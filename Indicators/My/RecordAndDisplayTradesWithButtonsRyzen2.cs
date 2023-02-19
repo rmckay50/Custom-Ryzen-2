@@ -64,7 +64,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 			if (State == State.SetDefaults)
 			{
                 Description = @"Enter the description for your new custom Indicator here.";
-                Name = "RecordAndDisplayTradesWithButtons";
+                Name = "RecordAndDisplayTradesWithButtonsRyzen2";
                 Calculate = Calculate.OnBarClose;
                 IsOverlay = false;
                 DisplayInDataBox = false;
@@ -95,14 +95,17 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             /// Reads 'C:\data\csvNTDrawline.csv' and draws lines on chart
             /// </summary>
 
-            if (State == State.DataLoaded)
+            else if (State == State.Historical)
             {
                 ReadCsvAndDrawLines();
             }
 
+            else if (State == State.Realtime)
             {
-                //Call the custom method in State.Historical or State.Realtime to ensure it is only done when applied to a chart not when loaded in the Indicators window				
-                if (ChartControl != null && !IsToolBarButtonAdded)
+
+                
+                    //Call the custom method in State.Historical or State.Realtime to ensure it is only done when applied to a chart not when loaded in the Indicators window				
+                    if (ChartControl != null && !IsToolBarButtonAdded)
                 {
                     ChartControl.Dispatcher.InvokeAsync((Action)(() => // Use this.Dispatcher to ensure code is executed on the proper thread
                     {
@@ -110,8 +113,18 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     }));
                 }
             }
+                            else if (State == State.Terminated)
+                {
+                    if (chartWindow != null)
+                    {
+                        ChartControl.Dispatcher.InvokeAsync((Action)(() => //Dispatcher used to Assure Executed on UI Thread
+                        {
+                            DisposeCleanUp();
+                        }));
+                    }
+                }
 
-        }
+            }
 
         protected override void OnBarUpdate()
         {
