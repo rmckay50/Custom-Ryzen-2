@@ -530,24 +530,19 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         {
             var bPlayback = false;
             //EnumValue = MyEnum.Playback;
-            Parameters.Input parameters = new Parameters.Input();
-            if (EnumValue == MyEnum.Playback)
-            {
-                bPlayback = true;
-            }
-            Input input = new Input()
+            Parameters.Input parameters = new Parameters.Input()
             {
                 BPlayback = bPlayback,
-                //Name = Instrument.FullName,
                 Name = Bars.Instrument.MasterInstrument.Name,
-                //StartDate = "01/01/2023",
                 StartDate = StartTime.ToString(),
-                //EndDate = "02/16/2023",
                 EndDate = EndTime.ToString(),
-                //Path = @"Data Source = C:\Users\Owner\Documents\NinjaTrader 8\db\NinjaTrader.sqlite"
-                Path = @"Data Source = " + InputFile
+                InputPath = @"Data Source = " + InputFile,
+                OutputPath = OutputFile
             };
-            //var path = input.Path;
+            if (EnumValue == MyEnum.Playback)
+            {
+                parameters.BPlayback = true;
+            }
 
             List<CSV.CSV> CSv = new List<CSV.CSV>();
             //  list to hold valiables in Executions table from NinjaTrader.sqlite
@@ -559,9 +554,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             //List<Query> selectedList = new List<Query>();
             List<Trade.Trade> workingTrades = new List<Trade.Trade>();
             List<Trade.Trade> trades = new List<Trade.Trade>();
-            //SqLiteExecutionsToListAndQueryResults.Program.main(parameters);
-            //SqLiteExecutionsToListAndQueryResults.Program.main(input, @"C:\Users\Owner\Documents\NinjaTrader 8\csvNTDrawline.csv;");
-            SqLiteExecutionsToListAndQueryResults.Program.main(input, OutputFile);
+            SqLiteExecutionsToListAndQueryResults.Program.main(parameters);
 
 
         }

@@ -12,7 +12,7 @@ namespace NinjaTrader.Custom.AddOns
 	{
 		//DateTime startTime, double startY, DateTime endTime, double endY
 		public int Id { get; set; }
-        public string Name { get; set; }
+        public string Symbol { get; set; }
         public string Long_Short { get; set; }
 		public long StartTimeTicks { get; set; }
 		public string StartTime { get; set; }
@@ -26,7 +26,7 @@ namespace NinjaTrader.Custom.AddOns
 
 		public NTDrawLine(
 			int id, 
-			string name, 
+			string symbol, 
 			string long_Short, 
 			long startTimeTicks, 
 			string startTime, 
@@ -37,7 +37,7 @@ namespace NinjaTrader.Custom.AddOns
 			double p_L)
 		{
 			Id = id;
-			Name = name;
+			Symbol = symbol;
 			Long_Short = long_Short;
 			StartTimeTicks = startTimeTicks;
 			StartTime = startTime;

@@ -11,3 +11,8 @@
 	worked through 'ExtensionMatchAndAddToCsv.dll'  
 	used 'TSLA' and dates 2023 03 21 - 22 
 	doesn't hang  
+
+2023 03 04 1115  
+*	commit - writing csvNTDrawline.csv and reading correctly  
+	TODO  
+	get data from TradeStation to work  
