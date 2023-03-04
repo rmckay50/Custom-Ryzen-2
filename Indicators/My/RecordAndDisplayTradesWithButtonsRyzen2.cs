@@ -66,7 +66,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 Description = @"Enter the description for your new custom Indicator here.";
                 Name = "RecordAndDisplayTradesWithButtonsRyzen2";
                 Calculate = Calculate.OnBarClose;
-                IsOverlay = false;
+                IsOverlay = true;
                 DisplayInDataBox = false;
                 ScaleJustification = NinjaTrader.Gui.Chart.ScaleJustification.Right;
                 IsAutoScale = true;

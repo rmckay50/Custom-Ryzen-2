@@ -5,3 +5,9 @@
 
 2023 02 19 1440  
 *	commit - deleted all but a couple of the trades on 2/17  is creating the .csv file but too long for time  
+
+2023 03 03 2105  
+*	commit - for some reason the 'ExtensionMatchAndAddToCsv.dll' is stuck in a loop and it runs out of memory  
+	worked through 'ExtensionMatchAndAddToCsv.dll'  
+	used 'TSLA' and dates 2023 03 21 - 22 
+	doesn't hang  
