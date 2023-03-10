@@ -16,3 +16,6 @@
 *	commit - writing csvNTDrawline.csv and reading correctly  
 	TODO  
 	get data from TradeStation to work  
+
+2023 03 09 2005  
+*	commit - removed 'ReadCsvAndDrawLines()' from State == State.Historical & State == State.Transition = still crashing  

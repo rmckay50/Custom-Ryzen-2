@@ -86,7 +86,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             else if (State == State.Configure)
             {
 
-                Print(String.Format("State.Configure: onvertedEndTime {0}", IsOverlay));
+                //Print(String.Format("State.Configure: onvertedEndTime {0}", IsOverlay));
             }
 
 

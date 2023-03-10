@@ -97,9 +97,18 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
             else if (State == State.Historical)
             {
-                ReadCsvAndDrawLines();
+//                ReadCsvAndDrawLines();
             }
 
+			else if (State == State.Transition)
+			{
+				///<summary>
+				/// Try 'ReadCsvAndDrawLines()' here
+				/// </summary>
+
+				//ReadCsvAndDrawLines();
+			}
+			
             else if (State == State.Realtime)
             {
 
