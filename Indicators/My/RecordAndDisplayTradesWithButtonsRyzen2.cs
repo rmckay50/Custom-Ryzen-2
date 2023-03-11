@@ -57,6 +57,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         private bool IsToolBarButtonAdded;
 
         private IEnumerable<NinjaTrader.Custom.AddOns.NTDrawLine> returnedClass;
+        private DateTime inputFirstBarTime, inputLastBarTime;
+        private string inputFirstBarOnChart, inPutLastBarOnChart;
 
 
         protected override void OnStateChange()
@@ -86,6 +88,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 EnumValue = MyEnum.Futures;
                 InputFile = @"C:\Users\Rod\Documents\NinjaTrader 8\db\NinjaTrader.sqlite";
                 OutputFile = @"C:\Users\Rod\Documents\NinjaTrader 8\csvNTDrawline.csv";
+                
+
+
             }
 			else if (State == State.Configure)
 			{
@@ -539,6 +544,11 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         {
             var bPlayback = false;
             //EnumValue = MyEnum.Playback;
+            inputFirstBarTime = ChartBars.GetTimeByBarIdx(ChartControl, ChartBars.FromIndex);
+            inputFirstBarOnChart = inputFirstBarTime.ToString("yy MM dd HH_mm");
+            inputLastBarTime = ChartBars.GetTimeByBarIdx(ChartControl, ChartBars.ToIndex);
+            inPutLastBarOnChart = inputLastBarTime.ToString("yy MM dd HH_mm");
+
             Parameters.Input parameters = new Parameters.Input()
             {
                 BPlayback = bPlayback,
@@ -546,7 +556,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 StartDate = StartTime.ToString(),
                 EndDate = EndTime.ToString(),
                 InputPath = @"Data Source = " + InputFile,
-                OutputPath = OutputFile
+                OutputPath = OutputFile,
+                TimeFirstBarOnChart = inputFirstBarOnChart,
+                TimeLastBarOnChart = inPutLastBarOnChart,
             };
             if (EnumValue == MyEnum.Playback)
             {

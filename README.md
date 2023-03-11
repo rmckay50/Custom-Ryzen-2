@@ -19,3 +19,7 @@
 
 2023 03 09 2005  
 *	commit - removed 'ReadCsvAndDrawLines()' from State == State.Historical & State == State.Transition = still crashing  
+	set up serilog to see how far indicator (RecordAndDisplayTradesWithButtonsRyzen2) gets  
+
+2023 03 11 0920  
+*	commit - changed CreateCvsFunction to include time span on .csv file  
