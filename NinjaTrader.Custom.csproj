@@ -473,7 +473,6 @@
     <Compile Include="Indicators\My\DrawLineTestFromCsvSqLite.cs" />
     <Compile Include="AddOns\ReturnedClass.cs" />
     <Compile Include="AddOns\NTDrawLine.cs" />
-    <Compile Include="ListExecutionQuery.cs" />
     <Compile Include="Indicators\My\RecordAndDisplayTradesWithButtonsRyzen2.cs" />
   </ItemGroup>
   <ItemGroup>

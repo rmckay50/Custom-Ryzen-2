@@ -18,7 +18,6 @@ using NinjaTrader.Gui.Tools;
 using NinjaTrader.Data;
 using NinjaTrader.NinjaScript;
 using NinjaTrader.Core.FloatingPoint;
-using NinjaTrader.Gui.Tools;
 #endregion
 
 //This namespace holds Add ons in this folder and is required. Do not change it. 

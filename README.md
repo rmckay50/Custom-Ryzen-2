@@ -23,3 +23,7 @@
 
 2023 03 11 0920  
 *	commit - changed CreateCvsFunction to include time span on .csv file  
+
+2023 03 14 0445  
+*	commit  - crashes when 'RecordAndDisplayTradesWithButtonsRyzen2' is placed on a chart with a playback connection and a trade is placed  
+	removing sections to try to locate problem code  
