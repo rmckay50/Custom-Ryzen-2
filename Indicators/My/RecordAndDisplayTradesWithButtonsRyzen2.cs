@@ -543,7 +543,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         private void CreateCvsFunc()
         {
             var bPlayback = false;
-            //EnumValue = MyEnum.Playback;
+            //  get first and last bar on chart
+            //   use these when giving the .csv file a name in 
+            /// 'SqLiteExecutionsToListAndQueryResults.Program.main(parameters);'
             inputFirstBarTime = ChartBars.GetTimeByBarIdx(ChartControl, ChartBars.FromIndex);
             inputFirstBarOnChart = inputFirstBarTime.ToString("yy MM dd HH_mm");
             inputLastBarTime = ChartBars.GetTimeByBarIdx(ChartControl, ChartBars.ToIndex);

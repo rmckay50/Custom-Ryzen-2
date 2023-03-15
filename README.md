@@ -27,3 +27,6 @@
 2023 03 14 0445  
 *	commit  - crashes when 'RecordAndDisplayTradesWithButtonsRyzen2' is placed on a chart with a playback connection and a trade is placed  
 	removing sections to try to locate problem code  
+
+2023 03 15 0140  
+commit - made note in 'RecordAndDisplayTradesWithButtonsRyzen2' about first and last bar for .csv file name  
