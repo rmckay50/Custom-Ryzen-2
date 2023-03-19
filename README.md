@@ -29,4 +29,8 @@
 	removing sections to try to locate problem code  
 
 2023 03 15 0140  
-commit - made note in 'RecordAndDisplayTradesWithButtonsRyzen2' about first and last bar for .csv file name  
+*	commit - made note in 'RecordAndDisplayTradesWithButtonsRyzen2' about first and last bar for .csv file name  
+	database my be open and when trade is place there is a locked exception being thrown  
+
+2023 03 19 1330  
+*	commit - about to add change to 'SqLiteExecutionsToListAndQueryResults.Program' to use NTDrawline with attributes  
