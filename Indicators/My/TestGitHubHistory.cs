@@ -54,6 +54,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 		{
 			if ( firstPass == true)
 			{
+				//clear the output window as soon as the bars data is loaded
+    			ClearOutputWindow();        
 				Print("first iteration");
 				Print("second iteration");
 				firstPass = false;
