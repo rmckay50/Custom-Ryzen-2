@@ -36,9 +36,9 @@ namespace NinjaTrader.Custom.AddOns
         public void Printer()
         {
             //Set this scripts Print() calls to the first output tab
-            PrintTo p = PrintTo.OutputTab1;
-            p.
-            Console.WriteLine("");
+//            PrintTo p = PrintTo.OutputTab1;
+//            p.
+//            Console.WriteLine("");
         }
         public double Offset { get; private set; }
     }

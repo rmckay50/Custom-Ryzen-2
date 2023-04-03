@@ -181,7 +181,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddOns\Class1.cs" />
+    <Compile Include="AddOns\%40%40Class1.cs" />
     <Compile Include="BarsTypes\%40DayBarsType.cs" />
     <Compile Include="BarsTypes\%40HeikenAshiBarsType.cs" />
     <Compile Include="BarsTypes\%40KagiBarsType.cs" />
@@ -475,9 +475,13 @@
     <Compile Include="AddOns\ReturnedClass.cs" />
     <Compile Include="AddOns\NTDrawLine.cs" />
     <Compile Include="Indicators\My\RecordAndDisplayTradesWithButtonsRyzen2.cs" />
-    <Compile Include="Indicators\PrintTest.cs" />
-    <Compile Include="AddOns\AddOnForGithubTest.cs" />
+    <Compile Include="AddOns\%40%40AddOnForGithubTest.cs" />
     <Compile Include="Indicators\My\TestGitHubHistory.cs" />
+    <Compile Include="Indicators\%40%40PrintTest.cs" />
+    <Compile Include="obj\Release\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
+    <Compile Include="obj\x64\Debug\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
+    <Compile Include="obj\x64\Release\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
+    <Compile Include="Indicators\My\%40%40TestGitHubHistory.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource.resx">
@@ -532,12 +536,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent></PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent></PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
