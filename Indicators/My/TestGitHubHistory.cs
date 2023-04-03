@@ -19,6 +19,7 @@ using NinjaTrader.Data;
 using NinjaTrader.NinjaScript;
 using NinjaTrader.Core.FloatingPoint;
 using NinjaTrader.NinjaScript.DrawingTools;
+using NinjaTrader.Custom.AddOns;
 #endregion
 
 //This namespace holds Indicators in this folder and is required. Do not change it. 
@@ -26,6 +27,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 {
 	public class TestGitHubHistory : Indicator
 	{
+//		AddOnForGitHubTest printer = new AddOnForGitHubTest();
 		public bool firstPass = true;
 		protected override void OnStateChange()
 		{
@@ -44,7 +46,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 				//Disable this property if your indicator requires custom values that cumulate with each new market data event. 
 				//See Help Guide for additional information.
 				IsSuspendedWhileInactive					= true;
-			}
+                //Set this scripts Print() calls to the first output tab
+                PrintTo = PrintTo.OutputTab1;
+            }
 			else if (State == State.Configure)
 			{
 			}
@@ -55,10 +59,17 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 			if ( firstPass == true)
 			{
 				//clear the output window as soon as the bars data is loaded
-    			ClearOutputWindow();        
+				ClearOutputWindow();
+
+
 				Print("first iteration");
-				Print("second iteration");
+
+				NinjaTader.NinjaScript.NinjaScript.Print("second iteration");
 				firstPass = false;
+//				Class1 c = new Class1();.
+
+				Class1 c = new Class1();
+				c.dump();
 			}
 		}
 	}
