@@ -181,6 +181,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddOns\ClassForTestGithubHistory.cs" />
     <Compile Include="BarsTypes\%40DayBarsType.cs" />
     <Compile Include="BarsTypes\%40HeikenAshiBarsType.cs" />
     <Compile Include="BarsTypes\%40KagiBarsType.cs" />
@@ -477,7 +478,6 @@
     <Compile Include="Indicators\My\TestGitHubHistory.cs" />
     <Compile Include="Indicators\My\%40%40TestGitHubHistory.cs" />
     <Compile Include="Indicators\%40%40PrintTest.cs" />
-    <Compile Include="AddOns\ClassForTestGithubHistory.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource.resx">
