@@ -19,20 +19,22 @@ using NinjaTrader.Data;
 using NinjaTrader.NinjaScript;
 using NinjaTrader.Core.FloatingPoint;
 using NinjaTrader.NinjaScript.DrawingTools;
+using NinjaTrader.Custom.AddOns;
 #endregion
 
 //This namespace holds Indicators in this folder and is required. Do not change it. 
 namespace NinjaTrader.NinjaScript.Indicators.My
 {
-	public class TestGithubHistory : Indicator
+	public class TestGitHubHistory : Indicator
 	{
+//		AddOnForGitHubTest printer = new AddOnForGitHubTest();
 		public bool firstPass = true;
 		protected override void OnStateChange()
 		{
 			if (State == State.SetDefaults)
 			{
-				Description									= @"Enter the description for your new custom Indicator here.";
-				Name										= "TestGithubHistory";
+				Description									= @"Will change pint statements to output window and checkput different commits to see if it works";
+				Name										= "TestGitHubHistory";
 				Calculate									= Calculate.OnBarClose;
 				IsOverlay									= false;
 				DisplayInDataBox							= true;
@@ -44,7 +46,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 				//Disable this property if your indicator requires custom values that cumulate with each new market data event. 
 				//See Help Guide for additional information.
 				IsSuspendedWhileInactive					= true;
-			}
+                //Set this scripts Print() calls to the first output tab
+                PrintTo = PrintTo.OutputTab1;
+            }
 			else if (State == State.Configure)
 			{
 			}
@@ -52,13 +56,21 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
 		protected override void OnBarUpdate()
 		{
-			if (firstPass == true)
+			if ( firstPass == true)
 			{
+				//clear the output window as soon as the bars data is loaded
 				ClearOutputWindow();
-				Print("first commit");
+
+
+				Print("first iteration");
+
+				Print("second iteration");
 				firstPass = false;
+//				Class1 c = new Class1();.
+
+				Class1 c = new Class1();
+				c.dump();
 			}
-			//Add your custom indicator logic here.
 		}
 	}
 }
@@ -69,19 +81,19 @@ namespace NinjaTrader.NinjaScript.Indicators
 {
 	public partial class Indicator : NinjaTrader.Gui.NinjaScript.IndicatorRenderBase
 	{
-		private My.TestGithubHistory[] cacheTestGithubHistory;
-		public My.TestGithubHistory TestGithubHistory()
+		private My.TestGitHubHistory[] cacheTestGitHubHistory;
+		public My.TestGitHubHistory TestGitHubHistory()
 		{
-			return TestGithubHistory(Input);
+			return TestGitHubHistory(Input);
 		}
 
-		public My.TestGithubHistory TestGithubHistory(ISeries<double> input)
+		public My.TestGitHubHistory TestGitHubHistory(ISeries<double> input)
 		{
-			if (cacheTestGithubHistory != null)
-				for (int idx = 0; idx < cacheTestGithubHistory.Length; idx++)
-					if (cacheTestGithubHistory[idx] != null &&  cacheTestGithubHistory[idx].EqualsInput(input))
-						return cacheTestGithubHistory[idx];
-			return CacheIndicator<My.TestGithubHistory>(new My.TestGithubHistory(), input, ref cacheTestGithubHistory);
+			if (cacheTestGitHubHistory != null)
+				for (int idx = 0; idx < cacheTestGitHubHistory.Length; idx++)
+					if (cacheTestGitHubHistory[idx] != null &&  cacheTestGitHubHistory[idx].EqualsInput(input))
+						return cacheTestGitHubHistory[idx];
+			return CacheIndicator<My.TestGitHubHistory>(new My.TestGitHubHistory(), input, ref cacheTestGitHubHistory);
 		}
 	}
 }
@@ -90,14 +102,14 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 {
 	public partial class MarketAnalyzerColumn : MarketAnalyzerColumnBase
 	{
-		public Indicators.My.TestGithubHistory TestGithubHistory()
+		public Indicators.My.TestGitHubHistory TestGitHubHistory()
 		{
-			return indicator.TestGithubHistory(Input);
+			return indicator.TestGitHubHistory(Input);
 		}
 
-		public Indicators.My.TestGithubHistory TestGithubHistory(ISeries<double> input )
+		public Indicators.My.TestGitHubHistory TestGitHubHistory(ISeries<double> input )
 		{
-			return indicator.TestGithubHistory(input);
+			return indicator.TestGitHubHistory(input);
 		}
 	}
 }
@@ -106,14 +118,14 @@ namespace NinjaTrader.NinjaScript.Strategies
 {
 	public partial class Strategy : NinjaTrader.Gui.NinjaScript.StrategyRenderBase
 	{
-		public Indicators.My.TestGithubHistory TestGithubHistory()
+		public Indicators.My.TestGitHubHistory TestGitHubHistory()
 		{
-			return indicator.TestGithubHistory(Input);
+			return indicator.TestGitHubHistory(Input);
 		}
 
-		public Indicators.My.TestGithubHistory TestGithubHistory(ISeries<double> input )
+		public Indicators.My.TestGitHubHistory TestGitHubHistory(ISeries<double> input )
 		{
-			return indicator.TestGithubHistory(input);
+			return indicator.TestGitHubHistory(input);
 		}
 	}
 }
