@@ -66,10 +66,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
 				Print("second iteration");
 				firstPass = false;
-//				Class1 c = new Class1();.
-
-				Class1 c = new Class1();
-				c.dump();
 			}
 		}
 	}

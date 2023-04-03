@@ -475,6 +475,9 @@
     <Compile Include="AddOns\NTDrawLine.cs" />
     <Compile Include="Indicators\My\RecordAndDisplayTradesWithButtonsRyzen2.cs" />
     <Compile Include="Indicators\My\TestGitHubHistory.cs" />
+    <Compile Include="Indicators\My\%40%40TestGitHubHistory.cs" />
+    <Compile Include="Indicators\%40%40PrintTest.cs" />
+    <Compile Include="AddOns\ClassForTestGithubHistory.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource.resx">
