@@ -61,15 +61,16 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 				//clear the output window as soon as the bars data is loaded
 				ClearOutputWindow();
 
-
+				Print(DateTime.Now);
 				Print("first iteration");
 
 				Print("second iteration");
-				firstPass = false;
-//				Class1 c = new Class1();.
 
-				Class1 c = new Class1();
-				c.dump();
+				Print("third iteration");
+				
+				firstPass = false;
+				ClassForTestGithubHistory c = new ClassForTestGithubHistory();
+				c.Display();
 			}
 		}
 	}

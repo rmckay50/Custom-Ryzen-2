@@ -181,7 +181,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddOns\ClassForTestGithubHistory.cs" />
+    <Compile Include="AddOns\%40%40ClassForTestGithubHistory.cs" />
     <Compile Include="BarsTypes\%40DayBarsType.cs" />
     <Compile Include="BarsTypes\%40HeikenAshiBarsType.cs" />
     <Compile Include="BarsTypes\%40KagiBarsType.cs" />
@@ -465,19 +465,19 @@
     <Compile Include="SuperDomColumns\%40Notes.cs" />
     <Compile Include="SuperDomColumns\%40ProfitLoss.cs" />
     <Compile Include="SuperDomColumns\%40Volume.cs" />
-    <Compile Include="AddOns\TryCatchClass.cs" />
-    <Compile Include="Indicators\AB\ABToolbarButtons.cs" />
-    <Compile Include="Indicators\My\TryCatchExample.cs" />
+    <Compile Include="AddOns\%40%40TryCatchClass.cs" />
+    <Compile Include="Indicators\AB\%40%40ABToolbarButtons.cs" />
+    <Compile Include="Indicators\My\%40%40TryCatchExample.cs" />
     <Compile Include="obj\Debug\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
     <Compile Include="Indicators\My\%40%40ReturnedClass.cs" />
-    <Compile Include="Indicators\My\DrawLineTestFromCsv.cs" />
-    <Compile Include="Indicators\My\DrawLineTestFromCsvSqLite.cs" />
-    <Compile Include="AddOns\ReturnedClass.cs" />
+    <Compile Include="Indicators\My\%40%40DrawLineTestFromCsv.cs" />
+    <Compile Include="Indicators\My\%40%40DrawLineTestFromCsvSqLite.cs" />
+    <Compile Include="AddOns\%40%40ReturnedClass.cs" />
     <Compile Include="AddOns\NTDrawLine.cs" />
     <Compile Include="Indicators\My\RecordAndDisplayTradesWithButtonsRyzen2.cs" />
-    <Compile Include="Indicators\My\TestGitHubHistory.cs" />
-    <Compile Include="Indicators\My\%40%40TestGitHubHistory.cs" />
     <Compile Include="Indicators\%40%40PrintTest.cs" />
+    <Compile Include="AddOns\%40%40Class1.cs" />
+    <Compile Include="Indicators\My\%40%40TestGithubHistory.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource.resx">
