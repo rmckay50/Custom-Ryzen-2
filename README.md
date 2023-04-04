@@ -35,10 +35,11 @@
 2023 03 19 1330  
 *	commit - about to add change to 'SqLiteExecutionsToListAndQueryResults.Program' to use NTDrawline with attributes  
 
-2023 04 03 0855  
-*	commit - 'about to add change to 'SqLiteExecutionsToListAndQueryResults.Program' to use NTDrawline with attributes' gets lines woking again  
 *	commit - about to add change to 'SqLiteExecutionsToListAndQueryResults.Program' to use NTDrawline with attributes  
 
 2023 04 03  
 *	commit - use '// Instead of Print()
-	NinjaTrader.Code.Output.Process("my message", PrintTo.OutputTab1);' in AddOn Class  
+	NinjaTrader.Code.Output.Process("my message", PrintTo.OutputTab1);' in AddOn Class  2023 04 03 0855  
+
+2023 04 03 2103  
+*	commit - 'about to add change to 'SqLiteExecutionsToListAndQueryResults.Program' to use NTDrawline with attributes' gets lines woking again  
