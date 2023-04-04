@@ -476,7 +476,6 @@
     <Compile Include="Indicators\My\RecordAndDisplayTradesWithButtonsRyzen2.cs" />
     <Compile Include="Indicators\%40%40PrintTest.cs" />
     <Compile Include="AddOns\%40%40Class1.cs" />
-    <Compile Include="Indicators\My\%40%40TestGithubHistory.cs" />
     <Compile Include="AddOns\ClassForTestGithubHistory.cs" />
     <Compile Include="Indicators\My\TestGitHubHistory.cs" />
   </ItemGroup>
@@ -530,10 +529,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent></PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent></PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
