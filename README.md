@@ -43,3 +43,45 @@
 
 2023 04 03 2103  
 *	commit - 'about to add change to 'SqLiteExecutionsToListAndQueryResults.Program' to use NTDrawline with attributes' gets lines woking again  
+
+2023 04 16 0300  
+*	commit - works can use data from TS to display in NT!!!!
+	uses 'RecordAndDisplayTradesWithButtonsRyzen2' to call 'CreateCvsFunc' which calls 'SqLiteExecutionsToListAndQueryResults'
+	a list is passed 
+```
+	            Parameters.Input parameters = new Parameters.Input()  
+            {  
+                BPlayback = bPlayback,  
+                Name = Bars.Instrument.MasterInstrument.Name,  
+                StartDate = StartTime.ToString(),  
+                EndDate = EndTime.ToString(),  
+                InputPath = @"Data Source = " + InputFile,   
+                OutputPath = OutputFile,  
+                TimeFirstBarOnChart = inputFirstBarOnChart,  
+                TimeLastBarOnChart = inPutLastBarOnChart,  
+            };  
+            if (EnumValue == MyEnum.Playback)  
+            {  
+                parameters.BPlayback = true;  
+            }  
+```
+    which is used in 'SqLiteExecutionsToListAndQueryResults' -> 'public static void main(Parameters.Input input)' -> 'Methods.getInstList' to read C:\Users\Rod\Documents\NinjaTrader 8\db\NinjaTrader.sqlite  
+    the Executions table contains the entry and exit price/times  
+    the symbol is supplies by the chart  
+    the list created is then queried for all trades greater than the input starting date and account type (1 for Playback, 2 for simulated trades) 
+    a new list is made - 'workingTrades'  
+    workingTrades is used to fill in class source.Trades  
+    source. has a number of properties and 3 lists Trades, Csv, and NTDrawLine  
+    a number of extensions for source create source.NTDrawLine  
+    source.NTDrawLine LinQtoCSV to write the list to NT usually csvNTDrawline.csv  
+    this file is read in NT uses indicator - RecordAndDisplayTradesWithButtonsRyzen2, converted to lines and displayed on chart  using 'ReadCsvAndDrawLines()'  
+    lines are now on chart  
+    Data from TS is collected by creating a .csv file Export -> Trades List  
+    The TradesList is placed in 'C:\Users\Rod\Cloud-Drive\TradeManagerAnalysis'  
+    It is read by 'ReadAllLines From IDrive-Sync and Remove Header 1 DST.linq' or  
+        'ReadAllLines From IDrive-Sync and Remove Header 1.linq'  
+    LINQtoCSV is again used to create "C:\data\csvNTDrawline.csv"   
+    this file is same format as the csvNTDrawline.csv which was created by 'RecordAndDisplayTradesWithButtonsRyzen2'  
+    the indicator 'RecordAndDisplayTradesWithButtonsRyzen2' has input selection parameters  'OutputFile' is where the .csv file is placed which is read to creat chart lines.  
+    that file can be given any location so using the linqPad .csv loacation C:\data can be read and plced on a chart  
+
