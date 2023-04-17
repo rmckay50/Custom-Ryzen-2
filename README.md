@@ -45,7 +45,7 @@
 *	commit - 'about to add change to 'SqLiteExecutionsToListAndQueryResults.Program' to use NTDrawline with attributes' gets lines woking again  
 
 2023 04 16 0300  
-*	commit - works can use data from TS to display in NT!!!!
+*	commit - works - can use data from TS to display in NT!!!!
 	uses 'RecordAndDisplayTradesWithButtonsRyzen2' to call 'CreateCvsFunc' which calls 'SqLiteExecutionsToListAndQueryResults'
 	a list is passed 
 ```
@@ -84,4 +84,8 @@
     this file is same format as the csvNTDrawline.csv which was created by 'RecordAndDisplayTradesWithButtonsRyzen2'  
     the indicator 'RecordAndDisplayTradesWithButtonsRyzen2' has input selection parameters  'OutputFile' is where the .csv file is placed which is read to creat chart lines.  
     that file can be given any location so using the linqPad .csv loacation C:\data can be read and plced on a chart  
+
+    at the ppresent all of the extensions and classes in 'SqLiteExecutionsToListAndQueryResults' are compiled to .dlls and referenced in NT  
+    project is underway to use .cs files in NT AddOns instead of .dlls for ease of acces when changeing and duplication flies for ZBook and Ryzen-1  
+    'RecordAndDisplayTradesWithButtonsRyzen2' is source controlled in 'https://github.com/rmckay49/Custom-Ryzen-2.git'  
 
