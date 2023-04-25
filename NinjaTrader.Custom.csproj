@@ -116,8 +116,8 @@
     <Reference Include="LINQtoCSV">
       <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\LINQtoCSV.dll</HintPath>
     </Reference>
-    <Reference Include="CreateExtensionGetInstLIst">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\CreateExtensionGetInstLIst.dll</HintPath>
+    <Reference Include="Parameters">
+      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\Parameters.dll</HintPath>
     </Reference>
     <Reference Include="CSV">
       <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\CSV.dll</HintPath>
@@ -125,41 +125,8 @@
     <Reference Include="Executions">
       <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\Executions.dll</HintPath>
     </Reference>
-    <Reference Include="ExtensionCreateNTDrawline">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\ExtensionCreateNTDrawline.dll</HintPath>
-    </Reference>
-    <Reference Include="ExtensionFill">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\ExtensionFill.dll</HintPath>
-    </Reference>
-    <Reference Include="ExtensionFillLongShortColumnInTradesList">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\ExtensionFillLongShortColumnInTradesList.dll</HintPath>
-    </Reference>
-    <Reference Include="ExtensionFillProfitLossColumnInTradesList">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\ExtensionFillProfitLossColumnInTradesList.dll</HintPath>
-    </Reference>
-    <Reference Include="ExtensionGetActiveEntry">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\ExtensionGetActiveEntry.dll</HintPath>
-    </Reference>
-    <Reference Include="ExtensionMatchAndAddToCsv">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\ExtensionMatchAndAddToCsv.dll</HintPath>
-    </Reference>
-    <Reference Include="ExtensionUpdateActiveEntry">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\ExtensionUpdateActiveEntry.dll</HintPath>
-    </Reference>
-    <Reference Include="getInstList">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\getInstList.dll</HintPath>
-    </Reference>
-    <Reference Include="getInstListSqLite">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\getInstListSqLite.dll</HintPath>
-    </Reference>
     <Reference Include="NTDrawLine">
       <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\NTDrawLine.dll</HintPath>
-    </Reference>
-    <Reference Include="Parameters">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\Parameters.dll</HintPath>
-    </Reference>
-    <Reference Include="Ret">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\Ret.dll</HintPath>
     </Reference>
     <Reference Include="Source">
       <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\Source.dll</HintPath>
@@ -167,20 +134,20 @@
     <Reference Include="SqLiteExecutionsToListAndQueryResults">
       <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\SqLiteExecutionsToListAndQueryResults.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.Linq">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\System.Data.Linq.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\System.Data.SQLite.dll</HintPath>
-    </Reference>
     <Reference Include="Trade">
       <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\Trade.dll</HintPath>
+    </Reference>
+    <Reference Include="Ret">
+      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\Ret.dll</HintPath>
     </Reference>
     <Reference Include="NinjaTrader.Vendor">
       <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\NinjaTrader.Vendor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddOns\NTDrawLine.cs" />
+    <Compile Include="AddOns\ReturnedClass.cs" />
+    <Compile Include="AddOns\TryCatchClass.cs" />
     <Compile Include="BarsTypes\%40DayBarsType.cs" />
     <Compile Include="BarsTypes\%40HeikenAshiBarsType.cs" />
     <Compile Include="BarsTypes\%40KagiBarsType.cs" />
@@ -464,17 +431,9 @@
     <Compile Include="SuperDomColumns\%40Notes.cs" />
     <Compile Include="SuperDomColumns\%40ProfitLoss.cs" />
     <Compile Include="SuperDomColumns\%40Volume.cs" />
-    <Compile Include="AddOns\TryCatchClass.cs" />
-    <Compile Include="Indicators\AB\ABToolbarButtons.cs" />
-    <Compile Include="Indicators\My\TryCatchExample.cs" />
-    <Compile Include="obj\Debug\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
-    <Compile Include="Indicators\My\%40%40ReturnedClass.cs" />
-    <Compile Include="Indicators\My\DrawLineTestFromCsv.cs" />
-    <Compile Include="Indicators\My\DrawLineTestFromCsvSqLite.cs" />
-    <Compile Include="AddOns\ReturnedClass.cs" />
-    <Compile Include="AddOns\NTDrawLine.cs" />
-    <Compile Include="Indicators\My\RecordAndDisplayTradesWithButtonsRyzen2.cs" />
     <Compile Include="Indicators\PrintTest.cs" />
+    <Compile Include="obj\Debug\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
+    <Compile Include="Indicators\My\RecordAndDisplayTradesWithButtonsRyzen2.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource.resx">
@@ -523,6 +482,9 @@
       <SubType>Designer</SubType>
       <DependentUpon>Resource.resx</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Debug\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

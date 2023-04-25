@@ -33,13 +33,15 @@ using LINQtoCSV;
 using NinjaTrader.Gui.NinjaScript;
 
 using Parameters;
+using NinjaTrader.Custom.AddOns;
+using System.Security.Cryptography;
 #endregion
 
 //This namespace holds Indicators in this folder and is required. Do not change it. 
 namespace NinjaTrader.NinjaScript.Indicators.My
 {
-	public class RecordAndDisplayTradesWithButtonsRyzen2 : Indicator
-	{
+    public class RecordAndDisplayTradesWithButtonsRyzen2 : Indicator
+    {
         private bool drawSwitch;
         private bool indiSwitch;
 
@@ -62,13 +64,13 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
 
         protected override void OnStateChange()
-		{
-			if (State == State.SetDefaults)
-			{
+        {
+            if (State == State.SetDefaults)
+            {
                 Description = @"Enter the description for your new custom Indicator here.";
                 Name = "RecordAndDisplayTradesWithButtonsRyzen2";
                 Calculate = Calculate.OnBarClose;
-                IsOverlay = true;
+                IsOverlay = false;
                 DisplayInDataBox = false;
                 ScaleJustification = NinjaTrader.Gui.Chart.ScaleJustification.Right;
                 IsAutoScale = true;
@@ -88,13 +90,13 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 EnumValue = MyEnum.Futures;
                 InputFile = @"C:\Users\Rod\Documents\NinjaTrader 8\db\NinjaTrader.sqlite";
                 OutputFile = @"C:\Users\Rod\Documents\NinjaTrader 8\csvNTDrawline.csv";
-                
+
 
 
             }
-			else if (State == State.Configure)
-			{
-			}
+            else if (State == State.Configure)
+            {
+            }
 
             ///<summary>
             /// Reads 'C:\data\csvNTDrawline.csv' and draws lines on chart
@@ -102,24 +104,24 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
             else if (State == State.Historical)
             {
-//                ReadCsvAndDrawLines();
+                //                ReadCsvAndDrawLines();
             }
 
-			else if (State == State.Transition)
-			{
-				///<summary>
-				/// Try 'ReadCsvAndDrawLines()' here
-				/// </summary>
+            else if (State == State.Transition)
+            {
+                ///<summary>
+                /// Try 'ReadCsvAndDrawLines()' here
+                /// </summary>
 
-				//ReadCsvAndDrawLines();
-			}
-			
+                //ReadCsvAndDrawLines();
+            }
+
             else if (State == State.Realtime)
             {
 
-                
-                    //Call the custom method in State.Historical or State.Realtime to ensure it is only done when applied to a chart not when loaded in the Indicators window				
-                    if (ChartControl != null && !IsToolBarButtonAdded)
+
+                //Call the custom method in State.Historical or State.Realtime to ensure it is only done when applied to a chart not when loaded in the Indicators window				
+                if (ChartControl != null && !IsToolBarButtonAdded)
                 {
                     ChartControl.Dispatcher.InvokeAsync((Action)(() => // Use this.Dispatcher to ensure code is executed on the proper thread
                     {
@@ -127,18 +129,18 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     }));
                 }
             }
-                            else if (State == State.Terminated)
+            else if (State == State.Terminated)
+            {
+                if (chartWindow != null)
                 {
-                    if (chartWindow != null)
+                    ChartControl.Dispatcher.InvokeAsync((Action)(() => //Dispatcher used to Assure Executed on UI Thread
                     {
-                        ChartControl.Dispatcher.InvokeAsync((Action)(() => //Dispatcher used to Assure Executed on UI Thread
-                        {
-                            DisposeCleanUp();
-                        }));
-                    }
+                        DisposeCleanUp();
+                    }));
                 }
-
             }
+
+        }
 
         protected override void OnBarUpdate()
         {
@@ -557,6 +559,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 Name = Bars.Instrument.MasterInstrument.Name,
                 StartDate = StartTime.ToString(),
                 EndDate = EndTime.ToString(),
+                //Path = @"Data Source = " + InputFile
                 InputPath = @"Data Source = " + InputFile,
                 OutputPath = OutputFile,
                 TimeFirstBarOnChart = inputFirstBarOnChart,
