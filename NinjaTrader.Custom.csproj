@@ -116,36 +116,17 @@
     <Reference Include="LINQtoCSV">
       <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\LINQtoCSV.dll</HintPath>
     </Reference>
-    <Reference Include="Parameters">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\Parameters.dll</HintPath>
+    <Reference Include="System.Data.SQLite">
+      <HintPath>\\ZBOOK\Users\Owner\Documents\NinjaTrader 8\bin\Custom\System.Data.SQLite.dll</HintPath>
     </Reference>
-    <Reference Include="CSV">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\CSV.dll</HintPath>
-    </Reference>
-    <Reference Include="Executions">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\Executions.dll</HintPath>
-    </Reference>
-    <Reference Include="NTDrawLine">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\NTDrawLine.dll</HintPath>
-    </Reference>
-    <Reference Include="Source">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\Source.dll</HintPath>
-    </Reference>
-    <Reference Include="SqLiteExecutionsToListAndQueryResults">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\SqLiteExecutionsToListAndQueryResults.dll</HintPath>
-    </Reference>
-    <Reference Include="Trade">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\Trade.dll</HintPath>
-    </Reference>
-    <Reference Include="Ret">
-      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\Ret.dll</HintPath>
+    <Reference Include="System.Data">
+      <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\System.Data.dll</HintPath>
     </Reference>
     <Reference Include="NinjaTrader.Vendor">
       <HintPath>C:\Users\Rod\Documents\NinjaTrader 8\bin\Custom\NinjaTrader.Vendor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddOns\NTDrawLine.cs" />
     <Compile Include="AddOns\ReturnedClass.cs" />
     <Compile Include="AddOns\TryCatchClass.cs" />
     <Compile Include="BarsTypes\%40DayBarsType.cs" />
@@ -433,7 +414,10 @@
     <Compile Include="SuperDomColumns\%40Volume.cs" />
     <Compile Include="Indicators\PrintTest.cs" />
     <Compile Include="obj\Debug\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
-    <Compile Include="Indicators\My\RecordAndDisplayTradesWithButtonsRyzen2.cs" />
+    <Compile Include="Indicators\My\RecordAndDisplayTradesWithButtons.cs" />
+    <Compile Include="AddOns\ButtonsLineCSFilesAddOns.cs" />
+    <Compile Include="AddOns\SqLiteExecutionsExtension.cs" />
+    <Compile Include="AddOns\SqLiteExecutionsToListAndQueryResults.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource.resx">

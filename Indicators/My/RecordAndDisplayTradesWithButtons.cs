@@ -1,7 +1,21 @@
 #region Comments
 /*
- * 2023 02 19 0410
- *	Using new git branch to try to get 'RecordAndDisplayTradesWithButtonsRyzen2' working
+ * 2022 12 15 1900  
+ *	Added script in 'State.DataLoaded' to draw lines from 
+ *	Changed hideDrawsFunc() to get IsAttachedToNinjaScript for each line - drawn by indicator
+ * 
+ * 2023 02 16 1145 
+ *  adding 'ReadCsvAndDrawLines' which reads file from .csv draws the lines
+ *  on load the files is read in State.Loaded
+ *  
+ * 2023 02 18 1225 
+ *  transfer from 'ToolbarButtonsCopy'
+ *  selecting a file for output other than 'csvNTDrawline.csv' allows display of prior trades
+ *      selecting NQ Playback xxxx will show trades from that run
+ *      
+ * 2023 04 25 1200  
+ *  'SqLiteExecutionsToListAndQueryResults' works correctly as .dll 
+ *  attemptiong transfer to AddOns
 */
 #endregion Comments
 
@@ -31,17 +45,16 @@ using NinjaTrader.Core.FloatingPoint;
 using NinjaTrader.NinjaScript.DrawingTools;
 using LINQtoCSV;
 using NinjaTrader.Gui.NinjaScript;
-
-using Parameters;
 using NinjaTrader.Custom.AddOns;
-using System.Security.Cryptography;
+using Trade = NinjaTrader.Custom.AddOns.Trade;
 #endregion
 
 //This namespace holds Indicators in this folder and is required. Do not change it. 
 namespace NinjaTrader.NinjaScript.Indicators.My
 {
-    public class RecordAndDisplayTradesWithButtonsRyzen2 : Indicator
+    public class RecordAndDisplayTradesWithButtons : Indicator
     {
+
         private bool drawSwitch;
         private bool indiSwitch;
 
@@ -50,6 +63,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
         // Define a Button
         private new System.Windows.Controls.Button btnTradeLines;
+        private new System.Windows.Controls.Button btnUserDrawObjs;
         private new System.Windows.Controls.Button btnIndicators;
         private new System.Windows.Controls.Button btnShowTrades;
         private new System.Windows.Controls.Button btnHideWicks;
@@ -58,7 +72,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
         private bool IsToolBarButtonAdded;
 
-        private IEnumerable<NinjaTrader.Custom.AddOns.NTDrawLine> returnedClass;
+        private IEnumerable<NTDrawLine> returnedClass;
         private DateTime inputFirstBarTime, inputLastBarTime;
         private string inputFirstBarOnChart, inPutLastBarOnChart;
 
@@ -68,9 +82,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             if (State == State.SetDefaults)
             {
                 Description = @"Enter the description for your new custom Indicator here.";
-                Name = "RecordAndDisplayTradesWithButtonsRyzen2";
+                Name = "RecordAndDisplayTradesWithButtons";
                 Calculate = Calculate.OnBarClose;
-                IsOverlay = false;
                 DisplayInDataBox = false;
                 ScaleJustification = NinjaTrader.Gui.Chart.ScaleJustification.Right;
                 IsAutoScale = true;
@@ -79,47 +92,23 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 colorActiveCursor = true;
                 ActiveCursorColor = Brushes.DarkGreen;
                 InactiveCursorColor = Brushes.DimGray;
-                //	Used to retreive 'C:\data\csvNTDrawline.csv' 
-                //	Will be used to redraw lines
-                //IEnumerable<NinjaTrader.Custom.AddOns.NTDrawLine> returnedClass; 
-                //Disable this property if your indicator requires custom values that cumulate with each new market data event. 
-                //See Help Guide for additional information.
                 IsSuspendedWhileInactive = true;
-                StartTime = DateTime.Parse("01/01/2023");
-                EndTime = DateTime.Parse("02/28/2023");
+                StartTime = DateTime.Parse("12/01/ 2023");
+                EndTime = DateTime.Parse("12/30/ 2023");
                 EnumValue = MyEnum.Futures;
-                InputFile = @"C:\Users\Rod\Documents\NinjaTrader 8\db\NinjaTrader.sqlite";
-                OutputFile = @"C:\Users\Rod\Documents\NinjaTrader 8\csvNTDrawline.csv";
-
-
-
+                InputFile = @"C:\Users\Owner\Documents\NinjaTrader 8\db\NinjaTrader.sqlite";
+                OutputFile = @"C:\Users\Owner\Documents\NinjaTrader 8\csvNTDrawline.csv";
             }
             else if (State == State.Configure)
             {
+                IsOverlay = false;
             }
-
-            ///<summary>
-            /// Reads 'C:\data\csvNTDrawline.csv' and draws lines on chart
-            /// </summary>
-
-            else if (State == State.Historical)
+            if (State == State.Historical)
             {
-                //                ReadCsvAndDrawLines();
+                ReadCsvAndDrawLines();
             }
-
-            else if (State == State.Transition)
-            {
-                ///<summary>
-                /// Try 'ReadCsvAndDrawLines()' here
-                /// </summary>
-
-                //ReadCsvAndDrawLines();
-            }
-
             else if (State == State.Realtime)
             {
-
-
                 //Call the custom method in State.Historical or State.Realtime to ensure it is only done when applied to a chart not when loaded in the Indicators window				
                 if (ChartControl != null && !IsToolBarButtonAdded)
                 {
@@ -139,17 +128,10 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     }));
                 }
             }
-
         }
 
         protected override void OnBarUpdate()
         {
-            //RemoveDrawObjects();
-            //if (CurrentBar < 20) return;
-            var s = StartTime;
-            var e = EndTime;
-            var i = InputFile;
-            var o = OutputFile;
         }
 
         #region Properties
@@ -178,9 +160,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         //public string MyFile
         public string OutputFile
         { get; set; }
-
-
-
 
         #endregion Properties
 
@@ -298,6 +277,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnStyle.Setters.Add(new Setter(System.Windows.Controls.Button.HorizontalAlignmentProperty, HorizontalAlignment.Center));
 
             // Instantiate the buttons
+            btnUserDrawObjs = new System.Windows.Controls.Button();
             btnTradeLines = new System.Windows.Controls.Button();
             btnIndicators = new System.Windows.Controls.Button();
             btnShowTrades = new System.Windows.Controls.Button();
@@ -306,6 +286,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
             // Set button names
             btnTradeLines.Content = "Toggle Trade Lines";
+            btnUserDrawObjs.Content = "Toggle Draw";
             btnIndicators.Content = "Toggle Indicators";
             btnShowTrades.Content = "Toggle Trades";
             btnHideWicks.Content = "Toggle Wicks";
@@ -313,6 +294,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
             // Set Button style            
             btnTradeLines.Style = btnStyle;
+            btnUserDrawObjs.Style = btnStyle;
             btnIndicators.Style = btnStyle;
             btnShowTrades.Style = btnStyle;
             btnHideWicks.Style = btnStyle;
@@ -320,6 +302,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
             // Add the Buttons to the chart's toolbar
             chartWindow.MainMenu.Add(btnTradeLines);
+            chartWindow.MainMenu.Add(btnUserDrawObjs);
             chartWindow.MainMenu.Add(btnIndicators);
             chartWindow.MainMenu.Add(btnShowTrades);
             chartWindow.MainMenu.Add(btnHideWicks);
@@ -327,6 +310,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
             // Set button visibility
             btnTradeLines.Visibility = Visibility.Visible;
+            btnUserDrawObjs.Visibility = Visibility.Visible;
             btnIndicators.Visibility = Visibility.Visible;
             btnShowTrades.Visibility = Visibility.Visible;
             btnHideWicks.Visibility = Visibility.Visible;
@@ -334,6 +318,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
             // Subscribe to click events
             btnTradeLines.Click += btnTradeLinesClick;
+            btnUserDrawObjs.Click += btnUserDrawObjsClick;
             btnIndicators.Click += btnIndicatorsClick;
             btnShowTrades.Click += btnShowTradesClick;
             btnHideWicks.Click += btnHideWicksClick;
@@ -355,6 +340,15 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             {
                 ReadCsvAndDrawLines();
                 hideDrawsFunc();
+            }
+        }
+        //  Toggle user drawn objects
+        private void btnUserDrawObjsClick(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Controls.Button button = sender as System.Windows.Controls.Button;
+            if (button != null)
+            {
+                hideUserDrawsFunc();
             }
         }
 
@@ -459,17 +453,10 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             CsvFileDescription dataFromFile = new CsvFileDescription();
 
             //	Read in file 'C:\data\csvNTDrawline.csv'  Fills returnedClass
-            //	Conflict with Class NTDrawLine - in both getInstListFutures and getInstListFuturesExtension 
-            //IEnumerable<NinjaTrader.Custom.AddOns.NTDrawLine> returnedClass =
-            //    cc.Read<NinjaTrader.Custom.AddOns.NTDrawLine>
-
-            returnedClass = cc.Read<NinjaTrader.Custom.AddOns.NTDrawLine>
+            returnedClass = cc.Read<NTDrawLine>
                             (
-                                //InputFile,
                                 OutputFile,
-                            //@"C:\data\csvNTDrawline.csv",
-                            //@"C:\Users\Owner\Documents\NinjaTrader 8\csvNTDrawline.csv",
-                            dataFromFile
+                                dataFromFile
                             );
             #endregion Use LINQtoCSV to read "csvNTDrawline.csv"
 
@@ -547,13 +534,12 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             var bPlayback = false;
             //  get first and last bar on chart
             //   use these when giving the .csv file a name in 
-            /// 'SqLiteExecutionsToListAndQueryResults.Program.main(parameters);'
             inputFirstBarTime = ChartBars.GetTimeByBarIdx(ChartControl, ChartBars.FromIndex);
             inputFirstBarOnChart = inputFirstBarTime.ToString("yy MM dd HH_mm");
             inputLastBarTime = ChartBars.GetTimeByBarIdx(ChartControl, ChartBars.ToIndex);
             inPutLastBarOnChart = inputLastBarTime.ToString("yy MM dd HH_mm");
 
-            Parameters.Input parameters = new Parameters.Input()
+            Input parameters = new Input()
             {
                 BPlayback = bPlayback,
                 Name = Bars.Instrument.MasterInstrument.Name,
@@ -570,19 +556,17 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 parameters.BPlayback = true;
             }
 
-            List<CSV.CSV> CSv = new List<CSV.CSV>();
+            List<CSV> CSv = new List<CSV>();
             //  list to hold valiables in Executions table from NinjaTrader.sqlite
-            List<ExecutionsClass.Executions> listExecution = new List<ExecutionsClass.Executions>();
-            List<NTDrawLine.NTDrawLine> nTDrawline = new List<NTDrawLine.NTDrawLine>();
+            List<Executions> listExecution = new List<Executions>();
+            List<NTDrawLine> nTDrawline = new List<NTDrawLine>();
             //  list to hold Ret() format from listExecution
-            List<Ret.Ret> listExecutionRet = new List<Ret.Ret>();
-            Source.Source source = new Source.Source();
-            //List<Query> selectedList = new List<Query>();
-            List<Trade.Trade> workingTrades = new List<Trade.Trade>();
-            List<Trade.Trade> trades = new List<Trade.Trade>();
+            List<Ret> listExecutionRet = new List<Ret>();
+            Source source = new Source();
+            List<Trade> trades = new List<Trade>();
+
+            //  Call main()
             SqLiteExecutionsToListAndQueryResults.Program.main(parameters);
-
-
         }
 
         private void hideDrawsFunc()
@@ -633,6 +617,66 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
 
             #endregion From ABToolBars in Ryzen-2
+
+            drawSwitch = !drawSwitch;
+            chartWindow.ActiveChartControl.InvalidateVisual();
+            ForceRefresh();
+        }
+
+        private void hideUserDrawsFunc()
+        {
+            // toggle all drawing objects
+            // turns off historical drawings but future drawings will show until hidden
+
+            // Sets drawSwitch based on whether there are any drawings on the chart
+            //foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
+            foreach (DrawingTool dTL in DrawObjects.ToList())
+
+            {
+                var draw = dTL as DrawingTool;
+                if (draw != null)
+                {
+                    if (draw.IsVisible && draw.IsUserDrawn)
+                    //if (draw.IsVisible)
+
+                    {
+                        drawSwitch = true;
+                        btnUserDrawObjs.Background = Brushes.Green;
+                        break;
+                    }
+                    else
+                    {
+                        drawSwitch = false;
+                        btnUserDrawObjs.Background = Brushes.DimGray;
+
+                    }
+                }
+            }
+
+            //foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
+            foreach (DrawingTool dTL in DrawObjects.ToList())
+
+            {
+                //var draw = obj as DrawingTool;
+                var draw = dTL as DrawingTool;
+                if (draw != null)
+                {
+                    if (draw.IsUserDrawn)
+                    {
+                        if (drawSwitch)
+                        {
+                            draw.IsVisible = false;
+                            //btnUserDrawObjs.Background = Brushes.Green;
+                            // Print(draw.Name + " '" + draw.Tag + "' is hidden.");
+                        }
+                        else if (!drawSwitch)
+                        {
+                            draw.IsVisible = true;
+                            // Print(draw.Name + " '" + draw.Tag + "'  is visible.");
+                        }
+                    }
+                }
+            }
 
             drawSwitch = !drawSwitch;
             chartWindow.ActiveChartControl.InvalidateVisual();
@@ -773,6 +817,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
             if (btnTradeLines != null) chartWindow.MainMenu.Remove(btnTradeLines);
             btnTradeLines.Click -= btnTradeLinesClick;
+            if (btnUserDrawObjs != null) chartWindow.MainMenu.Remove(btnUserDrawObjs);
+            btnUserDrawObjs.Click -= btnUserDrawObjsClick;
             if (btnIndicators != null) chartWindow.MainMenu.Remove(btnIndicators);
             btnIndicators.Click -= btnIndicatorsClick;
             if (btnShowTrades != null) chartWindow.MainMenu.Remove(btnShowTrades);
@@ -783,6 +829,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnCreateCsv.Click -= btnCreateCsvClick;
 
         }
+
+
 
         #region Properties
         [NinjaScriptProperty]
@@ -815,10 +863,68 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         }
         #endregion
 
-
-
     }
 }
+
+#region Drawing tool not used
+//foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
+//{
+//             foreach (DrawingTool dTL in DrawObjects.ToList())
+//	{
+//		if (dTL.IsVisible && dTL.IsAttachedToNinjaScript)
+//		//	RemoveDrawObject(dTL.Tag);
+//		//Print(String.Format(dTL.Tag));
+//                 if (drawSwitch)
+//                 {
+//                     dTL.IsVisible = false;
+//                     // Print(draw.Name + " '" + draw.Tag + "' is hidden.");
+//                 }
+//                 else if (!drawSwitch)
+//                 {
+//                     dTL.IsVisible = true;
+//                     // Print(draw.Name + " '" + draw.Tag + "'  is visible.");
+//                 }
+
+//             }
+//             var draw = obj as DrawingTool;
+//    if (dtl != null)
+//    {
+//        //if (draw.IsVisible && draw.IsUserDrawn)
+//                     if (draw.IsVisible)
+
+//                     {
+//			Print(String.Format("draw.IsVisible is {0}", draw.IsVisible));
+//                         drawSwitch = true;
+//			break;
+//		}
+//		else
+//		{
+//			drawSwitch = false;
+//		}
+//    }
+//}
+
+//foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
+//{
+//    var draw = obj as DrawingTool;
+//    if (draw != null)
+//    {
+//        if (draw.IsUserDrawn)
+//        {						
+//			if (drawSwitch)green
+//			{
+//				draw.IsVisible = false;
+//				// Print(draw.Name + " '" + draw.Tag + "' is hidden.");
+//			}
+//			else if (!drawSwitch)
+//			{
+//				draw.IsVisible = true;
+//				// Print(draw.Name + " '" + draw.Tag + "'  is visible.");
+//			}
+//        }
+//    }
+//}
+#endregion Drawing tool not used
 
 #region NinjaScript generated code. Neither change nor remove.
 
@@ -826,19 +932,19 @@ namespace NinjaTrader.NinjaScript.Indicators
 {
 	public partial class Indicator : NinjaTrader.Gui.NinjaScript.IndicatorRenderBase
 	{
-		private My.RecordAndDisplayTradesWithButtonsRyzen2[] cacheRecordAndDisplayTradesWithButtonsRyzen2;
-		public My.RecordAndDisplayTradesWithButtonsRyzen2 RecordAndDisplayTradesWithButtonsRyzen2(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
+		private My.RecordAndDisplayTradesWithButtons[] cacheRecordAndDisplayTradesWithButtons;
+		public My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
 		{
-			return RecordAndDisplayTradesWithButtonsRyzen2(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
+			return RecordAndDisplayTradesWithButtons(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
 		}
 
-		public My.RecordAndDisplayTradesWithButtonsRyzen2 RecordAndDisplayTradesWithButtonsRyzen2(ISeries<double> input, DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
+		public My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(ISeries<double> input, DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
 		{
-			if (cacheRecordAndDisplayTradesWithButtonsRyzen2 != null)
-				for (int idx = 0; idx < cacheRecordAndDisplayTradesWithButtonsRyzen2.Length; idx++)
-					if (cacheRecordAndDisplayTradesWithButtonsRyzen2[idx] != null && cacheRecordAndDisplayTradesWithButtonsRyzen2[idx].StartTime == startTime && cacheRecordAndDisplayTradesWithButtonsRyzen2[idx].EndTime == endTime && cacheRecordAndDisplayTradesWithButtonsRyzen2[idx].InputFile == inputFile && cacheRecordAndDisplayTradesWithButtonsRyzen2[idx].OutputFile == outputFile && cacheRecordAndDisplayTradesWithButtonsRyzen2[idx].colorActiveCursor == colorActiveCursor && cacheRecordAndDisplayTradesWithButtonsRyzen2[idx].EqualsInput(input))
-						return cacheRecordAndDisplayTradesWithButtonsRyzen2[idx];
-			return CacheIndicator<My.RecordAndDisplayTradesWithButtonsRyzen2>(new My.RecordAndDisplayTradesWithButtonsRyzen2(){ StartTime = startTime, EndTime = endTime, InputFile = inputFile, OutputFile = outputFile, colorActiveCursor = colorActiveCursor }, input, ref cacheRecordAndDisplayTradesWithButtonsRyzen2);
+			if (cacheRecordAndDisplayTradesWithButtons != null)
+				for (int idx = 0; idx < cacheRecordAndDisplayTradesWithButtons.Length; idx++)
+					if (cacheRecordAndDisplayTradesWithButtons[idx] != null && cacheRecordAndDisplayTradesWithButtons[idx].StartTime == startTime && cacheRecordAndDisplayTradesWithButtons[idx].EndTime == endTime && cacheRecordAndDisplayTradesWithButtons[idx].InputFile == inputFile && cacheRecordAndDisplayTradesWithButtons[idx].OutputFile == outputFile && cacheRecordAndDisplayTradesWithButtons[idx].colorActiveCursor == colorActiveCursor && cacheRecordAndDisplayTradesWithButtons[idx].EqualsInput(input))
+						return cacheRecordAndDisplayTradesWithButtons[idx];
+			return CacheIndicator<My.RecordAndDisplayTradesWithButtons>(new My.RecordAndDisplayTradesWithButtons(){ StartTime = startTime, EndTime = endTime, InputFile = inputFile, OutputFile = outputFile, colorActiveCursor = colorActiveCursor }, input, ref cacheRecordAndDisplayTradesWithButtons);
 		}
 	}
 }
@@ -847,14 +953,14 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 {
 	public partial class MarketAnalyzerColumn : MarketAnalyzerColumnBase
 	{
-		public Indicators.My.RecordAndDisplayTradesWithButtonsRyzen2 RecordAndDisplayTradesWithButtonsRyzen2(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
+		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
 		{
-			return indicator.RecordAndDisplayTradesWithButtonsRyzen2(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
+			return indicator.RecordAndDisplayTradesWithButtons(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
 		}
 
-		public Indicators.My.RecordAndDisplayTradesWithButtonsRyzen2 RecordAndDisplayTradesWithButtonsRyzen2(ISeries<double> input , DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
+		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(ISeries<double> input , DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
 		{
-			return indicator.RecordAndDisplayTradesWithButtonsRyzen2(input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
+			return indicator.RecordAndDisplayTradesWithButtons(input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
 		}
 	}
 }
@@ -863,14 +969,14 @@ namespace NinjaTrader.NinjaScript.Strategies
 {
 	public partial class Strategy : NinjaTrader.Gui.NinjaScript.StrategyRenderBase
 	{
-		public Indicators.My.RecordAndDisplayTradesWithButtonsRyzen2 RecordAndDisplayTradesWithButtonsRyzen2(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
+		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
 		{
-			return indicator.RecordAndDisplayTradesWithButtonsRyzen2(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
+			return indicator.RecordAndDisplayTradesWithButtons(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
 		}
 
-		public Indicators.My.RecordAndDisplayTradesWithButtonsRyzen2 RecordAndDisplayTradesWithButtonsRyzen2(ISeries<double> input , DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
+		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(ISeries<double> input , DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
 		{
-			return indicator.RecordAndDisplayTradesWithButtonsRyzen2(input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
+			return indicator.RecordAndDisplayTradesWithButtons(input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
 		}
 	}
 }
