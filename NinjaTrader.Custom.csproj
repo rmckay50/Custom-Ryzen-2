@@ -127,8 +127,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddOns\ReturnedClass.cs" />
-    <Compile Include="AddOns\TryCatchClass.cs" />
     <Compile Include="BarsTypes\%40DayBarsType.cs" />
     <Compile Include="BarsTypes\%40HeikenAshiBarsType.cs" />
     <Compile Include="BarsTypes\%40KagiBarsType.cs" />
@@ -412,17 +410,13 @@
     <Compile Include="SuperDomColumns\%40Notes.cs" />
     <Compile Include="SuperDomColumns\%40ProfitLoss.cs" />
     <Compile Include="SuperDomColumns\%40Volume.cs" />
-    <Compile Include="Indicators\AB\ABToolbarButtons.cs" />
-    <Compile Include="Indicators\My\%40%40TryCatchExample.cs" />
     <Compile Include="obj\Debug\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
-    <Compile Include="Indicators\My\%40%40ReturnedClass.cs" />
-    <Compile Include="Indicators\My\%40%40DrawLineTestFromCsv.cs" />
-    <Compile Include="Indicators\My\DrawLineTestFromCsvSqLite.cs" />
-    <Compile Include="ListExecutionQuery.cs" />
     <Compile Include="Indicators\My\RecordAndDisplayTradesWithButtonsRyzen2.cs" />
     <Compile Include="AddOns\SqLiteExecutionsExtension.cs" />
     <Compile Include="AddOns\SqLiteExecutionsToListAndQueryResults.cs" />
     <Compile Include="AddOns\ButtonsLineCSFilesAddOns.cs" />
+    <Compile Include="Indicators\My\%40%40RecordAndDisplayTradesWithButtons.cs" />
+    <Compile Include="Indicators\PrintTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource.resx">
