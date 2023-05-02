@@ -33,7 +33,7 @@ using System.Diagnostics;
 //This namespace holds Indicators in this folder and is required. Do not change it. 
 namespace NinjaTrader.NinjaScript.Indicators.My
 {
-	public class Print : Indicator
+	public class Printer : Indicator
 	{
 		private bool firstPass;
 		private string userName = Environment.UserName;
@@ -115,19 +115,19 @@ namespace NinjaTrader.NinjaScript.Indicators
 {
 	public partial class Indicator : NinjaTrader.Gui.NinjaScript.IndicatorRenderBase
 	{
-		private My.Print[] cachePrint;
-		public My.Print Print(string inputFile, string outputFile)
+		private My.Printer[] cachePrinter;
+		public My.Printer Printer(string inputFile, string outputFile)
 		{
-			return Print(Input, inputFile, outputFile);
+			return Printer(Input, inputFile, outputFile);
 		}
 
-		public My.Print Print(ISeries<double> input, string inputFile, string outputFile)
+		public My.Printer Printer(ISeries<double> input, string inputFile, string outputFile)
 		{
-			if (cachePrint != null)
-				for (int idx = 0; idx < cachePrint.Length; idx++)
-					if (cachePrint[idx] != null && cachePrint[idx].InputFile == inputFile && cachePrint[idx].OutputFile == outputFile && cachePrint[idx].EqualsInput(input))
-						return cachePrint[idx];
-			return CacheIndicator<My.Print>(new My.Print(){ InputFile = inputFile, OutputFile = outputFile }, input, ref cachePrint);
+			if (cachePrinter != null)
+				for (int idx = 0; idx < cachePrinter.Length; idx++)
+					if (cachePrinter[idx] != null && cachePrinter[idx].InputFile == inputFile && cachePrinter[idx].OutputFile == outputFile && cachePrinter[idx].EqualsInput(input))
+						return cachePrinter[idx];
+			return CacheIndicator<My.Printer>(new My.Printer(){ InputFile = inputFile, OutputFile = outputFile }, input, ref cachePrinter);
 		}
 	}
 }
@@ -136,14 +136,14 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 {
 	public partial class MarketAnalyzerColumn : MarketAnalyzerColumnBase
 	{
-		public Indicators.My.Print Print(string inputFile, string outputFile)
+		public Indicators.My.Printer Printer(string inputFile, string outputFile)
 		{
-			return indicator.Print(Input, inputFile, outputFile);
+			return indicator.Printer(Input, inputFile, outputFile);
 		}
 
-		public Indicators.My.Print Print(ISeries<double> input , string inputFile, string outputFile)
+		public Indicators.My.Printer Printer(ISeries<double> input , string inputFile, string outputFile)
 		{
-			return indicator.Print(input, inputFile, outputFile);
+			return indicator.Printer(input, inputFile, outputFile);
 		}
 	}
 }
@@ -152,14 +152,14 @@ namespace NinjaTrader.NinjaScript.Strategies
 {
 	public partial class Strategy : NinjaTrader.Gui.NinjaScript.StrategyRenderBase
 	{
-		public Indicators.My.Print Print(string inputFile, string outputFile)
+		public Indicators.My.Printer Printer(string inputFile, string outputFile)
 		{
-			return indicator.Print(Input, inputFile, outputFile);
+			return indicator.Printer(Input, inputFile, outputFile);
 		}
 
-		public Indicators.My.Print Print(ISeries<double> input , string inputFile, string outputFile)
+		public Indicators.My.Printer Printer(ISeries<double> input , string inputFile, string outputFile)
 		{
-			return indicator.Print(input, inputFile, outputFile);
+			return indicator.Printer(input, inputFile, outputFile);
 		}
 	}
 }
