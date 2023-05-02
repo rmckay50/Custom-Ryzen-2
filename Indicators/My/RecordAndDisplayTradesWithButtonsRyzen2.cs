@@ -1,14 +1,38 @@
+#region Comments
+/*
+ * 2022 12 15 1900  
+ *	Added script in 'State.DataLoaded' to draw lines from 
+ *	Changed hideDrawsFunc() to get IsAttachedToNinjaScript for each line - drawn by indicator
+ * 
+ * 2023 02 16 1145 
+ *  adding 'ReadCsvAndDrawLines' which reads file from .csv draws the lines
+ *  on load the files is read in State.Loaded
+ *  
+ * 2023 02 18 1225 
+ *  transfer from 'ToolbarButtonsCopy'
+ *  selecting a file for output other than 'csvNTDrawline.csv' allows display of prior trades
+ *      selecting NQ Playback xxxx will show trades from that run
+ *      
+ * 2023 04 25 1200  
+ *  'SqLiteExecutionsToListAndQueryResults' works correctly as .dll 
+ *  attemptiong transfer to AddOns
+*/
+#endregion Comments
+
 #region Using declarations
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 using NinjaTrader.Cbi;
 using NinjaTrader.Gui;
@@ -19,6 +43,10 @@ using NinjaTrader.Data;
 using NinjaTrader.NinjaScript;
 using NinjaTrader.Core.FloatingPoint;
 using NinjaTrader.NinjaScript.DrawingTools;
+using LINQtoCSV;
+using NinjaTrader.Gui.NinjaScript;
+using NinjaTrader.Custom.AddOns;
+using Trade = NinjaTrader.Custom.AddOns.Trade;
 #endregion
 
 //This namespace holds Indicators in this folder and is required. Do not change it. 
