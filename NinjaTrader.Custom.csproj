@@ -414,10 +414,10 @@
     <Compile Include="SuperDomColumns\%40Volume.cs" />
     <Compile Include="Indicators\PrintTest.cs" />
     <Compile Include="obj\Debug\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
-    <Compile Include="Indicators\My\RecordAndDisplayTradesWithButtons.cs" />
     <Compile Include="AddOns\ButtonsLineCSFilesAddOns.cs" />
     <Compile Include="AddOns\SqLiteExecutionsExtension.cs" />
     <Compile Include="AddOns\SqLiteExecutionsToListAndQueryResults.cs" />
+    <Compile Include="Indicators\My\RecordAndDisplayTradesWithButtons.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource.resx">

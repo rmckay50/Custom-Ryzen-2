@@ -69,13 +69,13 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         private new System.Windows.Controls.Button btnHideWicks;
         private new System.Windows.Controls.Button btnCreateCsv;
 
-
         private bool IsToolBarButtonAdded;
 
         private IEnumerable<NTDrawLine> returnedClass;
         private DateTime inputFirstBarTime, inputLastBarTime;
         private string inputFirstBarOnChart, inPutLastBarOnChart;
-
+        //  use to hold last ChartExecutionStyle
+        private ChartExecutionStyle startingExecutionStyle = ChartExecutionStyle.DoNotPlot;
 
         protected override void OnStateChange()
         {
@@ -397,8 +397,11 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             if (button != null)
             {
                 // toggle trades				
+                //  used for saving plot style so that is can be change back to original
+                //var startingExecutionStyle = ChartExecutionStyle.DoNotPlot;
                 foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
                 {
+
                     var trades = obj as ChartBars;
                     if (trades != null)
                     {
@@ -406,20 +409,42 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                         {
                             case ChartExecutionStyle.DoNotPlot:
                                 {
-                                    trades.Properties.PlotExecutions = ChartExecutionStyle.MarkersOnly;
-                                    btnShowTrades.Background = Brushes.DimGray;
+                                    if (startingExecutionStyle == ChartExecutionStyle.MarkersOnly)
+                                    {
+                                        trades.Properties.PlotExecutions = ChartExecutionStyle.MarkersOnly;
+                                        btnShowTrades.Background = Brushes.DimGray;
+                                        goto Done;
+                                    }
+                                    else if (startingExecutionStyle == ChartExecutionStyle.TextAndMarker)
+                                    {
+                                        trades.Properties.PlotExecutions = ChartExecutionStyle.TextAndMarker;
+                                        btnShowTrades.Background = Brushes.DimGray;
+                                        goto Done;
+                                    }
                                     break;
                                 }
                             case ChartExecutionStyle.MarkersOnly:
                                 {
+                                    startingExecutionStyle = ChartExecutionStyle.MarkersOnly;
                                     trades.Properties.PlotExecutions = ChartExecutionStyle.DoNotPlot;
                                     btnShowTrades.Background = Brushes.Green;
                                     break;
                                 }
+                            case ChartExecutionStyle.TextAndMarker:
+                                {
+                                    startingExecutionStyle = ChartExecutionStyle.TextAndMarker;
+                                    trades.Properties.PlotExecutions = ChartExecutionStyle.DoNotPlot;
+                                    btnShowTrades.Background = Brushes.Green;
+                                    break;
+                                }
+
+                            Done:
+                                continue;
+
                         }
+
                     }
                 }
-
                 chartWindow.ActiveChartControl.InvalidateVisual();
                 ForceRefresh();
             }
