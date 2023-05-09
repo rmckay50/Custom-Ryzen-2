@@ -263,7 +263,7 @@ namespace NinjaTrader.Custom.AddOns
                 );
 
                 //  replace name (local declaration) to input.Name (calling program definition)
-                var fileName = input.Name.ToUpper() + "                " + input.TimeFirstBarOnChart + ".csv";
+                var fileName = input.Name.ToUpper() + "                " + input.TimeLastBarOnChart + ".csv";
                 var dir = Path.GetDirectoryName(input.OutputPath); ;
 
                 if (input.BPlayback != true)
