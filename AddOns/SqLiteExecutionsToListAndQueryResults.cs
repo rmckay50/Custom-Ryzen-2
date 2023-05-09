@@ -258,7 +258,7 @@ namespace NinjaTrader.Custom.AddOns
                 CsvContext cc = new CsvContext();
                 cc.Write
                 (
-                source.NTDrawLine,
+                columnsWithAttributes,
                 input.OutputPath
                 );
 
@@ -268,14 +268,14 @@ namespace NinjaTrader.Custom.AddOns
 
                 if (input.BPlayback != true)
                 {
-                    cc.Write(source.NTDrawLine, dir + @"\" + fileName);
+                    cc.Write(columnsWithAttributes, dir + @"\" + fileName);
                 }
                 else
                 {
                     //  lastBarTime is set in NT 'ChartBars.GetTimeByBarIdx(ChartControl, ChartBars.ToIndex)); //8/11/2015 4:30:00 AM'
                     string l = input.TimeLastBarOnChart;
                     fileName = input.Name.ToUpper() + " Playback " + input.TimeFirstBarOnChart + " To " + input.TimeLastBarOnChart + ".csv";
-                    cc.Write(source.NTDrawLine, dir + @"\" + fileName);
+                    cc.Write(columnsWithAttributes, dir + @"\" + fileName);
                 }
 
                 #endregion
