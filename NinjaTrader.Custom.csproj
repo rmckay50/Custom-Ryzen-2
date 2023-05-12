@@ -416,7 +416,6 @@
     <Compile Include="AddOns\SqLiteExecutionsToListAndQueryResults.cs" />
     <Compile Include="AddOns\ButtonsLineCSFilesAddOns.cs" />
     <Compile Include="Indicators\My\%40%40RecordAndDisplayTradesWithButtons.cs" />
-    <Compile Include="Indicators\My\%40%40TestGitHubHistory.cs" />
     <Compile Include="Indicators\%40%40PrintTest.cs" />
   </ItemGroup>
   <ItemGroup>
