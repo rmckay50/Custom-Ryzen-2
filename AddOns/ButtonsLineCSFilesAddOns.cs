@@ -340,7 +340,7 @@ namespace NinjaTrader.Custom.AddOns
                 instList = (from list in listExecutionRet
                                 //where (Int64)list.Instrument == (Int64)62124056207858786      //  62124056207858786
                                 //  this where is eleminating all trades.  Don't know why
-                                //where list.Time > (sDateUtc.Ticks)
+                            where list.Time > (sDateUtc.Ticks)
                             where list.Account == account
                             select new Ret()
                             {
