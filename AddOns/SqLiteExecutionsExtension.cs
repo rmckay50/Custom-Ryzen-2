@@ -307,6 +307,7 @@ namespace NinjaTrader.Custom.AddOns
             //{
             var s = source.Trades[0].Id;
             //	start is first row above exit row
+            //  will throw exception if trade start is proir to selected date in indidator setup
             int start = source.Trades[source.rowInTrades - 1].Id;
             for (int i = source.Trades[source.rowInTrades - 1].Id; i >= 0; i--)
             {
