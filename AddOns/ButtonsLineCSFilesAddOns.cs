@@ -191,7 +191,7 @@ namespace NinjaTrader.Custom.AddOns
             var startTicks = sDateUtc.Ticks;
             DateTime eDate = DateTime.Parse(endDate);                           //.Dump("eDate")
             DateTime eDateUtc = TimeZoneInfo.ConvertTimeToUtc(eDate);           //.Dump("eDateUtc")
-
+            var endTicks = eDateUtc.Ticks;
 
             using (var db = new System.Data.SQLite.SQLiteConnection(path))
             {
@@ -340,7 +340,7 @@ namespace NinjaTrader.Custom.AddOns
                 instList = (from list in listExecutionRet
                                 //where (Int64)list.Instrument == (Int64)62124056207858786      //  62124056207858786
                                 //  this where is eleminating all trades.  Don't know why
-                            where list.Time > sDateUtc.Ticks
+                            where list.Time > sDateUtc.Ticks && list.Time < eDateUtc.Ticks
                             where list.Account == account
                             select new Ret()
                             {
