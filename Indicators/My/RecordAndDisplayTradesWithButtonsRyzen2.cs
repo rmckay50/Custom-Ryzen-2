@@ -77,6 +77,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
         private ChartExecutionStyle startingExecutionStyle = ChartExecutionStyle.DoNotPlot;
 
+        //  Get Username from Environment.UserName for InputFile and OutputFile initialization
+        private string userName = Environment.UserName;
+
         protected override void OnStateChange()
         {
             if (State == State.SetDefaults)
@@ -96,8 +99,10 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 StartTime = DateTime.Parse("12/01/ 2023");
                 EndTime = DateTime.Parse("12/30/ 2023");
                 EnumValue = MyEnum.Futures;
-                InputFile = @"C:\Users\Owner\Documents\NinjaTrader 8\db\NinjaTrader.sqlite";
-                OutputFile = @"C:\Users\Owner\Documents\NinjaTrader 8\csvNTDrawline.csv";
+                //  The userName needs to be correct to keep ReadCsvAndDrawLines() in State.Historical from throwing exception
+                InputFile = @"C:\Users\" + userName + @"\Documents\NinjaTrader 8\db\NinjaTrader.sqlite"; 
+                OutputFile = @"C:\Users\" + userName + @"\Documents\NinjaTrader 8\csvNTDrawline.csv";
+
             }
             else if (State == State.Configure)
             {

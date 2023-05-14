@@ -34,7 +34,7 @@ namespace NinjaTrader.Custom.AddOns
         {
             return (IEnumerator)this;                                                                       //	class CSV
         }
-    }
+    } 
     public class Executions
     {
         public Int64 Id { get; set; }
@@ -347,7 +347,6 @@ namespace NinjaTrader.Custom.AddOns
                                 InstId = (long?)0,
                                 ExecId = list.ExecId,
                                 Account = list.Account,
-                                //Name = symbol,
                                 Name = list.Name,
                                 Position = list.Position,
                                 Quantity = list.Quantity,

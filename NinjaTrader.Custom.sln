@@ -5,10 +5,6 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NinjaTrader.Custom", "NinjaTrader.Custom.csproj", "{AF9FA825-F452-4071-ACE9-FAB5B44A013E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parameters", "..\..\..\..\source\repos\SqLiteExecutionsToListAndQueryResults\Parameters\Parameters.csproj", "{0C64057C-D9F9-42C4-B20E-04B322C75437}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqLiteExecutionsToListAndQueryResults", "..\..\..\..\source\repos\SqLiteExecutionsToListAndQueryResults\ported from SqLiteExecutionsToListAndQueryResults\SqLiteExecutionsToListAndQueryResults.csproj", "{373C676B-3016-4B5C-A7E0-0AAC2AE58A9B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,22 +21,6 @@ Global
 		{AF9FA825-F452-4071-ACE9-FAB5B44A013E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AF9FA825-F452-4071-ACE9-FAB5B44A013E}.Release|x64.ActiveCfg = Release|x64
 		{AF9FA825-F452-4071-ACE9-FAB5B44A013E}.Release|x64.Build.0 = Release|x64
-		{0C64057C-D9F9-42C4-B20E-04B322C75437}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0C64057C-D9F9-42C4-B20E-04B322C75437}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0C64057C-D9F9-42C4-B20E-04B322C75437}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{0C64057C-D9F9-42C4-B20E-04B322C75437}.Debug|x64.Build.0 = Debug|Any CPU
-		{0C64057C-D9F9-42C4-B20E-04B322C75437}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0C64057C-D9F9-42C4-B20E-04B322C75437}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0C64057C-D9F9-42C4-B20E-04B322C75437}.Release|x64.ActiveCfg = Release|Any CPU
-		{0C64057C-D9F9-42C4-B20E-04B322C75437}.Release|x64.Build.0 = Release|Any CPU
-		{373C676B-3016-4B5C-A7E0-0AAC2AE58A9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{373C676B-3016-4B5C-A7E0-0AAC2AE58A9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{373C676B-3016-4B5C-A7E0-0AAC2AE58A9B}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{373C676B-3016-4B5C-A7E0-0AAC2AE58A9B}.Debug|x64.Build.0 = Debug|Any CPU
-		{373C676B-3016-4B5C-A7E0-0AAC2AE58A9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{373C676B-3016-4B5C-A7E0-0AAC2AE58A9B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{373C676B-3016-4B5C-A7E0-0AAC2AE58A9B}.Release|x64.ActiveCfg = Release|Any CPU
-		{373C676B-3016-4B5C-A7E0-0AAC2AE58A9B}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

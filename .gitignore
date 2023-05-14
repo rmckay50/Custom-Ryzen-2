@@ -369,6 +369,5 @@ FodyWeavers.xsd
 /pt-PT/NinjaTrader.Custom.resources.dll
 /ru-RU/NinjaTrader.Custom.resources.dll
 /zh-Hans/NinjaTrader.Custom.resources.dll
-/NinjaTrader.Custom.csproj
 /NinjaTrader.Custom.dll
-/NinjaTrader.Custom.xml
+/NinjaTrader.Custom.csproj
