@@ -34,7 +34,7 @@ namespace NinjaTrader.Custom.AddOns
         {
             return (IEnumerator)this;                                                                       //	class CSV
         }
-    } 
+    }
     public class Executions
     {
         public Int64 Id { get; set; }
@@ -273,11 +273,6 @@ namespace NinjaTrader.Custom.AddOns
                 }
 
             }
-
-
-            ///<summary>
-            ///<param>Select needed properties for Ret (instList return)</param>
-            /// </summary>
             try
             {
                 foreach (var execList in listExecution)
@@ -329,7 +324,6 @@ namespace NinjaTrader.Custom.AddOns
                     account = 1;
                 }
                 instList = (from list in listExecutionRet
-                                //  this where is eleminating all trades.  Don't know why
                             where list.Time > sDateUtc.Ticks && list.Time < eDateUtc.Ticks
                             where list.Account == account
                             select new Ret()
@@ -543,5 +537,3 @@ namespace NinjaTrader.Custom.AddOns
         }
     }
 }
-	
-//}
