@@ -98,7 +98,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 EnumValue = MyEnum.Futures;
                 //InputFile = @"C:\Users\Owner\Documents\NinjaTrader 8\db\NinjaTrader.sqlite";
                 //OutputFile = @"C:\Users\Owner\Documents\NinjaTrader 8\csvNTDrawline.csv";
-                InputFile = @"C:\Users\Rod\Documents\NinjaTrader 8\db\NinjaTrader.sqlite";
+                InputFile = @"C:\Users\Rod\Documents\NinjaTrader 8\db\NinjaTrader.sqlite"; 
                 OutputFile = @"C:\Users\Rod\Documents\NinjaTrader 8\csvNTDrawline.csv";
 
             }
