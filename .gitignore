@@ -361,3 +361,13 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/de-DE/NinjaTrader.Custom.resources.dll
+/es-ES/NinjaTrader.Custom.resources.dll
+/fr-FR/NinjaTrader.Custom.resources.dll
+/it-IT/NinjaTrader.Custom.resources.dll
+/ko-KR/NinjaTrader.Custom.resources.dll
+/pt-PT/NinjaTrader.Custom.resources.dll
+/ru-RU/NinjaTrader.Custom.resources.dll
+/zh-Hans/NinjaTrader.Custom.resources.dll
+/NinjaTrader.Custom.dll
+/NinjaTrader.Custom.csproj
