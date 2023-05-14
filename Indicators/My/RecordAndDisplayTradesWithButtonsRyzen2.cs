@@ -96,8 +96,11 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 StartTime = DateTime.Parse("12/01/ 2023");
                 EndTime = DateTime.Parse("12/30/ 2023");
                 EnumValue = MyEnum.Futures;
-                InputFile = @"C:\Users\Owner\Documents\NinjaTrader 8\db\NinjaTrader.sqlite";
-                OutputFile = @"C:\Users\Owner\Documents\NinjaTrader 8\csvNTDrawline.csv";
+                //InputFile = @"C:\Users\Owner\Documents\NinjaTrader 8\db\NinjaTrader.sqlite";
+                //OutputFile = @"C:\Users\Owner\Documents\NinjaTrader 8\csvNTDrawline.csv";
+                InputFile = @"C:\Users\Rod\Documents\NinjaTrader 8\db\NinjaTrader.sqlite";
+                OutputFile = @"C:\Users\Rod\Documents\NinjaTrader 8\csvNTDrawline.csv";
+
             }
             else if (State == State.Configure)
             {
