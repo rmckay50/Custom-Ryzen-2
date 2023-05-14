@@ -89,3 +89,7 @@
     project is underway to use .cs files in NT AddOns instead of .dlls for ease of acces when changeing and duplication flies for ZBook and Ryzen-1  
     'RecordAndDisplayTradesWithButtonsRyzen2' is source controlled in 'https://github.com/rmckay49/Custom-Ryzen-2.git'  
 
+```
+
+2023 05 14 1250  
+	commit - all files for 'RecordAndDisplayTradesWithButtons' and AddOns are synced  
