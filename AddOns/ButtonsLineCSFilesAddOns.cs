@@ -198,12 +198,6 @@ namespace NinjaTrader.Custom.AddOns
                 try
                 {
                     db.Open();
-                    ///<summary>
-                    ///<param> create reader, command </param>
-                    ///<
-                    /// </summary>
-                    /// 
-
                     SQLiteDataReader reader;
                     SQLiteCommand sqlite_cmd;
                     sqlite_cmd = db.CreateCommand();
@@ -212,7 +206,6 @@ namespace NinjaTrader.Custom.AddOns
                     reader = sqlite_cmd.ExecuteReader();
 
                     //  used to hold data after read from db
-
                     while (reader.Read())
                     {
                         Executions exec = new Executions();
@@ -295,8 +288,6 @@ namespace NinjaTrader.Custom.AddOns
                         //	fill new list 
                         list.InstId = (long?)0;
                         list.ExecId = execList.Id;
-                        //list.Name = symbol;
-                        //  name is one of parameters in call to this .dll form
                         list.Name = name;
                         list.Account = execList.Account;
                         list.Position = execList.Position;
@@ -338,7 +329,6 @@ namespace NinjaTrader.Custom.AddOns
                     account = 1;
                 }
                 instList = (from list in listExecutionRet
-                                //where (Int64)list.Instrument == (Int64)62124056207858786      //  62124056207858786
                                 //  this where is eleminating all trades.  Don't know why
                             where list.Time > sDateUtc.Ticks && list.Time < eDateUtc.Ticks
                             where list.Account == account
