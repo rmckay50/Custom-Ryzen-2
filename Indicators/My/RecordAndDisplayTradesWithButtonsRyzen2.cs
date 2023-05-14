@@ -445,7 +445,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                                 continue;
 
                         }
-
                     }
                 }
                 chartWindow.ActiveChartControl.InvalidateVisual();
@@ -469,10 +468,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 CreateCvsFunc();
             }
         }
-        /// <summary>
-        /// Create 'C:\data\csvNTDrawline.csv'
-        /// </summary>
-        /// 
         private void ReadCsvAndDrawLines()
         {
             #region Use LINQtoCSV to read "csvNTDrawline.csv"
@@ -659,14 +654,11 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             // Sets drawSwitch based on whether there are any drawings on the chart
             //foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
             foreach (DrawingTool dTL in DrawObjects.ToList())
-
             {
                 var draw = dTL as DrawingTool;
                 if (draw != null)
                 {
                     if (draw.IsVisible && draw.IsUserDrawn)
-                    //if (draw.IsVisible)
-
                     {
                         drawSwitch = true;
                         btnUserDrawObjs.Background = Brushes.Green;
@@ -676,14 +668,12 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     {
                         drawSwitch = false;
                         btnUserDrawObjs.Background = Brushes.DimGray;
-
                     }
                 }
             }
 
             //foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
             foreach (DrawingTool dTL in DrawObjects.ToList())
-
             {
                 //var draw = obj as DrawingTool;
                 var draw = dTL as DrawingTool;
