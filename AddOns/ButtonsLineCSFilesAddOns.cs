@@ -34,7 +34,7 @@ namespace NinjaTrader.Custom.AddOns
         {
             return (IEnumerator)this;                                                                       //	class CSV
         }
-    }
+    } 
     public class Executions
     {
         public Int64 Id { get; set; }
