@@ -96,8 +96,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 ActiveCursorColor = Brushes.DarkGreen;
                 InactiveCursorColor = Brushes.DimGray;
                 IsSuspendedWhileInactive = true;
-                StartTime   = DateTime.Parse("12/01/ 2023");
-                EndTime     = DateTime.Parse("12/30/ 2023");
+                StartTime   = DateTime.Parse("05/01/ 2023");
+                EndTime     = DateTime.Parse("05/30/ 2023");
                 EnumValue   = MyEnum.Futures;
                 //  The userName needs to be correct to keep ReadCsvAndDrawLines() in State.Historical from throwing exception
                 InputFile = @"C:\Users\" + userName + @"\Documents\NinjaTrader 8\db\NinjaTrader.sqlite";
