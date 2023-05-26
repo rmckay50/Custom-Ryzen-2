@@ -532,7 +532,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 };
                 #endregion Determine brush color
 
-                #region Draw.Line()
+                #region Draw.Line() 
                 Draw.Line
                     (this,
                     i.ToString(),
