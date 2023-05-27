@@ -54,7 +54,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 {
 	public class RecordAndDisplayTradesWithButtonsRyzen2 : Indicator
     {
-
         private bool drawSwitch;
         private bool indiSwitch;
 
@@ -495,7 +494,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             foreach (var rc in returnedClass)
             {
                 #region Print rc - Commented Out
-                /*
+                ///*
                 Print(String.Format("\ncombinedQry.csv: {0} {1} {2} {3} {4} {5} {6} {7} {8} ", 
                     rc.Id, 
                     rc.StartTimeTicks, 
@@ -506,7 +505,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     rc.EndY, 
                     rc.P_L, 
                     rc.Long_Short));
-                */
+                //*/
                 #endregion Print rc - Commented Out
 
                 #region Determine brush color
@@ -532,7 +531,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 };
                 #endregion Determine brush color
 
-                #region Draw.Line() 
+                #region Draw.Line()
                 Draw.Line
                     (this,
                     i.ToString(),
@@ -545,6 +544,22 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     DashStyleHelper.Solid,
                     5);
                 #endregion Draw.Line()
+                #region Draw.Text()
+                try
+                {
+                var st = DateTime.Parse("08/18/2018 07:22:16");
+                    int barsAgo = CurrentBar - Bars.GetBar(DateTime.Parse(rc.StartTime));
+                    Print(String.Format("CurrentBar is {0} {1}", CurrentBar.ToString(), barsAgo.ToString()));
+                    // Print out the 9 AM bar closing price
+                    Print("The close price on the 9 AM bar was: " + Close[barsAgo].ToString());
+                    //firstPass = false;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+
+                #endregion Draw.Text()
 
                 i++;
             }
