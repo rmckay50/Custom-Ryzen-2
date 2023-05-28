@@ -26,14 +26,19 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 {
 	public class GetBarNumber : Indicator
 	{
-		private int barNumber;
+        private int _barCntr = 1;
+        private int barNumber;
 		private DateTime startTime = DateTime.Parse("08:54:05  05/25/2023");
 		private bool firstPass = true;
-		protected override void OnStateChange()
+        private bool _textIsBelowBars = true;
+        private int _fontSize = 14;
+        private int _pixelsAboveBelowBar = -50;
+        private Brush _textColorDefinedbyUser = Brushes.Gray;
+        protected override void OnStateChange()
 		{
 			if (State == State.SetDefaults)
 			{
-				Description = @"Enter the description for your new custom Indicator here.";
+				Description = @"Attempting to get number of bar using GetBar().";
 				Name = "GetBarNumber";
 				Calculate = Calculate.OnBarClose;
 				IsOverlay = false;
@@ -53,35 +58,60 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 			else if (State == State.Historical)
 			{
 			}
-		}
+            else if (State == State.DataLoaded)
+            {
+                //clear the output window as soon as the bars data is loaded
+                ClearOutputWindow();
+            }
+        }
 
 		protected override void OnBarUpdate()
 		{
-			//// Check that its past 9:45 AM
-			//if (ToTime(Time[0]) >= ToTime(9, 45, 00))
-			//{
-			//    // Calculate the bars ago value for the 9 AM bar for the current day
-			//    int barsAgo = Bars.GetBar(new DateTime(2023, 05, 26, 7, 30, 0));
+            double _textYStartingPoint = High[0]; //position text above or below bars
+            if (_textIsBelowBars)
+                _textYStartingPoint = Low[0];
+            NinjaTrader.Gui.Tools.SimpleFont myFont = new NinjaTrader.Gui.Tools.SimpleFont("Courier New", 14) { Size = _fontSize, Bold = false };
+				var st = DateTime.Parse("08/18/2018 07:22:16");
 
-			//    // Print out the 9 AM bar closing price
-			//    Print("The close price on the 9 AM bar was: " + Close[barsAgo].ToString());
-			//}
-			//if (CurrentBar > 0)
-			//{
-				try
-				{
-					int barsAgo = CurrentBar - Bars.GetBar(startTime);
-					Print(String.Format("CurrentBar is {0} {1}", CurrentBar.ToString(), barsAgo.ToString()));
+            if (CurrentBar < 5)
+			{
+				Print("Bar number: " + CurrentBar.ToString());
+				Print("Bar time: " + Time[0].ToString() + "Bar Close: " + Close[0]);
+            // Check that its past 9:45 AM
+            if (ToTime(Time[0]) == ToTime(7, 35, 00))
+			{
+					//	Text to print
+					var pL = 6.20;
+				// Calculate the bars ago value for the 9 AM bar for the current day
+				//int barsAgo = Bars.GetBar(new DateTime(2023, 05, 26, 7, 35, 0));
+                    int barsAgo = Bars.GetBar(st);
+
+                    Print("barsAgo:" + barsAgo.ToString());
 					// Print out the 9 AM bar closing price
-					Print("The close price on the 9 AM bar was: " + Close[barsAgo].ToString());
-					firstPass = false;
-				}
-				catch (Exception ex)
-				{
-					Console.WriteLine(ex.ToString());
-				}
-			//}
-		}
+					Print("*** The close price on the 7:35 AM bar was: " + Close[barsAgo].ToString());
+					//Draw.Text(this, CurrentBar.ToString(), true, _barCntr.ToString(), 0, _textYStartingPoint, _pixelsAboveBelowBar, _textColorDefinedbyUser, myFont, TextAlignment.Center, null, null, 1);
+                    Draw.Text(this, CurrentBar.ToString(), true, pL.ToString(), 0, _textYStartingPoint, _pixelsAboveBelowBar, _textColorDefinedbyUser, myFont, TextAlignment.Center, null, null, 1);
+
+                    //Print("The close price on the 9 AM bar was: " + Close[0].ToString());
+
+                }
+            }
+            //if (CurrentBar > 0)
+            //{
+            //	try
+            //	{
+            //		int barsAgo = CurrentBar - Bars.GetBar(startTime);
+            //		Print(String.Format("CurrentBar is {0} {1}", CurrentBar.ToString(), barsAgo.ToString()));
+            //		// Print out the 9 AM bar closing price
+            //		Print("The close price on the 9 AM bar was: " + Close[barsAgo].ToString());
+            //		firstPass = false;
+            //	}
+            //	catch (Exception ex)
+            //	{
+            //		Console.WriteLine(ex.ToString());
+            //	}
+            ////}
+        }
 
     }
 }

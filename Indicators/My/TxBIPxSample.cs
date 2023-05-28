@@ -74,14 +74,14 @@ namespace NinjaTrader.NinjaScript.Indicators
 		private DateTime endDateTime;
 		protected override void OnBarUpdate()
 		{
-//			if (State != State.Realtime)
-//				return;
+			if (State != State.Realtime)
+				return;
 			if (CurrentBars[0]<1 || CurrentBars[1]<1)
 				return;
-			
-//			if(CurrentBar<1)
-//				return;
-					
+
+			if (CurrentBar < 1)
+				return;
+
 			// Check to make sure the end time is not earlier than the start time
 			if (EndHour < StartHour)
 			    return;

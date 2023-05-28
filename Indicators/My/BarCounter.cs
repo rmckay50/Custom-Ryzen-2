@@ -21,8 +21,9 @@ using NinjaTrader.Core.FloatingPoint;
 using NinjaTrader.NinjaScript.DrawingTools;
 #endregion
 
+//  https://ninjatraderecosystem.com/user-app-share-download/bar-counter/
 //This namespace holds Indicators in this folder and is required. Do not change it. 
-namespace NinjaTrader.NinjaScript.Indicators
+namespace NinjaTrader.NinjaScript.Indicators.My
 {
     public class BarCounter : Indicator
     {
@@ -157,19 +158,19 @@ namespace NinjaTrader.NinjaScript.Indicators
 {
 	public partial class Indicator : NinjaTrader.Gui.NinjaScript.IndicatorRenderBase
 	{
-		private BarCounter[] cacheBarCounter;
-		public BarCounter BarCounter(bool showOddNumbers, Brush textColor, int textFontSize, int pixelsAboveBelow, bool textIsBelowBars)
+		private My.BarCounter[] cacheBarCounter;
+		public My.BarCounter BarCounter(bool showOddNumbers, Brush textColor, int textFontSize, int pixelsAboveBelow, bool textIsBelowBars)
 		{
 			return BarCounter(Input, showOddNumbers, textColor, textFontSize, pixelsAboveBelow, textIsBelowBars);
 		}
 
-		public BarCounter BarCounter(ISeries<double> input, bool showOddNumbers, Brush textColor, int textFontSize, int pixelsAboveBelow, bool textIsBelowBars)
+		public My.BarCounter BarCounter(ISeries<double> input, bool showOddNumbers, Brush textColor, int textFontSize, int pixelsAboveBelow, bool textIsBelowBars)
 		{
 			if (cacheBarCounter != null)
 				for (int idx = 0; idx < cacheBarCounter.Length; idx++)
 					if (cacheBarCounter[idx] != null && cacheBarCounter[idx].ShowOddNumbers == showOddNumbers && cacheBarCounter[idx].TextColor == textColor && cacheBarCounter[idx].TextFontSize == textFontSize && cacheBarCounter[idx].PixelsAboveBelow == pixelsAboveBelow && cacheBarCounter[idx].TextIsBelowBars == textIsBelowBars && cacheBarCounter[idx].EqualsInput(input))
 						return cacheBarCounter[idx];
-			return CacheIndicator<BarCounter>(new BarCounter(){ ShowOddNumbers = showOddNumbers, TextColor = textColor, TextFontSize = textFontSize, PixelsAboveBelow = pixelsAboveBelow, TextIsBelowBars = textIsBelowBars }, input, ref cacheBarCounter);
+			return CacheIndicator<My.BarCounter>(new My.BarCounter(){ ShowOddNumbers = showOddNumbers, TextColor = textColor, TextFontSize = textFontSize, PixelsAboveBelow = pixelsAboveBelow, TextIsBelowBars = textIsBelowBars }, input, ref cacheBarCounter);
 		}
 	}
 }
@@ -178,12 +179,12 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 {
 	public partial class MarketAnalyzerColumn : MarketAnalyzerColumnBase
 	{
-		public Indicators.BarCounter BarCounter(bool showOddNumbers, Brush textColor, int textFontSize, int pixelsAboveBelow, bool textIsBelowBars)
+		public Indicators.My.BarCounter BarCounter(bool showOddNumbers, Brush textColor, int textFontSize, int pixelsAboveBelow, bool textIsBelowBars)
 		{
 			return indicator.BarCounter(Input, showOddNumbers, textColor, textFontSize, pixelsAboveBelow, textIsBelowBars);
 		}
 
-		public Indicators.BarCounter BarCounter(ISeries<double> input , bool showOddNumbers, Brush textColor, int textFontSize, int pixelsAboveBelow, bool textIsBelowBars)
+		public Indicators.My.BarCounter BarCounter(ISeries<double> input , bool showOddNumbers, Brush textColor, int textFontSize, int pixelsAboveBelow, bool textIsBelowBars)
 		{
 			return indicator.BarCounter(input, showOddNumbers, textColor, textFontSize, pixelsAboveBelow, textIsBelowBars);
 		}
@@ -194,12 +195,12 @@ namespace NinjaTrader.NinjaScript.Strategies
 {
 	public partial class Strategy : NinjaTrader.Gui.NinjaScript.StrategyRenderBase
 	{
-		public Indicators.BarCounter BarCounter(bool showOddNumbers, Brush textColor, int textFontSize, int pixelsAboveBelow, bool textIsBelowBars)
+		public Indicators.My.BarCounter BarCounter(bool showOddNumbers, Brush textColor, int textFontSize, int pixelsAboveBelow, bool textIsBelowBars)
 		{
 			return indicator.BarCounter(Input, showOddNumbers, textColor, textFontSize, pixelsAboveBelow, textIsBelowBars);
 		}
 
-		public Indicators.BarCounter BarCounter(ISeries<double> input , bool showOddNumbers, Brush textColor, int textFontSize, int pixelsAboveBelow, bool textIsBelowBars)
+		public Indicators.My.BarCounter BarCounter(ISeries<double> input , bool showOddNumbers, Brush textColor, int textFontSize, int pixelsAboveBelow, bool textIsBelowBars)
 		{
 			return indicator.BarCounter(input, showOddNumbers, textColor, textFontSize, pixelsAboveBelow, textIsBelowBars);
 		}

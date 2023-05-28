@@ -96,3 +96,6 @@
 
 2023 05 27 1030  
     commit - branch AddPL.  Exception from Close[barsAgo] in print statement
+
+2023 05 28 0935  
+    commit - crude GetBar() working example  

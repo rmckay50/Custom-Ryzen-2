@@ -494,7 +494,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             foreach (var rc in returnedClass)
             {
                 #region Print rc - Commented Out
-                ///*
+                /*
                 Print(String.Format("\ncombinedQry.csv: {0} {1} {2} {3} {4} {5} {6} {7} {8} ", 
                     rc.Id, 
                     rc.StartTimeTicks, 
@@ -505,7 +505,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     rc.EndY, 
                     rc.P_L, 
                     rc.Long_Short));
-                //*/
+                */
                 #endregion Print rc - Commented Out
 
                 #region Determine brush color
