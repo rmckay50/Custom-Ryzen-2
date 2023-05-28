@@ -71,19 +71,20 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             if (_textIsBelowBars)
                 _textYStartingPoint = Low[0];
             NinjaTrader.Gui.Tools.SimpleFont myFont = new NinjaTrader.Gui.Tools.SimpleFont("Courier New", 14) { Size = _fontSize, Bold = false };
-				var st = DateTime.Parse("08/18/2018 07:22:16");
+				var st = DateTime.Parse("05/26/2023 07:40:00");
 
             if (CurrentBar < 5)
 			{
 				Print("Bar number: " + CurrentBar.ToString());
 				Print("Bar time: " + Time[0].ToString() + "Bar Close: " + Close[0]);
             // Check that its past 9:45 AM
-            if (ToTime(Time[0]) == ToTime(7, 35, 00))
-			{
-					//	Text to print
-					var pL = 6.20;
-				// Calculate the bars ago value for the 9 AM bar for the current day
-				//int barsAgo = Bars.GetBar(new DateTime(2023, 05, 26, 7, 35, 0));
+            //if (ToTime(Time[0]) == ToTime(7, 35, 00))
+                    if (ToTime(Time[0]) == ToTime(st))
+
+                    {
+                        //	Text to print
+                        var pL = 6.20;
+					//	Bars.GetBar is working
                     int barsAgo = Bars.GetBar(st);
 
                     Print("barsAgo:" + barsAgo.ToString());
