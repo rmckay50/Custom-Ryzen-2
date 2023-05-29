@@ -67,53 +67,58 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
 		protected override void OnBarUpdate()
 		{
-            double _textYStartingPoint = High[0]; //position text above or below bars
-            if (_textIsBelowBars)
-                _textYStartingPoint = Low[0];
-            NinjaTrader.Gui.Tools.SimpleFont myFont = new NinjaTrader.Gui.Tools.SimpleFont("Courier New", 14) { Size = _fontSize, Bold = false };
-				var st = DateTime.Parse("05/26/2023 07:40:00");
+			var st = DateTime.Parse("05/26/2023 07:40:00");
+			if (CurrentBar > 1)
+			{
+				Print(String.Format("CurrentBar: {0} Close[0]: {1} Close[1]: {2} ToTime(Time[0]): {3} ToTime(st): {4}", CurrentBar, Close[0], Close[1], ToTime(Time[0]), ToTime(st)));
+			}
 
-            if (CurrentBar < 5)
+			double _textYStartingPoint = High[0]; //position text above or below bars
+			if (_textIsBelowBars)
+				_textYStartingPoint = Low[0];
+			NinjaTrader.Gui.Tools.SimpleFont myFont = new NinjaTrader.Gui.Tools.SimpleFont("Courier New", 14) { Size = _fontSize, Bold = false };
+
+			if (CurrentBar < 5)
 			{
 				Print("Bar number: " + CurrentBar.ToString());
 				Print("Bar time: " + Time[0].ToString() + "Bar Close: " + Close[0]);
-            // Check that its past 9:45 AM
-            //if (ToTime(Time[0]) == ToTime(7, 35, 00))
-                    if (ToTime(Time[0]) == ToTime(st))
+				// Check that its past 9:45 AM
+				//if (ToTime(Time[0]) == ToTime(7, 35, 00))
+				if (ToTime(Time[0]) == ToTime(st))
 
-                    {
-                        //	Text to print
-                        var pL = 6.20;
+				{
+					//	Text to print
+					var pL = 6.20;
 					//	Bars.GetBar is working
-                    int barsAgo = Bars.GetBar(st);
+					int barsAgo = Bars.GetBar(st);
 
-                    Print("barsAgo:" + barsAgo.ToString());
+					Print("barsAgo:" + barsAgo.ToString());
 					// Print out the 9 AM bar closing price
 					Print("*** The close price on the 7:35 AM bar was: " + Close[barsAgo].ToString());
 					//Draw.Text(this, CurrentBar.ToString(), true, _barCntr.ToString(), 0, _textYStartingPoint, _pixelsAboveBelowBar, _textColorDefinedbyUser, myFont, TextAlignment.Center, null, null, 1);
-                    Draw.Text(this, CurrentBar.ToString(), true, pL.ToString(), 0, _textYStartingPoint, _pixelsAboveBelowBar, _textColorDefinedbyUser, myFont, TextAlignment.Center, null, null, 1);
+					Draw.Text(this, CurrentBar.ToString(), true, pL.ToString(), 0, _textYStartingPoint, _pixelsAboveBelowBar, _textColorDefinedbyUser, myFont, TextAlignment.Center, null, null, 1);
 
-                    //Print("The close price on the 9 AM bar was: " + Close[0].ToString());
+					//Print("The close price on the 9 AM bar was: " + Close[0].ToString());
 
-                }
-            }
-            //if (CurrentBar > 0)
-            //{
-            //	try
-            //	{
-            //		int barsAgo = CurrentBar - Bars.GetBar(startTime);
-            //		Print(String.Format("CurrentBar is {0} {1}", CurrentBar.ToString(), barsAgo.ToString()));
-            //		// Print out the 9 AM bar closing price
-            //		Print("The close price on the 9 AM bar was: " + Close[barsAgo].ToString());
-            //		firstPass = false;
-            //	}
-            //	catch (Exception ex)
-            //	{
-            //		Console.WriteLine(ex.ToString());
-            //	}
-            ////}
-        }
-
+				}
+			}
+			if (CurrentBar > 0)
+			{
+				try
+				{
+					int barsAgo = CurrentBar - Bars.GetBar(startTime);
+					Print(String.Format("CurrentBar is {0} barsAgo: {1}", CurrentBar.ToString(), barsAgo.ToString()));
+					// Print out the 9 AM bar closing price
+					Print("The close price on the 9 AM bar was: " + Close[barsAgo].ToString());
+					firstPass = false;
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.ToString());
+				}
+				////}
+			}
+		}
     }
 }
 

@@ -545,14 +545,32 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     5);
                 #endregion Draw.Line()
                 #region Draw.Text()
-                try
+                     DateTime st = DateTime.Parse(rc.StartTime);
+               try
                 {
-                var st = DateTime.Parse("08/18/2018 07:22:16");
-                    int barsAgo = CurrentBar - Bars.GetBar(DateTime.Parse(rc.StartTime));
-                    Print(String.Format("CurrentBar is {0} {1}", CurrentBar.ToString(), barsAgo.ToString()));
-                    // Print out the 9 AM bar closing price
-                    Print("The close price on the 9 AM bar was: " + Close[barsAgo].ToString());
-                    //firstPass = false;
+                    //Print(String.Format("ToTime(Time[0]) is {0} ToTime((rc.StartTime)) is {1} ", ToTime(Time[0]), ToTime(DateTime.Parse(rc.StartTime))));
+                    Print(String.Format("ToTime(Time[0]) is {0} ToTime((st)) is {1} ", ToTime(Time[0]), ToTime((st))));
+
+
+                         for (int j = 0; j <= CurrentBar; j++)
+                        {
+                   //if (ToTime(Time[0]) == ToTime(DateTime.Parse(rc.StartTime)))
+                    if (Time[j] <= st)
+                    {
+                            Print(String.Format("CurrentBar is {0} {1} {2} {3}", CurrentBar.ToString(), Time[j].ToString(), Close[j], rc.StartTime));
+
+                            //var st = DateTime.Parse("08/18/2018 07:22:16");
+                            int barsAgo = CurrentBar - Bars.GetBar(DateTime.Parse(rc.StartTime));
+                            if (barsAgo > 0)
+                            {
+                                Print(String.Format("CurrentBar is {0} barsAgo is {1}", CurrentBar.ToString(), barsAgo.ToString()));
+
+                                // Print out the 9 AM bar closing price
+                                Print("The close price on the 9 AM bar was: " + Close[barsAgo].ToString());
+                                //firstPass = false;
+                            }
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
