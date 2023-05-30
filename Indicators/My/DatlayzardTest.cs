@@ -22,7 +22,7 @@ using NinjaTrader.NinjaScript.DrawingTools;
 #endregion
 
 //This namespace holds Indicators in this folder and is required. Do not change it. 
-namespace NinjaTrader.NinjaScript.Indicators
+namespace NinjaTrader.NinjaScript.Indicators.My
 {
 	public class DatlayzardTest : Indicator
 	{
@@ -73,19 +73,19 @@ namespace NinjaTrader.NinjaScript.Indicators
 {
 	public partial class Indicator : NinjaTrader.Gui.NinjaScript.IndicatorRenderBase
 	{
-		private DatlayzardTest[] cacheDatlayzardTest;
-		public DatlayzardTest DatlayzardTest()
+		private My.DatlayzardTest[] cacheDatlayzardTest;
+		public My.DatlayzardTest DatlayzardTest()
 		{
 			return DatlayzardTest(Input);
 		}
 
-		public DatlayzardTest DatlayzardTest(ISeries<double> input)
+		public My.DatlayzardTest DatlayzardTest(ISeries<double> input)
 		{
 			if (cacheDatlayzardTest != null)
 				for (int idx = 0; idx < cacheDatlayzardTest.Length; idx++)
 					if (cacheDatlayzardTest[idx] != null &&  cacheDatlayzardTest[idx].EqualsInput(input))
 						return cacheDatlayzardTest[idx];
-			return CacheIndicator<DatlayzardTest>(new DatlayzardTest(), input, ref cacheDatlayzardTest);
+			return CacheIndicator<My.DatlayzardTest>(new My.DatlayzardTest(), input, ref cacheDatlayzardTest);
 		}
 	}
 }
@@ -94,12 +94,12 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 {
 	public partial class MarketAnalyzerColumn : MarketAnalyzerColumnBase
 	{
-		public Indicators.DatlayzardTest DatlayzardTest()
+		public Indicators.My.DatlayzardTest DatlayzardTest()
 		{
 			return indicator.DatlayzardTest(Input);
 		}
 
-		public Indicators.DatlayzardTest DatlayzardTest(ISeries<double> input )
+		public Indicators.My.DatlayzardTest DatlayzardTest(ISeries<double> input )
 		{
 			return indicator.DatlayzardTest(input);
 		}
@@ -110,12 +110,12 @@ namespace NinjaTrader.NinjaScript.Strategies
 {
 	public partial class Strategy : NinjaTrader.Gui.NinjaScript.StrategyRenderBase
 	{
-		public Indicators.DatlayzardTest DatlayzardTest()
+		public Indicators.My.DatlayzardTest DatlayzardTest()
 		{
 			return indicator.DatlayzardTest(Input);
 		}
 
-		public Indicators.DatlayzardTest DatlayzardTest(ISeries<double> input )
+		public Indicators.My.DatlayzardTest DatlayzardTest(ISeries<double> input )
 		{
 			return indicator.DatlayzardTest(input);
 		}

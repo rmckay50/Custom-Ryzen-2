@@ -109,22 +109,22 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     }
                 }
 			}
-			if (CurrentBar > 0)
-			{
-				try
-				{
-					int barsAgo = CurrentBar - Bars.GetBar(startTime);
-					Print(String.Format("CurrentBar is {0} barsAgo: {1}", CurrentBar.ToString(), barsAgo.ToString()));
-					// Print out the 9 AM bar closing price
-					Print("The close price on the 9 AM bar was: " + Close[barsAgo].ToString());
-					firstPass = false;
-				}
-				catch (Exception ex)
-				{
-					Console.WriteLine(ex.ToString());
-				}
-				////}
-			}
+			//if (CurrentBar > 0)
+			//{
+			//	try
+			//	{
+			//		int barsAgo = CurrentBar - Bars.GetBar(startTime);
+			//		Print(String.Format("CurrentBar is {0} barsAgo: {1}", CurrentBar.ToString(), barsAgo.ToString()));
+			//		// Print out the 9 AM bar closing price
+			//		Print("The close price on the 9 AM bar was: " + Close[barsAgo].ToString());
+			//		firstPass = false;
+			//	}
+			//	catch (Exception ex)
+			//	{
+			//		Console.WriteLine(ex.ToString());
+			//	}
+			//	////}
+			//}
 		}
     }
 }

@@ -557,12 +557,16 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
                     var sTime = DateTime.Parse(rc.StartTime);
                     int barsAgo = CurrentBar - Bars.GetBar(sTime);
-                    double _textYStartingPoint = High[0]; //position text above or below bars
-                    //if (_textIsBelowBars)
-                        _textYStartingPoint = Low[barsAgo];
+                   //if (_textIsBelowBars)
+                    var _textYStartingPoint = Low[barsAgo];
                     NinjaTrader.Gui.Tools.SimpleFont myFont = new NinjaTrader.Gui.Tools.SimpleFont("Courier New", 14) { Size = _fontSize, Bold = false };
 
-                    Draw.Text(this, CurrentBar.ToString() + "Text", true, rc.P_L.ToString(), st, _textYStartingPoint, _pixelsAboveBelowBar, _textColorDefinedbyUser, myFont, System.Windows.TextAlignment.Center, null, null, 1);
+                    //Draw.Text(this, CurrentBar.ToString() + "Text", true, rc.P_L.ToString(), st, _textYStartingPoint, _pixelsAboveBelowBar, _textColorDefinedbyUser, myFont, System.Windows.TextAlignment.Center, null, null, 1);
+                    var tag = rc.P_L.ToString();
+                    var text = rc.P_L.ToString();
+                    var startPt = _textYStartingPoint;
+                    var pixels = _pixelsAboveBelowBar;
+                    Draw.Text(this, CurrentBar.ToString() + "Text", true, rc.P_L.ToString(), barsAgo, _textYStartingPoint, _pixelsAboveBelowBar, _textColorDefinedbyUser, myFont, System.Windows.TextAlignment.Center, null, null, 1);
 
                     Draw.Text(this, CurrentBar.ToString() + "P/L","6.7", barsAgo, Low[barsAgo]);
                     //Print(String.Format("ToTime(Time[0]) is {0} ToTime((rc.StartTime)) is {1} ", ToTime(Time[0]), ToTime(DateTime.Parse(rc.StartTime))));
