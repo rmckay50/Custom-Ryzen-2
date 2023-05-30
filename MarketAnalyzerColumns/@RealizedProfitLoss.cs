@@ -1,5 +1,5 @@
 // 
-// Copyright (C) 2022, NinjaTrader LLC <www.ninjatrader.com>.
+// Copyright (C) 2023, NinjaTrader LLC <www.ninjatrader.com>.
 // NinjaTrader reserves the right to modify or overwrite this NinjaScript component with each release.
 //
 #region Using declarations
@@ -35,7 +35,7 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 		{
 			if (State == State.SetDefaults)
 			{
-				AccountName				= Cbi.Account.SimulationAccountName;
+				AccountName				= DefaultAccountName;
 				Description				= NinjaTrader.Custom.Resource.NinjaScriptMarketAnalyzerColumnDescriptionRealizedProfitLoss;
 				Name					= NinjaTrader.Custom.Resource.NinjaScriptMarketAnalyzerColumnNameRealizedProfitLoss;
 				IsDataSeriesRequired	= false;
@@ -45,7 +45,7 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 
 		protected override void OnAccountItemUpdate(Cbi.AccountItemEventArgs accountItemUpdate)
 		{
-			if (AccountName != Account.SimulationAccountName || accountItemUpdate.Account.Name != AccountName || accountItemUpdate.AccountItem != AccountItem.RealizedProfitLoss)
+			if (AccountName != DefaultAccountName || accountItemUpdate.Account.DisplayName != AccountName || accountItemUpdate.AccountItem != AccountItem.RealizedProfitLoss)
 				return;
 
 			accountDenomination	= accountItemUpdate.Account.Denomination;
@@ -63,7 +63,7 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 			{
 				Cbi.Account account;
 				lock (connectionStatusUpdate.Connection.Accounts)
-					account = connectionStatusUpdate.Connection.Accounts.FirstOrDefault(o => o.Name == AccountName);
+					account = connectionStatusUpdate.Connection.Accounts.FirstOrDefault(o => o.DisplayName == AccountName);
 
 				if (account != null)
 				{
@@ -80,7 +80,7 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 
 		protected override void OnExecutionUpdate(Cbi.ExecutionEventArgs executionUpdate)
 		{
-			if (executionUpdate.Execution.Account.Name != AccountName 
+			if (executionUpdate.Execution.Account.DisplayName != AccountName 
 					|| (executionUpdate.Execution.Instrument.MasterInstrument.InstrumentType != InstrumentType.Stock && executionUpdate.Execution.Instrument != Instrument)
 					|| (executionUpdate.Execution.Instrument.MasterInstrument.InstrumentType == InstrumentType.Stock && executionUpdate.Execution.Instrument.FullName != Instrument.FullName))
 				return;
@@ -91,7 +91,7 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 
 		#region Properties
 		[NinjaScriptProperty]
-		[TypeConverter(typeof(AccountNameConverter))]
+		[TypeConverter(typeof(AccountDisplayNameConverter))]
 		[Display(ResourceType = typeof(Resource), Name = "NinjaScriptColumnBaseAccount", GroupName = "NinjaScriptSetup", Order = 0)]
 		public string AccountName
 		{ get; set; }

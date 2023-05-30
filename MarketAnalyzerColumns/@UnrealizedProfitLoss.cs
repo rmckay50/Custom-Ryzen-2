@@ -1,5 +1,5 @@
 // 
-// Copyright (C) 2022, NinjaTrader LLC <www.ninjatrader.com>.
+// Copyright (C) 2023, NinjaTrader LLC <www.ninjatrader.com>.
 // NinjaTrader reserves the right to modify or overwrite this NinjaScript component with each release.
 //
 #region Using declarations
@@ -35,7 +35,7 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 		{
 			if (State == State.SetDefaults)
 			{
-				AccountName				= Cbi.Account.SimulationAccountName;
+				AccountName				= DefaultAccountName;
 				Description				= NinjaTrader.Custom.Resource.NinjaScriptMarketAnalyzerColumnDescriptionUnrealizedProfitLoss;
 				Name					= NinjaTrader.Custom.Resource.NinjaScriptMarketAnalyzerColumnNameUnrealizedProfitLoss;
 				IsDataSeriesRequired	= false;
@@ -49,7 +49,7 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 			{
 				Cbi.Account account = null;
 				lock (connectionStatusUpdate.Connection.Accounts)
-					account = connectionStatusUpdate.Connection.Accounts.FirstOrDefault(o => o.Name == AccountName);
+					account = connectionStatusUpdate.Connection.Accounts.FirstOrDefault(o => o.DisplayName == AccountName);
 
 				if (account != null)
 				{
@@ -75,7 +75,7 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 
 		protected override void OnPositionUpdate(Cbi.PositionEventArgs positionUpdate)
 		{
-			if (positionUpdate.Position.Account.Name == AccountName && positionUpdate.Position.Instrument == Instrument)
+			if (positionUpdate.Position.Account.DisplayName == AccountName && positionUpdate.Position.Instrument == Instrument)
 			{
 				position 			= (positionUpdate.Operation == Cbi.Operation.Remove ? null : positionUpdate.Position);
 				CurrentValue 		= (position == null ? 0 : position.GetUnrealizedProfitLoss(Cbi.PerformanceUnit.Currency));
@@ -85,7 +85,7 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 
 		#region Properties
 		[NinjaScriptProperty]
-		[TypeConverter(typeof(AccountNameConverter))]
+		[TypeConverter(typeof(AccountDisplayNameConverter))]
 		[Display(ResourceType = typeof(Resource), Name = "NinjaScriptColumnBaseAccount", GroupName = "NinjaScriptSetup", Order = 0)]
 		public string AccountName
 		{ get; set; }

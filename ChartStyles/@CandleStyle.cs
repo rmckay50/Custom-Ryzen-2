@@ -1,5 +1,5 @@
 // 
-// Copyright (C) 2022, NinjaTrader LLC <www.ninjatrader.com>.
+// Copyright (C) 2023, NinjaTrader LLC <www.ninjatrader.com>.
 // NinjaTrader reserves the right to modify or overwrite this NinjaScript component with each release.
 //
 #region Using declarations
@@ -59,14 +59,18 @@ namespace NinjaTrader.NinjaScript.ChartStyles
 					rect.Y		= Math.Min(close, open);
 					rect.Width	= barWidth - 1;
 					rect.Height	= Math.Max(open, close) - Math.Min(close, open);
+
+					// Rectangle fill
 					Brush brush	= overriddenBarBrush ?? (closeValue >= openValue ? UpBrushDX : DownBrushDX);
 					if (!(brush is SolidColorBrush))
 						TransformBrush(brush, rect);
 					RenderTarget.FillRectangle(rect, brush);
+
+					// Rectangle border
 					brush = overriddenOutlineBrush ?? Stroke.BrushDX;
 					if (!(brush is SolidColorBrush))
 						TransformBrush(brush, rect);
-					RenderTarget.DrawRectangle(rect, overriddenOutlineBrush ?? Stroke.BrushDX, Stroke.Width, Stroke.StrokeStyle);
+					RenderTarget.DrawRectangle(rect, brush ?? Stroke.BrushDX, Stroke.Width, Stroke.StrokeStyle);
 				}
 
 				Brush br = overriddenOutlineBrush ?? Stroke2.BrushDX;

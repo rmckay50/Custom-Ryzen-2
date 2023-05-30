@@ -47,6 +47,7 @@ using LINQtoCSV;
 using NinjaTrader.Gui.NinjaScript;
 using NinjaTrader.Custom.AddOns;
 using Trade = NinjaTrader.Custom.AddOns.Trade;
+using SharpDX.DirectWrite;
 #endregion
 
 //This namespace holds Indicators in this folder and is required. Do not change it. 
@@ -78,6 +79,10 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
         //  Get Username from Environment.UserName for InputFile and OutputFile initialization
         private string userName = Environment.UserName;
+        private bool _textIsBelowBars = true;
+        private int _fontSize = 14;
+        private int _pixelsAboveBelowBar = -50;
+        private Brush _textColorDefinedbyUser = Brushes.Gray;
 
         protected override void OnStateChange()
         {
@@ -270,7 +275,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnStyle.TargetType = typeof(System.Windows.Controls.Button);
 
             btnStyle.Setters.Add(new Setter(System.Windows.Controls.Button.FontSizeProperty, 11.0));
-            btnStyle.Setters.Add(new Setter(System.Windows.Controls.Button.FontFamilyProperty, new FontFamily("Arial")));
+            btnStyle.Setters.Add(new Setter(System.Windows.Controls.Button.FontFamilyProperty, new System.Windows.Media.FontFamily("Arial")));
             btnStyle.Setters.Add(new Setter(System.Windows.Controls.Button.FontWeightProperty, FontWeights.Bold));
             btnStyle.Setters.Add(new Setter(System.Windows.Controls.Button.MarginProperty, new Thickness(2, 0, 2, 0)));
             btnStyle.Setters.Add(new Setter(System.Windows.Controls.Button.PaddingProperty, new Thickness(4, 2, 4, 2)));
@@ -548,29 +553,41 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                      DateTime st = DateTime.Parse(rc.StartTime);
                try
                 {
+                    //int barsAgo = Bars.GetBar(st);
+
+                    var sTime = DateTime.Parse(rc.StartTime);
+                    int barsAgo = CurrentBar - Bars.GetBar(sTime);
+                    double _textYStartingPoint = High[0]; //position text above or below bars
+                    //if (_textIsBelowBars)
+                        _textYStartingPoint = Low[barsAgo];
+                    NinjaTrader.Gui.Tools.SimpleFont myFont = new NinjaTrader.Gui.Tools.SimpleFont("Courier New", 14) { Size = _fontSize, Bold = false };
+
+                    Draw.Text(this, CurrentBar.ToString() + "Text", true, rc.P_L.ToString(), st, _textYStartingPoint, _pixelsAboveBelowBar, _textColorDefinedbyUser, myFont, System.Windows.TextAlignment.Center, null, null, 1);
+
+                    Draw.Text(this, CurrentBar.ToString() + "P/L","6.7", barsAgo, Low[barsAgo]);
                     //Print(String.Format("ToTime(Time[0]) is {0} ToTime((rc.StartTime)) is {1} ", ToTime(Time[0]), ToTime(DateTime.Parse(rc.StartTime))));
-                    Print(String.Format("ToTime(Time[0]) is {0} ToTime((st)) is {1} ", ToTime(Time[0]), ToTime((st))));
+                    // Print(String.Format("ToTime(Time[0]) is {0} ToTime((st)) is {1} ", ToTime(Time[0]), ToTime((st))));
 
 
-                         for (int j = 0; j <= CurrentBar; j++)
-                        {
-                   //if (ToTime(Time[0]) == ToTime(DateTime.Parse(rc.StartTime)))
-                    if (Time[j] <= st)
-                    {
-                            Print(String.Format("CurrentBar is {0} {1} {2} {3}", CurrentBar.ToString(), Time[j].ToString(), Close[j], rc.StartTime));
+                    //      for (int j = 0; j <= CurrentBar; j++)
+                    //     {
+                    ////if (ToTime(Time[0]) == ToTime(DateTime.Parse(rc.StartTime)))
+                    // if (Time[j] <= st)
+                    // {
+                    //         Print(String.Format("CurrentBar is {0} {1} {2} {3}", CurrentBar.ToString(), Time[j].ToString(), Close[j], rc.StartTime));
 
-                            //var st = DateTime.Parse("08/18/2018 07:22:16");
-                            int barsAgo = CurrentBar - Bars.GetBar(DateTime.Parse(rc.StartTime));
-                            if (barsAgo > 0)
-                            {
-                                Print(String.Format("CurrentBar is {0} barsAgo is {1}", CurrentBar.ToString(), barsAgo.ToString()));
+                    //         //var st = DateTime.Parse("08/18/2018 07:22:16");
+                    //         int barsAgo = CurrentBar - Bars.GetBar(DateTime.Parse(rc.StartTime));
+                    //         if (barsAgo > 0)
+                    //         {
+                    //             Print(String.Format("CurrentBar is {0} barsAgo is {1}", CurrentBar.ToString(), barsAgo.ToString()));
 
-                                // Print out the 9 AM bar closing price
-                                Print("The close price on the 9 AM bar was: " + Close[barsAgo].ToString());
-                                //firstPass = false;
-                            }
-                        }
-                    }
+                    //             // Print out the 9 AM bar closing price
+                    //             Print("The close price on the 9 AM bar was: " + Close[barsAgo].ToString());
+                    //             //firstPass = false;
+                    //         }
+                    //     }
+                    // }
                 }
                 catch (Exception ex)
                 {

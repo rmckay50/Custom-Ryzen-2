@@ -1,5 +1,5 @@
 // 
-// Copyright (C) 2022, NinjaTrader LLC <www.ninjatrader.com>.
+// Copyright (C) 2023, NinjaTrader LLC <www.ninjatrader.com>.
 // NinjaTrader reserves the right to modify or overwrite this NinjaScript component with each release.
 //
 #region Using declarations
@@ -32,7 +32,7 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 		{
 			if (State == State.SetDefaults)
 			{
-				AccountName				= Cbi.Account.SimulationAccountName;
+				AccountName				= DefaultAccountName;
 				Description				= NinjaTrader.Custom.Resource.NinjaScriptMarketAnalyzerColumnDescriptionTradedContracts;
 				Name					= NinjaTrader.Custom.Resource.NinjaScriptMarketAnalyzerColumnNameTradedContracts;
 				IsDataSeriesRequired	= false;
@@ -47,7 +47,7 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 			{
 				lock (connectionStatusUpdate.Connection.Accounts)
 				{
-					Cbi.Account account = connectionStatusUpdate.Connection.Accounts.FirstOrDefault(o => o.Name == AccountName);
+					Cbi.Account account = connectionStatusUpdate.Connection.Accounts.FirstOrDefault(o => o.DisplayName == AccountName);
 					if (account != null)
 					{
 						CurrentValue = 0;
@@ -60,20 +60,20 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 			else if (connectionStatusUpdate.Status == Cbi.ConnectionStatus.Disconnected && connectionStatusUpdate.PreviousStatus == Cbi.ConnectionStatus.Disconnecting)
 			{
 				lock (connectionStatusUpdate.Connection.Accounts)
-					if (connectionStatusUpdate.Connection.Accounts.FirstOrDefault(o => o.Name == AccountName) != null)
+					if (connectionStatusUpdate.Connection.Accounts.FirstOrDefault(o => o.DisplayName == AccountName) != null)
 						CurrentValue = 0;
 			}
 		}
 
 		protected override void OnExecutionUpdate(Cbi.ExecutionEventArgs executionUpdate)
 		{
-			if (executionUpdate.Operation == Cbi.Operation.Add && executionUpdate.Execution.Instrument == Instrument && executionUpdate.Execution.Account.Name == AccountName)
+			if (executionUpdate.Operation == Cbi.Operation.Add && executionUpdate.Execution.Instrument == Instrument && executionUpdate.Execution.Account.DisplayName == AccountName)
 				CurrentValue += executionUpdate.Execution.Quantity;
 		}
 
 		#region Properties
 		[NinjaScriptProperty]
-		[TypeConverter(typeof(AccountNameConverter))]
+		[TypeConverter(typeof(AccountDisplayNameConverter))]
 		[Display(ResourceType = typeof(NinjaTrader.Resource), Name = "NinjaScriptColumnBaseAccount", GroupName = "NinjaScriptSetup", Order = 0)]
 		public string AccountName
 		{ get; set; }
