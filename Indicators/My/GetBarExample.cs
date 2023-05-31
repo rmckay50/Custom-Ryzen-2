@@ -19,6 +19,7 @@ using NinjaTrader.Data;
 using NinjaTrader.NinjaScript;
 using NinjaTrader.Core.FloatingPoint;
 using NinjaTrader.NinjaScript.DrawingTools;
+using SharpDX.Direct2D1;
 #endregion
 
 //This namespace holds Indicators in this folder and is required. Do not change it. 
@@ -39,7 +40,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 				DrawHorizontalGridLines						= true;
 				DrawVerticalGridLines						= true;
 				PaintPriceMarkers							= true;
-				ScaleJustification							= NinjaTrader.Gui.Chart.ScaleJustification.Right;
+				ScaleJustification							= ScaleJustification.Right;
 				//Disable this property if your indicator requires custom values that cumulate with each new market data event. 
 				//See Help Guide for additional information.
 				IsSuspendedWhileInactive					= true;
@@ -56,38 +57,28 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
 		protected override void OnBarUpdate()
 		{
-            //	int barsAgo = CurrentBar - Bars.GetBar(new DateTime(2023, 05, 25, 9, 30, 0));
-            //Print("\nbarsAgo: " + barsAgo.ToString());
-            //// Check that its past 9:45 AM,
-            ////if (ToTime(Time[0]) >= ToTime(7, 30, 00) && barsAgo > 0)
-            //             if (ToTime(Time[0]) >= ToTime(9, 30, 00) )
+            DateTime StartTime = DateTime.Parse("08:54:05  05/25/2023");
+            DateTime EndTime = DateTime.Parse("09:26:12  05/25/2023");
+            Draw.Line
+                (this,
+                "First Line",
+                false,
+                StartTime,
+                183.94,
+                DateTime.Parse(EndTime.ToString()),
+                184.7,
+                Brushes.Blue,
+                DashStyleHelper.Solid,
+                5);
 
-            //             {
-            //                 try
-            //	{
-            //		Print(String.Format("Time[0]: {0} ToTime(7, 30, 00): {1}", Time[0], ToTime(7, 30, 00)));
-            //		// Calculate the bars ago value for the 9 AM bar for the current day
-            //		//if (CurrentBar > barsAgo)
-            //		//{
-            //		// Print out the 7:30 AM bar closing price
-            //		Print(String.Format("The close price on the 7:30 AM bar was: {0} Time: {1}", Close[barsAgo].ToString(), Time[0]));
-            //		//}
-            //	}
-            //             catch (Exception ex)
-            //             {
-            //                 Print(String.Format("Time[0]: {0} ToTime(7, 30, 00): {1}", Time[0], ToTime(7, 30, 00)));
-            //             }
-            //         }
-
-            //	GetBar() Example
-            // Check that its past 9:45 AM
-            if (ToTime(Time[0]) >= ToTime(9, 45, 00))
+            //var sTime = DateTime.Parse(rc.StartTime);
+            int barsAgo = CurrentBar - Bars.GetBar(StartTime);
+            if (barsAgo > 0)
             {
-                // Calculate the bars ago value for the 9 AM bar for the current day
-                int barsAgo = CurrentBar - Bars.GetBar(new DateTime(2006, 12, 18, 9, 0, 0));
+                var _textYStartingPoint = Low[barsAgo];
 
-                // Print out the 9 AM bar closing price
-                Print("The close price on the 9 AM bar was: " + Close[barsAgo].ToString());
+                Draw.Text(this, CurrentBar.ToString() + "P/L", "6.7", barsAgo, Low[barsAgo]);
+
             }
         }
 	}

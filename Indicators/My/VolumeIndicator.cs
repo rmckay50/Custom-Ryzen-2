@@ -118,11 +118,11 @@ namespace NinjaTrader.NinjaScript.Indicators.VolumeIndicator
                     if (longTrend)
                         {
 
-//	                    Draw.Text(this, "L" + CurrentBar, "L " + longVolumeAccumulated, 0, High[0] + (5 * TickSize), Brushes.White);
+                        Draw.Text(this, "L" + CurrentBar, "L " + longVolumeAccumulated, 0, High[0] + (5 * TickSize), Brushes.White);
                         }
                     else
                         {
-//                        Draw.Text(this, "S" + CurrentBar, "S " + shortVolumeAccumulated, 0, Low[0] - (5 * TickSize), Brushes.White);
+                        Draw.Text(this, "S" + CurrentBar, "S " + shortVolumeAccumulated, 0, Low[0] - (5 * TickSize), Brushes.White);
                         }
             //Print(Time[0] + "   High " + Values[2][0] +  "           "  + Values[2][1] + "     " + CurrentBar);
 			//*/

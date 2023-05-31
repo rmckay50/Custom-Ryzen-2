@@ -47,7 +47,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 				DrawHorizontalGridLines = true;
 				DrawVerticalGridLines = true;
 				PaintPriceMarkers = true;
-				ScaleJustification = NinjaTrader.Gui.Chart.ScaleJustification.Right;
+				ScaleJustification = ScaleJustification.Right;
 				//Disable this property if your indicator requires custom values that cumulate with each new market data event. 
 				//See Help Guide for additional information.
 				IsSuspendedWhileInactive = true;
@@ -68,24 +68,25 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 		protected override void OnBarUpdate()
 		{
 			var st = DateTime.Parse("05/26/2023 07:40:00");
-		if (CurrentBar > 1)
-			{
-				Print(String.Format("\nCurrentBar: {0} Close[0]: {1} Close[1]: {2} ToTime(Time[0]): {3} ToTime(st): {4}", CurrentBar, Close[0], Close[1], ToTime(Time[0]), ToTime(st)));
-			}
+		//if (CurrentBar > 1)
+		//	{
+		//		Print(String.Format("\nCurrentBar: {0} Close[0]: {1} Close[1]: {2} ToTime(Time[0]): {3} ToTime(st): {4}", CurrentBar, Close[0], Close[1], ToTime(Time[0]), ToTime(st)));
+		//	}
 
 			double _textYStartingPoint = High[0]; //position text above or below bars
 			if (_textIsBelowBars)
 				_textYStartingPoint = Low[0];
-			NinjaTrader.Gui.Tools.SimpleFont myFont = new NinjaTrader.Gui.Tools.SimpleFont("Courier New", 14) { Size = _fontSize, Bold = false };
-					//	Text to print
-					var pL = 6.20;
+			//NinjaTrader.Gui.Tools.SimpleFont myFont = new NinjaTrader.Gui.Tools.SimpleFont("Courier New", 14) { Size = _fontSize, Bold = false };
+            SimpleFont myFont = new SimpleFont("Courier New", 14) { Size = _fontSize, Bold = false }; ;
+            //	Text to print
+            var pL = 6.20;
 			if (firstPass == true)
 			{
 				Draw.Text(this, CurrentBar.ToString(), true, pL.ToString(), st, _textYStartingPoint, _pixelsAboveBelowBar, _textColorDefinedbyUser, myFont, TextAlignment.Center, null, null, 1);
 				firstPass= false;
 			}
-			if (CurrentBar < 5)
-			{
+			//if (CurrentBar < 5)
+			//{
 				Print("Bar number: " + CurrentBar.ToString());
 				Print("Bar time: " + Time[0].ToString() + "Bar Close: " + Close[0]);
 				// Check that its past 9:45 AM
@@ -108,7 +109,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                         //Print("The close price on the 9 AM bar was: " + Close[0].ToString());
                     }
                 }
-			}
+			//}
 			//if (CurrentBar > 0)
 			//{
 			//	try

@@ -55,6 +55,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 {
 	public class RecordAndDisplayTradesWithButtonsRyzen2 : Indicator
     {
+        #region Variables
         private bool drawSwitch;
         private bool indiSwitch;
 
@@ -83,7 +84,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         private int _fontSize = 14;
         private int _pixelsAboveBelowBar = -50;
         private Brush _textColorDefinedbyUser = Brushes.Gray;
-
+        #endregion Variables
         protected override void OnStateChange()
         {
             if (State == State.SetDefaults)
@@ -92,7 +93,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 Name = "RecordAndDisplayTradesWithButtons";
                 Calculate = Calculate.OnBarClose;
                 DisplayInDataBox = false;
-                ScaleJustification = NinjaTrader.Gui.Chart.ScaleJustification.Right;
+                //ScaleJustification = NinjaTrader.Gui.Chart.ScaleJustification.Right;
+                ScaleJustification = ScaleJustification.Right;
                 IsAutoScale = true;
                 IsSuspendedWhileInactive = true;
                 indiSwitch = true;
@@ -464,6 +466,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 hideWicksFunc();
             }
         }
+        
         private void btnCreateCsvClick(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.Button button = sender as System.Windows.Controls.Button;
@@ -472,6 +475,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 CreateCvsFunc();
             }
         }
+        
         private void ReadCsvAndDrawLines()
         {
             #region Use LINQtoCSV to read "csvNTDrawline.csv"
@@ -550,16 +554,18 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     5);
                 #endregion Draw.Line()
                 #region Draw.Text()
-                     DateTime st = DateTime.Parse(rc.StartTime);
-               try
-                {
+                DateTime st = DateTime.Parse(rc.StartTime);
+                //try 
+                //{
                     //int barsAgo = Bars.GetBar(st);
 
                     var sTime = DateTime.Parse(rc.StartTime);
                     int barsAgo = CurrentBar - Bars.GetBar(sTime);
-                   //if (_textIsBelowBars)
+                if (barsAgo > 0)
+                {
                     var _textYStartingPoint = Low[barsAgo];
-                    NinjaTrader.Gui.Tools.SimpleFont myFont = new NinjaTrader.Gui.Tools.SimpleFont("Courier New", 14) { Size = _fontSize, Bold = false };
+                    //NinjaTrader.Gui.Tools.SimpleFont myFont = new NinjaTrader.Gui.Tools.SimpleFont("Courier New", 14) { Size = _fontSize, Bold = false };
+                    SimpleFont myFont = new SimpleFont("Courier New", 14) { Size = _fontSize, Bold = false }; ;
 
                     //Draw.Text(this, CurrentBar.ToString() + "Text", true, rc.P_L.ToString(), st, _textYStartingPoint, _pixelsAboveBelowBar, _textColorDefinedbyUser, myFont, System.Windows.TextAlignment.Center, null, null, 1);
                     var tag = rc.P_L.ToString();
@@ -568,7 +574,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     var pixels = _pixelsAboveBelowBar;
                     Draw.Text(this, CurrentBar.ToString() + "Text", true, rc.P_L.ToString(), barsAgo, _textYStartingPoint, _pixelsAboveBelowBar, _textColorDefinedbyUser, myFont, System.Windows.TextAlignment.Center, null, null, 1);
 
-                    Draw.Text(this, CurrentBar.ToString() + "P/L","6.7", barsAgo, Low[barsAgo]);
+                    Draw.Text(this, CurrentBar.ToString() + "P/L", "6.7", barsAgo, Low[barsAgo]);
                     //Print(String.Format("ToTime(Time[0]) is {0} ToTime((rc.StartTime)) is {1} ", ToTime(Time[0]), ToTime(DateTime.Parse(rc.StartTime))));
                     // Print(String.Format("ToTime(Time[0]) is {0} ToTime((st)) is {1} ", ToTime(Time[0]), ToTime((st))));
 
@@ -592,12 +598,12 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     //         }
                     //     }
                     // }
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    Console.WriteLine(ex.ToString());
+                    //}
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
-
                 #endregion Draw.Text()
 
                 i++;
@@ -606,6 +612,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
 
         }
+        
         private void CreateCvsFunc()
         {
             var bPlayback = false;
@@ -901,8 +908,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnCreateCsv.Click -= btnCreateCsvClick;
 
         }
-
-
 
         #region Properties
         [NinjaScriptProperty]
