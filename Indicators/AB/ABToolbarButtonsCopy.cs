@@ -173,6 +173,29 @@ namespace NinjaTrader.NinjaScript.Indicators.AB
 		private void btnDrawObjsClick(object sender, RoutedEventArgs e)
 		{
             #region Using GetBar() function
+			            DateTime StartTime = DateTime.Parse("08:54:05  05/25/2023");
+            DateTime EndTime = DateTime.Parse("09:26:12  05/25/2023");
+            Draw.Line
+                (this,
+                "First Line",
+                false,
+                StartTime,
+                183.94,
+                DateTime.Parse(EndTime.ToString()),
+                184.7,
+                Brushes.Blue,
+                DashStyleHelper.Solid,
+                5);
+
+            //var sTime = DateTime.Parse(rc.StartTime);
+            int barsAgo = CurrentBar - Bars.GetBar(StartTime);
+            if (barsAgo > 0)
+            {
+                var _textYStartingPoint = Low[barsAgo];
+
+                Draw.Text(this, CurrentBar.ToString() + "P/L", "6.7", barsAgo, Low[barsAgo]);
+
+            }
 
             #endregion Using GetBar() function
 

@@ -53,7 +53,7 @@ using SharpDX.DirectWrite;
 //This namespace holds Indicators in this folder and is required. Do not change it. 
 namespace NinjaTrader.NinjaScript.Indicators.My
 {
-	public class RecordAndDisplayTradesWithButtonsRyzen2 : Indicator
+    public class RecordAndDisplayTradesWithButtonsRyzen2 : Indicator
     {
         #region Variables
         private bool drawSwitch;
@@ -102,9 +102,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 ActiveCursorColor = Brushes.DarkGreen;
                 InactiveCursorColor = Brushes.DimGray;
                 IsSuspendedWhileInactive = true;
-                StartTime   = DateTime.Parse("05/01/ 2023");
-                EndTime     = DateTime.Parse("05/30/ 2023");
-                EnumValue   = MyEnum.Futures;
+                StartTime = DateTime.Parse("05/01/ 2023");
+                EndTime = DateTime.Parse("05/30/ 2023");
+                EnumValue = MyEnum.Futures;
                 //  The userName needs to be correct to keep ReadCsvAndDrawLines() in State.Historical from throwing exception
                 InputFile = @"C:\Users\" + userName + @"\Documents\NinjaTrader 8\db\NinjaTrader.sqlite";
                 OutputFile = @"C:\Users\" + userName + @"\Documents\NinjaTrader 8\csvNTDrawline.csv";
@@ -466,7 +466,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 hideWicksFunc();
             }
         }
-        
+
         private void btnCreateCsvClick(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.Button button = sender as System.Windows.Controls.Button;
@@ -475,7 +475,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 CreateCvsFunc();
             }
         }
-        
+
         private void ReadCsvAndDrawLines()
         {
             #region Use LINQtoCSV to read "csvNTDrawline.csv"
@@ -557,10 +557,10 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 DateTime st = DateTime.Parse(rc.StartTime);
                 //try 
                 //{
-                    //int barsAgo = Bars.GetBar(st);
+                //int barsAgo = Bars.GetBar(st);
 
-                    var sTime = DateTime.Parse(rc.StartTime);
-                    int barsAgo = CurrentBar - Bars.GetBar(sTime);
+                var sTime = DateTime.Parse(rc.StartTime);
+                int barsAgo = CurrentBar - Bars.GetBar(sTime);
                 if (barsAgo > 0)
                 {
                     var _textYStartingPoint = Low[barsAgo];
@@ -612,7 +612,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
 
         }
-        
+
         private void CreateCvsFunc()
         {
             var bPlayback = false;
@@ -1007,55 +1007,55 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
 namespace NinjaTrader.NinjaScript.Indicators
 {
-	public partial class Indicator : NinjaTrader.Gui.NinjaScript.IndicatorRenderBase
-	{
-		private My.RecordAndDisplayTradesWithButtonsRyzen2[] cacheRecordAndDisplayTradesWithButtonsRyzen2;
-		public My.RecordAndDisplayTradesWithButtonsRyzen2 RecordAndDisplayTradesWithButtonsRyzen2(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
-		{
-			return RecordAndDisplayTradesWithButtonsRyzen2(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
-		}
+    public partial class Indicator : NinjaTrader.Gui.NinjaScript.IndicatorRenderBase
+    {
+        private My.RecordAndDisplayTradesWithButtonsRyzen2[] cacheRecordAndDisplayTradesWithButtonsRyzen2;
+        public My.RecordAndDisplayTradesWithButtonsRyzen2 RecordAndDisplayTradesWithButtonsRyzen2(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
+        {
+            return RecordAndDisplayTradesWithButtonsRyzen2(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
+        }
 
-		public My.RecordAndDisplayTradesWithButtonsRyzen2 RecordAndDisplayTradesWithButtonsRyzen2(ISeries<double> input, DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
-		{
-			if (cacheRecordAndDisplayTradesWithButtonsRyzen2 != null)
-				for (int idx = 0; idx < cacheRecordAndDisplayTradesWithButtonsRyzen2.Length; idx++)
-					if (cacheRecordAndDisplayTradesWithButtonsRyzen2[idx] != null && cacheRecordAndDisplayTradesWithButtonsRyzen2[idx].StartTime == startTime && cacheRecordAndDisplayTradesWithButtonsRyzen2[idx].EndTime == endTime && cacheRecordAndDisplayTradesWithButtonsRyzen2[idx].InputFile == inputFile && cacheRecordAndDisplayTradesWithButtonsRyzen2[idx].OutputFile == outputFile && cacheRecordAndDisplayTradesWithButtonsRyzen2[idx].colorActiveCursor == colorActiveCursor && cacheRecordAndDisplayTradesWithButtonsRyzen2[idx].EqualsInput(input))
-						return cacheRecordAndDisplayTradesWithButtonsRyzen2[idx];
-			return CacheIndicator<My.RecordAndDisplayTradesWithButtonsRyzen2>(new My.RecordAndDisplayTradesWithButtonsRyzen2(){ StartTime = startTime, EndTime = endTime, InputFile = inputFile, OutputFile = outputFile, colorActiveCursor = colorActiveCursor }, input, ref cacheRecordAndDisplayTradesWithButtonsRyzen2);
-		}
-	}
+        public My.RecordAndDisplayTradesWithButtonsRyzen2 RecordAndDisplayTradesWithButtonsRyzen2(ISeries<double> input, DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
+        {
+            if (cacheRecordAndDisplayTradesWithButtonsRyzen2 != null)
+                for (int idx = 0; idx < cacheRecordAndDisplayTradesWithButtonsRyzen2.Length; idx++)
+                    if (cacheRecordAndDisplayTradesWithButtonsRyzen2[idx] != null && cacheRecordAndDisplayTradesWithButtonsRyzen2[idx].StartTime == startTime && cacheRecordAndDisplayTradesWithButtonsRyzen2[idx].EndTime == endTime && cacheRecordAndDisplayTradesWithButtonsRyzen2[idx].InputFile == inputFile && cacheRecordAndDisplayTradesWithButtonsRyzen2[idx].OutputFile == outputFile && cacheRecordAndDisplayTradesWithButtonsRyzen2[idx].colorActiveCursor == colorActiveCursor && cacheRecordAndDisplayTradesWithButtonsRyzen2[idx].EqualsInput(input))
+                        return cacheRecordAndDisplayTradesWithButtonsRyzen2[idx];
+            return CacheIndicator<My.RecordAndDisplayTradesWithButtonsRyzen2>(new My.RecordAndDisplayTradesWithButtonsRyzen2() { StartTime = startTime, EndTime = endTime, InputFile = inputFile, OutputFile = outputFile, colorActiveCursor = colorActiveCursor }, input, ref cacheRecordAndDisplayTradesWithButtonsRyzen2);
+        }
+    }
 }
 
 namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 {
-	public partial class MarketAnalyzerColumn : MarketAnalyzerColumnBase
-	{
-		public Indicators.My.RecordAndDisplayTradesWithButtonsRyzen2 RecordAndDisplayTradesWithButtonsRyzen2(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
-		{
-			return indicator.RecordAndDisplayTradesWithButtonsRyzen2(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
-		}
+    public partial class MarketAnalyzerColumn : MarketAnalyzerColumnBase
+    {
+        public Indicators.My.RecordAndDisplayTradesWithButtonsRyzen2 RecordAndDisplayTradesWithButtonsRyzen2(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
+        {
+            return indicator.RecordAndDisplayTradesWithButtonsRyzen2(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
+        }
 
-		public Indicators.My.RecordAndDisplayTradesWithButtonsRyzen2 RecordAndDisplayTradesWithButtonsRyzen2(ISeries<double> input , DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
-		{
-			return indicator.RecordAndDisplayTradesWithButtonsRyzen2(input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
-		}
-	}
+        public Indicators.My.RecordAndDisplayTradesWithButtonsRyzen2 RecordAndDisplayTradesWithButtonsRyzen2(ISeries<double> input, DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
+        {
+            return indicator.RecordAndDisplayTradesWithButtonsRyzen2(input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
+        }
+    }
 }
 
 namespace NinjaTrader.NinjaScript.Strategies
 {
-	public partial class Strategy : NinjaTrader.Gui.NinjaScript.StrategyRenderBase
-	{
-		public Indicators.My.RecordAndDisplayTradesWithButtonsRyzen2 RecordAndDisplayTradesWithButtonsRyzen2(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
-		{
-			return indicator.RecordAndDisplayTradesWithButtonsRyzen2(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
-		}
+    public partial class Strategy : NinjaTrader.Gui.NinjaScript.StrategyRenderBase
+    {
+        public Indicators.My.RecordAndDisplayTradesWithButtonsRyzen2 RecordAndDisplayTradesWithButtonsRyzen2(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
+        {
+            return indicator.RecordAndDisplayTradesWithButtonsRyzen2(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
+        }
 
-		public Indicators.My.RecordAndDisplayTradesWithButtonsRyzen2 RecordAndDisplayTradesWithButtonsRyzen2(ISeries<double> input , DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
-		{
-			return indicator.RecordAndDisplayTradesWithButtonsRyzen2(input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
-		}
-	}
+        public Indicators.My.RecordAndDisplayTradesWithButtonsRyzen2 RecordAndDisplayTradesWithButtonsRyzen2(ISeries<double> input, DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor)
+        {
+            return indicator.RecordAndDisplayTradesWithButtonsRyzen2(input, startTime, endTime, inputFile, outputFile, colorActiveCursor);
+        }
+    }
 }
 
 #endregion
