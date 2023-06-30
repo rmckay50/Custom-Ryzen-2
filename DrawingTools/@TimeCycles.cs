@@ -1,5 +1,5 @@
 ﻿// 
-// Copyright (C) 2022, NinjaTrader LLC <www.ninjatrader.com>.
+// Copyright (C) 2023, NinjaTrader LLC <www.ninjatrader.com>.
 // NinjaTrader reserves the right to modify or overwrite this NinjaScript component with each release.
 //
 #region Using declarations
@@ -346,7 +346,7 @@ namespace NinjaTrader.NinjaScript.DrawingTools
 			if (firstTime && DrawingState == DrawingState.Normal)
 			{
 				firstTime = false;
-				Cbi.License.Log("TimeCycles");
+				Cbi.UserEntitlement.Log("TimeCycles");
 			}
 
 			ChartPanel	chartPanel	= chartControl.ChartPanels[PanelIndex];

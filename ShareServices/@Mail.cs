@@ -1,5 +1,5 @@
 ﻿// 
-// Copyright (C) 2022, NinjaTrader LLC <www.ninjatrader.com>.
+// Copyright (C) 2023, NinjaTrader LLC <www.ninjatrader.com>.
 // NinjaTrader reserves the right to modify or overwrite this NinjaScript component with each release.
 //
 #region Using declarations
@@ -105,9 +105,12 @@ namespace NinjaTrader.NinjaScript.ShareServices
 					if (!await Core.Globals.SendGMail(FromMailAddress, SenderDisplayName, ToMailAddress.Split(',', ';'), CcMailAddress.Split(',', ';'), text, Subject, imageFilePath, OAuthToken))
 					{
 						await OnAuthorizeAccount();
-						await Core.Globals.SendGMail(FromMailAddress, SenderDisplayName, ToMailAddress.Split(',', ';'), CcMailAddress.Split(',', ';'), text, Subject, imageFilePath, OAuthToken);
+						if (await Core.Globals.SendGMail(FromMailAddress, SenderDisplayName, ToMailAddress.Split(',', ';'), CcMailAddress.Split(',', ';'), text, Subject, imageFilePath, OAuthToken))
+							LogAndPrint(typeof(Custom.Resource), "ShareMailSentSuccessfully", new[] { Name }, Cbi.LogLevel.Information);
 					}
 				}
+				else
+					LogAndPrint(typeof(Custom.Resource), "ShareMailSentSuccessfully", new[] { Name }, Cbi.LogLevel.Information);
 				return;
 			}
 
@@ -122,7 +125,8 @@ namespace NinjaTrader.NinjaScript.ShareServices
 
 			try
 			{
-				await Core.Globals.SendMailToServer(FromMailAddress, DisplayName, ToMailAddress.Split(',', ';'), CcMailAddress.Split(',', ';'), text, Subject, imageFilePath, Server, Port, mailUserName, mailPassword);
+				if (await Core.Globals.SendMailToServer(FromMailAddress, DisplayName, ToMailAddress.Split(',', ';'), CcMailAddress.Split(',', ';'), text, Subject, imageFilePath, Server, Port, mailUserName, mailPassword))
+					LogAndPrint(typeof(Custom.Resource), "ShareMailSentSuccessfully", new[] { Name }, Cbi.LogLevel.Information);
 			}
 			catch (Exception ex)
 			{

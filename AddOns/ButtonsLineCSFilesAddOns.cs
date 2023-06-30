@@ -28,6 +28,7 @@ namespace NinjaTrader.Custom.AddOns
         public double? Exit { get; set; }                                                                //	class CSV
         public string Long_Short { get; set; }
         public double P_L { get; set; }
+        public double DailyTotal { get; set; }
 
 
         public IEnumerator GetEnumerator()                                                              //	class CSV
@@ -123,8 +124,7 @@ namespace NinjaTrader.Custom.AddOns
             Time = time;
             ServerName = serverName;
         }
-    }
-	
+    }	
     public class Input
     {
         public bool BPlayback { get; set; }
@@ -135,13 +135,14 @@ namespace NinjaTrader.Custom.AddOns
         public string OutputPath { get; set; }
         public string TimeFirstBarOnChart { get; set; }
         public string TimeLastBarOnChart { get; set; }
+		public long Expiry { get; set; }
 
 
         public Input()
         {
         }
 
-        public Input(bool bPlayback, string name, string startDate, string endDate, string inputPath, string outputPath, string timeFirstBarOnChart, string timeLastBarOnChart)
+        public Input(bool bPlayback, string name, string startDate, string endDate, string inputPath, string outputPath, string timeFirstBarOnChart, string timeLastBarOnChart, long expiry)
         {
             BPlayback = bPlayback;
             Name = name;
@@ -151,6 +152,7 @@ namespace NinjaTrader.Custom.AddOns
             OutputPath = outputPath;
             TimeFirstBarOnChart = timeFirstBarOnChart;
             TimeLastBarOnChart = timeLastBarOnChart;
+            Expiry = expiry;
         }
 
     }
@@ -379,12 +381,14 @@ namespace NinjaTrader.Custom.AddOns
         public string EndTime { get; set; }
         public double EndY { get; set; }
         public double P_L { get; set; }
+        public double DailyTotal { get; set; }
+
 
 
         public NTDrawLine() { }
 
         public NTDrawLine(int id, string symbol, string long_Short, long startTimeTicks, string startTime, double startY, long endTimeTicks, string endTime, double endY,
-            double p_L)
+            double p_L, double dailyTotal)
         {
             Id = id;
             Symbol = symbol;
@@ -396,6 +400,7 @@ namespace NinjaTrader.Custom.AddOns
             EndTime = endTime;
             EndY = endY;
             P_L = p_L;
+            DailyTotal = dailyTotal;
         }
     }
     public class NTDrawLineForLINQtoCSV
@@ -420,6 +425,8 @@ namespace NinjaTrader.Custom.AddOns
         public double EndY { get; set; }
         [CsvColumn(FieldIndex = 10)]
         public double P_L { get; set; }
+        [CsvColumn(FieldIndex = 11)]
+        public double DailyTotal { get; set; }
     }
     public class Source
     {

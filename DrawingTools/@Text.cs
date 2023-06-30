@@ -1,5 +1,5 @@
 // 
-// Copyright (C) 2022, NinjaTrader LLC <www.ninjatrader.com>.
+// Copyright (C) 2023, NinjaTrader LLC <www.ninjatrader.com>.
 // NinjaTrader reserves the right to modify or overwrite this NinjaScript component with each release.
 //
 #region Using declarations
@@ -699,7 +699,7 @@ namespace NinjaTrader.NinjaScript.DrawingTools
 		/// <param name="y">The y value or Price for the object</param>
 		/// <param name="textBrush">The brush used to color the text of the draw object</param>
 		/// <returns></returns>
-		public static Text Text(NinjaScriptBase owner, string tag, string text, int barsAgo, double y, Brush textBrush)
+		public static Text Text(NinjaScriptBase owner, string tag, bool v, string text, int barsAgo, double y, Brush textBrush)
 		{
 			return TextCore(owner, tag, false, text, barsAgo, Core.Globals.MinDate, y, null, textBrush, TextAlignment.Center, null, null, null, null, false, null, DashStyleHelper.Solid, 0);
 		}

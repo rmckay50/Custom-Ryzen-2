@@ -93,3 +93,9 @@
 
 2023 05 14 1250  
 	commit - all files for 'RecordAndDisplayTradesWithButtons' and AddOns are synced  
+
+2023 05 27 1030  
+    commit - branch AddPL.  Exception from Close[barsAgo] in print statement
+
+2023 05 28 0935  
+    commit - crude GetBar() working example  
