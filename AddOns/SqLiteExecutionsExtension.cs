@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,16 +37,14 @@ namespace NinjaTrader.Custom.AddOns
                             (long)csv.EndTimeTicks,
                             DateTime.Parse(csv.EndTime).ToString("HH:mm:ss  MM/dd/yyy"),
                             (double)csv.Exit,
-                            (double)csv.P_L
-
+                            (double)csv.P_L,
+                            (double)csv.DailyTotal
                         )
                     );
-
-
                 }
-                catch
+                catch ( Exception ex)
                 {
-                    //csv.Exit.Dump();
+                    Console.WriteLine( ex );
 
                 }
             }
@@ -128,6 +126,74 @@ namespace NinjaTrader.Custom.AddOns
                 return source;                                                                                  //	Fill
             }
         #endregion Fill        
+
+        #region FillDailyTotalColumn
+
+        public static Source FillDailyTotalColumn(this Source source)
+        {
+
+            //  get date ("MM/dd/yyyy") portion of end date
+            //  compare on each pass with starting date
+            //  when date changes (string compare) enter new total into DailyTotal column
+            var startingDate = source.Csv[0].EndTime.Substring(11);
+
+            //  use to get trade end date to be used for comparison
+            var currentTradeDate = "";
+
+            //  use as register to total trade P/L values
+            //  initialize with first value because starting poing for foreach is line 2
+            double runningTotal = source.Csv[0].P_L;
+
+            //  need to keep track of line number in list
+            int iD = 0;
+
+            //  cycle through trades - compare trade end date with previous - record total on change
+            //   zero accumulator
+            foreach (var c in source.Csv)
+            {
+                //  get date of trade ("/MM/dd/yyy")
+                currentTradeDate = c.EndTime.Substring(11);
+
+                //  has date changed - value less than zero is change
+                if (currentTradeDate.CompareTo(startingDate) == 0 && iD != 0)
+                {
+                    //  add curent line P/L to accumulator
+                    runningTotal = runningTotal + c.P_L;
+                }
+
+                //  date has changed
+                else if (iD != 0)
+                {
+                    //  insert total in DailyTotal column 1 line up
+                    source.Csv[iD - 1].DailyTotal = runningTotal;
+
+                    //  zero accumulator - this if if hit when dates are unequal so running total 
+                    //      needs to be set to rows P/L - zero is not needed
+                    runningTotal = 0;
+
+                    //  add curent line P/L to accumulator
+                    runningTotal = runningTotal + c.P_L;
+
+                    //  update trade end date
+                    startingDate = currentTradeDate;
+                };
+
+                //  update line ID
+                iD++;
+
+                //  if ID  == list.count - at end of list - enter last total
+                if (iD == source.Csv.Count)
+                {
+                    source.Csv[iD - 1].DailyTotal = runningTotal;
+
+                }
+            }
+
+
+            return source;
+        }
+
+        #endregion FillDailyTotalColumn        
 
         #region FillLongShortColumnInTradesList
         // 	Determines whether entry is a long or short position and fills in Long_Short column for entries

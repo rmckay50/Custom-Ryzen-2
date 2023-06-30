@@ -223,11 +223,19 @@ namespace NinjaTrader.Custom.AddOns
 
                 #endregion foreach through .csv and add StarTimeTicks StartTime ExitTimeTicks ExitTime
 
-                #region Fill in P_L coulmn in source.csv
+                #region Fill in P_L column in source.csv
                 //	Call 'FillProfitLossColumnInTradesList' to fill in csv P_L column
                 source.FillProfitLossColumnInTradesList();
                 //source.
                 #endregion Fill in P_L coulmn in source.csv
+
+                #region Fill in Daily Total Column
+
+                //	Call 'FillDailyTotalColumn' to fill in csv Daily Total column
+                source.FillDailyTotalColumn();
+
+                #endregion Fill in Daily Total Column
+
 
                 #region Create NTDrawLine list for use in saving to file and later in NT
 
@@ -251,6 +259,7 @@ namespace NinjaTrader.Custom.AddOns
                                                 EndTime = l.EndTime,
                                                 EndY = l.EndY,
                                                 P_L = l.P_L,
+                                                DailyTotal= l.DailyTotal,
                                             };
                 columnsWithAttributes.ToList();
 
