@@ -580,16 +580,27 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
                         var sTime = DateTime.Parse(rc.StartTime);
 
-                        int barsAgo = CurrentBar - Bars.GetBar(sTime);
-                            var x = Bars.GetDayBar(1).Open;
-                            var hi = Bars.GetDayBar(1).High;
-                            var lo = Bars.GetDayBar(1).Low;
-                            var y = CurrentDayOHL().CurrentLow[0];
-                            var nowTime = DateTime.Now;
+                            //  need DAteTime.Now to calculate days between now and trade date
+                            var timeNow = DateTime.Now;
 
+                            //  get number of days 
+                            int daysAgo = (timeNow - sTime).Days;
 
-                        //Print(x.ToString());
-                            //}
+                            //  instantiate outside of brackets
+                            double hi = 0;
+                            double lo = 0;
+
+                            //  get high and low
+                            if (daysAgo > 0)
+                            {
+                                hi = Bars.GetDayBar(daysAgo).High;
+                                lo = Bars.GetDayBar(daysAgo).Low;
+                            }
+                            //var x = Bars.GetDayBar(daysAgo).Open;
+
+                            //var y = CurrentDayOHL().CurrentLow[0];
+                            //var nowTime = DateTime.Now;
+
                                 var eTime = rc.EndTime;
 
                             if (rc.DailyTotal > 0)
@@ -601,8 +612,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                                 Print("etDateOnlySubString" + etDateOnlySubString);
                                 Print(string.Format("High = {0} Low = {1}", hi, lo));
                                 //Print(barsAgo.ToString());
-                                Print("Number of Days: " + (nowTime - etDateOnly).Days);
-                                Print("Number of Days: " + (nowTime - sTime).Days);
+                                Print("Number of Days: " + (timeNow - etDateOnly).Days);
+                                Print("Number of Days: " + (timeNow - sTime).Days);
 
                             }
                         }
