@@ -33,12 +33,13 @@ namespace NinjaTrader.Custom.AddOns
                             csv.Long_Short,
                             (long)csv.StartTimeTicks,
                             DateTime.Parse(csv.StartTime).ToString("HH:mm:ss  MM/dd/yyy"),
-                             (double)csv.Entry,
+                            (double)csv.Entry,
                             (long)csv.EndTimeTicks,
                             DateTime.Parse(csv.EndTime).ToString("HH:mm:ss  MM/dd/yyy"),
                             (double)csv.Exit,
                             (double)csv.P_L,
-                            (double)csv.DailyTotal
+                            (double)csv.DailyTotal,
+                            (int)csv.TotalTrades
                         )
                     );
                 }
@@ -144,6 +145,9 @@ namespace NinjaTrader.Custom.AddOns
             //  initialize with first value because starting poing for foreach is line 2
             double runningTotal = source.Csv[0].P_L;
 
+            //  use as register to count number of trades in the day
+            int TotalTrades = 1;
+
             //  need to keep track of line number in list
             int iD = 0;
 
@@ -159,6 +163,9 @@ namespace NinjaTrader.Custom.AddOns
                 {
                     //  add curent line P/L to accumulator
                     runningTotal = runningTotal + c.P_L;
+
+                    //  add to number of days trades
+                    TotalTrades++;
                 }
 
                 //  date has changed
@@ -167,9 +174,16 @@ namespace NinjaTrader.Custom.AddOns
                     //  insert total in DailyTotal column 1 line up
                     source.Csv[iD - 1].DailyTotal = runningTotal;
 
-                    //  zero accumulator - this if if hit when dates are unequal so running total 
+                    //  insert total in TotalTrades column 1 line up
+                    source.Csv[iD - 1].TotalTrades = TotalTrades;
+
+
+                    //  zero accumulator - this if is hit when dates are unequal so running total 
                     //      needs to be set to rows P/L - zero is not needed
                     runningTotal = 0;
+
+                    //  zero TotalTrades
+                    TotalTrades = 1;
 
                     //  add curent line P/L to accumulator
                     runningTotal = runningTotal + c.P_L;
@@ -185,6 +199,9 @@ namespace NinjaTrader.Custom.AddOns
                 if (iD == source.Csv.Count)
                 {
                     source.Csv[iD - 1].DailyTotal = runningTotal;
+
+                    //  enter number of trades in TotalTrades
+                    source.Csv[iD - 1].TotalTrades = TotalTrades;
 
                 }
             }
