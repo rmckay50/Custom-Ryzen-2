@@ -585,6 +585,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                             var hi = Bars.GetDayBar(1).High;
                             var lo = Bars.GetDayBar(1).Low;
                             var y = CurrentDayOHL().CurrentLow[0];
+                            var nowTime = DateTime.Now;
+
 
                         //Print(x.ToString());
                             //}
@@ -593,12 +595,14 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                             if (rc.DailyTotal > 0)
                             {
                                 Print ("rc.Endtime = " + rc.EndTime.ToString());
-                                Print(string.Format("Daily total is {0}", rc.DailyTotal.ToString("0.000")));
+                                Print(string.Format("Daily total is {0}", rc.DailyTotal.ToString("0.00")));
                                 var etDateOnly = DateTime.Parse(rc.EndTime);
                                 var etDateOnlySubString = rc.EndTime.Substring(9);
                                 Print("etDateOnlySubString" + etDateOnlySubString);
                                 Print(string.Format("High = {0} Low = {1}", hi, lo));
                                 //Print(barsAgo.ToString());
+                                Print("Number of Days: " + (nowTime - etDateOnly).Days);
+                                Print("Number of Days: " + (nowTime - sTime).Days);
 
                             }
                         }
