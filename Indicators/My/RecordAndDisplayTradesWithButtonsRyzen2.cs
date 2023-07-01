@@ -99,6 +99,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 ActiveCursorColor = Brushes.DarkGreen;
                 InactiveCursorColor = Brushes.DimGray;
                 PixelsAboveBelowBar = 50;
+                PixelsAboveBelowDay = 200;
                 IsSuspendedWhileInactive = true;
                 StartTime = DateTime.Parse("06/01/ 2023");
                 EndTime = DateTime.Parse("06/30/ 2023");
@@ -571,6 +572,11 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 #endregion Draw.Line()
 
                 #region Draw.Text()
+
+                //  instantiate outside of brackets
+                double hi = 0;
+                double lo = 0;
+
                 try
                 {
                     TriggerCustomEvent(o =>
@@ -603,9 +609,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                             //  number of days to trade needs to be less than the number of days on the chart
                             if (daysAgo < daysOnChart)
                             { 
-                                //  instantiate outside of brackets
-                                double hi = 0;
-                                double lo = 0;
+                                ////  instantiate outside of brackets
+                                //double hi = 0;
+                                //double lo = 0;
                                 //  get high and low
                                 if (daysAgo > 0)
                                 {
@@ -637,17 +643,16 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                         //}
                     }, null);
 
-            }
-                        catch (Exception ex)
-                        {
-                            Print (ex.ToString());
+                }
+                catch (Exception ex)
+                {
+                    Print (ex.ToString());
                     // Submits an entry into the Control Center logs to inform the user of an error				
                     Log("SampleTryCatch Error: Please check your indicator for errors.", NinjaTrader.Cbi.LogLevel.Warning);
-
                 }
 
                 try
-                        {
+                {
                     TriggerCustomEvent(o =>
                     {
                         var sTime = DateTime.Parse(rc.StartTime);
@@ -657,13 +662,12 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                         var chartControl = ChartControl.Properties.LabelFont;
                         //var pixels 
                         SimpleFont chartFont = chartControl;
+                        SimpleFont fontDailyTotal = new NinjaTrader.Gui.Tools.SimpleFont("Arial", 12) { Size = 50, Bold = true };
 
 
                         if (CurrentBar > 0 && CurrentBar > barsAgo)
                         {
                             //Print("The prior trading day's close is: " + Bars.GetDayBar(1).Close);
-
-
 
                             // Print P/L in blue below line start
                             if (rc.P_L >= 0)
@@ -678,11 +682,35 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                             }
 
                             //  if DailyTotal is available draw it at midpoint of day
-                            //if (rc.DailyTotal != 0)
-                            //{
-                                //var noon = sTime.Date.AddHours(12);
-                            //}
-                       }
+                            if (rc.DailyTotal != 0)
+                            {
+                                //  calculate text x position - 11:00 AM
+                                //  get day 'MM/dd/yyyy' from string rc.StartTime - substring date
+                                DateTime startDayText = DateTime.Parse(rc.StartTime.Substring(9));
+
+                                //  add 11 hours
+                                startDayText = startDayText.AddHours(11);
+                                Print("\nstartDayText: " + startDayText.ToString());
+                                Print("\nlo: " + lo.ToString() + " pixel offset: " + PixelsAboveBelowDay.ToString() + "Lo : " + lo);
+                                Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), sTime, rc.StartY, -PixelsAboveBelowDay, Brushes.Yellow, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                                Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay - 200, Brushes.Orange, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                                
+                                //  use red for loss and blue for gain
+                                if (rc.DailyTotal >= 0)
+                                {
+                                    //Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString(), sTime, rc.StartY, -PixelsAboveBelowBar, Brushes.Blue, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                                    Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay, Brushes.Blue, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+
+                                }
+                                // Print P/L in red above line start
+                                else
+                                {
+                                    //Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString(), sTime, rc.StartY, PixelsAboveBelowBar, Brushes.Red, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                                    Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay, Brushes.Red, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                                }
+
+                            }
+                        }
 
 
                     }, null);
@@ -850,7 +878,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             chartWindow.ActiveChartControl.InvalidateVisual();
             ForceRefresh();
         }
-
 
         private void hideUserDrawsFunc()
         {
@@ -1083,6 +1110,12 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         public int PixelsAboveBelowBar
         { get; set; }
 
+        [NinjaScriptProperty]
+        [Range(0, int.MaxValue)]
+        [Display(Name = "Pixels Above/Below Day", Description = "Number of Pixels above and below day", Order = 4, GroupName = "Other Settings")]
+        public int PixelsAboveBelowDay
+        { get; set; }
+
         #endregion
 
     }
@@ -1095,18 +1128,18 @@ namespace NinjaTrader.NinjaScript.Indicators
 	public partial class Indicator : NinjaTrader.Gui.NinjaScript.IndicatorRenderBase
 	{
 		private My.RecordAndDisplayTradesWithButtons[] cacheRecordAndDisplayTradesWithButtons;
-		public My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor, int pixelsAboveBelowBar)
+		public My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor, int pixelsAboveBelowBar, int pixelsAboveBelowDay)
 		{
-			return RecordAndDisplayTradesWithButtons(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor, pixelsAboveBelowBar);
+			return RecordAndDisplayTradesWithButtons(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor, pixelsAboveBelowBar, pixelsAboveBelowDay);
 		}
 
-		public My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(ISeries<double> input, DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor, int pixelsAboveBelowBar)
+		public My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(ISeries<double> input, DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor, int pixelsAboveBelowBar, int pixelsAboveBelowDay)
 		{
 			if (cacheRecordAndDisplayTradesWithButtons != null)
 				for (int idx = 0; idx < cacheRecordAndDisplayTradesWithButtons.Length; idx++)
-					if (cacheRecordAndDisplayTradesWithButtons[idx] != null && cacheRecordAndDisplayTradesWithButtons[idx].StartTime == startTime && cacheRecordAndDisplayTradesWithButtons[idx].EndTime == endTime && cacheRecordAndDisplayTradesWithButtons[idx].InputFile == inputFile && cacheRecordAndDisplayTradesWithButtons[idx].OutputFile == outputFile && cacheRecordAndDisplayTradesWithButtons[idx].colorActiveCursor == colorActiveCursor && cacheRecordAndDisplayTradesWithButtons[idx].PixelsAboveBelowBar == pixelsAboveBelowBar && cacheRecordAndDisplayTradesWithButtons[idx].EqualsInput(input))
+					if (cacheRecordAndDisplayTradesWithButtons[idx] != null && cacheRecordAndDisplayTradesWithButtons[idx].StartTime == startTime && cacheRecordAndDisplayTradesWithButtons[idx].EndTime == endTime && cacheRecordAndDisplayTradesWithButtons[idx].InputFile == inputFile && cacheRecordAndDisplayTradesWithButtons[idx].OutputFile == outputFile && cacheRecordAndDisplayTradesWithButtons[idx].colorActiveCursor == colorActiveCursor && cacheRecordAndDisplayTradesWithButtons[idx].PixelsAboveBelowBar == pixelsAboveBelowBar && cacheRecordAndDisplayTradesWithButtons[idx].PixelsAboveBelowDay == pixelsAboveBelowDay && cacheRecordAndDisplayTradesWithButtons[idx].EqualsInput(input))
 						return cacheRecordAndDisplayTradesWithButtons[idx];
-			return CacheIndicator<My.RecordAndDisplayTradesWithButtons>(new My.RecordAndDisplayTradesWithButtons(){ StartTime = startTime, EndTime = endTime, InputFile = inputFile, OutputFile = outputFile, colorActiveCursor = colorActiveCursor, PixelsAboveBelowBar = pixelsAboveBelowBar }, input, ref cacheRecordAndDisplayTradesWithButtons);
+			return CacheIndicator<My.RecordAndDisplayTradesWithButtons>(new My.RecordAndDisplayTradesWithButtons(){ StartTime = startTime, EndTime = endTime, InputFile = inputFile, OutputFile = outputFile, colorActiveCursor = colorActiveCursor, PixelsAboveBelowBar = pixelsAboveBelowBar, PixelsAboveBelowDay = pixelsAboveBelowDay }, input, ref cacheRecordAndDisplayTradesWithButtons);
 		}
 	}
 }
@@ -1115,14 +1148,14 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 {
 	public partial class MarketAnalyzerColumn : MarketAnalyzerColumnBase
 	{
-		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor, int pixelsAboveBelowBar)
+		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor, int pixelsAboveBelowBar, int pixelsAboveBelowDay)
 		{
-			return indicator.RecordAndDisplayTradesWithButtons(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor, pixelsAboveBelowBar);
+			return indicator.RecordAndDisplayTradesWithButtons(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor, pixelsAboveBelowBar, pixelsAboveBelowDay);
 		}
 
-		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(ISeries<double> input , DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor, int pixelsAboveBelowBar)
+		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(ISeries<double> input , DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor, int pixelsAboveBelowBar, int pixelsAboveBelowDay)
 		{
-			return indicator.RecordAndDisplayTradesWithButtons(input, startTime, endTime, inputFile, outputFile, colorActiveCursor, pixelsAboveBelowBar);
+			return indicator.RecordAndDisplayTradesWithButtons(input, startTime, endTime, inputFile, outputFile, colorActiveCursor, pixelsAboveBelowBar, pixelsAboveBelowDay);
 		}
 	}
 }
@@ -1131,14 +1164,14 @@ namespace NinjaTrader.NinjaScript.Strategies
 {
 	public partial class Strategy : NinjaTrader.Gui.NinjaScript.StrategyRenderBase
 	{
-		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor, int pixelsAboveBelowBar)
+		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor, int pixelsAboveBelowBar, int pixelsAboveBelowDay)
 		{
-			return indicator.RecordAndDisplayTradesWithButtons(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor, pixelsAboveBelowBar);
+			return indicator.RecordAndDisplayTradesWithButtons(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor, pixelsAboveBelowBar, pixelsAboveBelowDay);
 		}
 
-		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(ISeries<double> input , DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor, int pixelsAboveBelowBar)
+		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(ISeries<double> input , DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor, int pixelsAboveBelowBar, int pixelsAboveBelowDay)
 		{
-			return indicator.RecordAndDisplayTradesWithButtons(input, startTime, endTime, inputFile, outputFile, colorActiveCursor, pixelsAboveBelowBar);
+			return indicator.RecordAndDisplayTradesWithButtons(input, startTime, endTime, inputFile, outputFile, colorActiveCursor, pixelsAboveBelowBar, pixelsAboveBelowDay);
 		}
 	}
 }
