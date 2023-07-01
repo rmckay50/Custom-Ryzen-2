@@ -573,6 +573,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
                 #region Draw.Text()
 
+
+                //  check number of bars on chart is greater than needed for the first trade - throws an exception otherwise - out of bounds on 'barsAgo'
                 //  instantiate outside of brackets
                 double hi = 0;
                 double lo = 0;
@@ -651,29 +653,35 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     Log("SampleTryCatch Error: Please check your indicator for errors.", NinjaTrader.Cbi.LogLevel.Warning);
                 }
 
+                //  calculate position for text for trade P/L and Daily Total
+                //  print both
                 try
                 {
                     TriggerCustomEvent(o =>
                     {
+                        //  start time of line that P/L is plotted below/above in Draw.Text()
                         var sTime = DateTime.Parse(rc.StartTime);
 
+                        //  number of bars back from left side of chart to the trade line start time
+                        //  it needs to be less than the number of bars on the chart
                         int barsAgo = CurrentBar - Bars.GetBar(sTime);
+
                         //  get chart font for Draw.Text()
                         var chartControl = ChartControl.Properties.LabelFont;
+
                         //var pixels 
                         SimpleFont chartFont = chartControl;
+
+                        //  chart font (default is Arial 12) increase size to 50 so that I can see the fucker
                         SimpleFont fontDailyTotal = new NinjaTrader.Gui.Tools.SimpleFont("Arial", 12) { Size = 50, Bold = true };
 
-
+                        //  CurrentBar is -1 for a while && check for enough bar on the chart
                         if (CurrentBar > 0 && CurrentBar > barsAgo)
                         {
-                            //Print("The prior trading day's close is: " + Bars.GetDayBar(1).Close);
-
                             // Print P/L in blue below line start
                             if (rc.P_L >= 0)
                             {
                                 Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString(), sTime, rc.StartY, -PixelsAboveBelowBar, Brushes.Blue, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
-
                             }
                             // Print P/L in red above line start
                             else
@@ -690,22 +698,19 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
                                 //  add 11 hours
                                 startDayText = startDayText.AddHours(11);
-                                Print("\nstartDayText: " + startDayText.ToString());
-                                Print("\nlo: " + lo.ToString() + " pixel offset: " + PixelsAboveBelowDay.ToString() + "Lo : " + lo);
-                                Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), sTime, rc.StartY, -PixelsAboveBelowDay, Brushes.Yellow, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
-                                Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay - 200, Brushes.Orange, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                                //Print("\nstartDayText: " + startDayText.ToString());
+                                //Print("\nlo: " + lo.ToString() + " pixel offset: " + PixelsAboveBelowDay.ToString() + "Lo : " + lo);
+                                //Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), sTime, rc.StartY, -PixelsAboveBelowDay, Brushes.Yellow, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                                //Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay - 200, Brushes.Orange, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
                                 
                                 //  use red for loss and blue for gain
                                 if (rc.DailyTotal >= 0)
                                 {
-                                    //Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString(), sTime, rc.StartY, -PixelsAboveBelowBar, Brushes.Blue, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
                                     Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay, Brushes.Blue, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
 
                                 }
-                                // Print P/L in red above line start
                                 else
                                 {
-                                    //Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString(), sTime, rc.StartY, PixelsAboveBelowBar, Brushes.Red, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
                                     Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay, Brushes.Red, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
                                 }
 
