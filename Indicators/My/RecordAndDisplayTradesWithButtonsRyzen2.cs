@@ -605,8 +605,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                             //  need DAteTime.Now to calculate days between now and trade date
                             var timeNow = DateTime.Now;
 
-                            //  get number of days to trade
-                            int daysAgo = (timeNow - sTime).Days;
+                            //  get number of days to trade - needs an adjustment for some reason
+                            int daysAgo = (timeNow - sTime).Days - 1;
 
                             //  number of days to trade needs to be less than the number of days on the chart
                             if (daysAgo < daysOnChart)
