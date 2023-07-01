@@ -39,7 +39,7 @@ namespace NinjaTrader.Custom.AddOns
                             (double)csv.Exit,
                             (double)csv.P_L,
                             (double)csv.DailyTotal,
-                            (int)csv.TotalTrades
+                            (int?)csv.TotalTrades
                         )
                     );
                 }

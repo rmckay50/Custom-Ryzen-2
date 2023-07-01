@@ -260,6 +260,7 @@ namespace NinjaTrader.Custom.AddOns
                                                 EndY = l.EndY,
                                                 P_L = l.P_L,
                                                 DailyTotal= l.DailyTotal,
+                                                TotalTrades= l.TotalTrades
                                             };
                 columnsWithAttributes.ToList();
 

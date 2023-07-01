@@ -698,21 +698,28 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
                                 //  add 11 hours
                                 startDayText = startDayText.AddHours(11);
+
+                                //  add TotalTrades to DailyTotal
+                                var daillyTotalPlusTotalTrades = rc.DailyTotal.ToString() + " (" + rc.TotalTrades.ToString() + ")";
                                 //Print("\nstartDayText: " + startDayText.ToString());
                                 //Print("\nlo: " + lo.ToString() + " pixel offset: " + PixelsAboveBelowDay.ToString() + "Lo : " + lo);
                                 //Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), sTime, rc.StartY, -PixelsAboveBelowDay, Brushes.Yellow, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
                                 //Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay - 200, Brushes.Orange, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
-                                
+
                                 //  use red for loss and blue for gain
                                 if (rc.DailyTotal >= 0)
                                 {
-                                    Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay, Brushes.Blue, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                                    //Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay, Brushes.Blue, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                                    Draw.Text(this, i.ToString() + "DailyText", false, daillyTotalPlusTotalTrades, startDayText, lo, -PixelsAboveBelowDay, Brushes.Blue, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
 
                                 }
                                 else
                                 {
-                                    Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay, Brushes.Red, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                                    //Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay, Brushes.Red, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                                    Draw.Text(this, i.ToString() + "DailyText", false, daillyTotalPlusTotalTrades, startDayText, lo, -PixelsAboveBelowDay, Brushes.Red, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+
                                 }
+
 
                             }
                         }
