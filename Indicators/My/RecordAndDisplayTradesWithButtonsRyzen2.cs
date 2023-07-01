@@ -577,47 +577,64 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     {
                         if (CurrentBar > 0)
                         {
+                            //  get days on chart
+                            //  needs to be greater than 1st day in C:\Users\Rod\Documents\NinjaTrader 8\csvNTDrawline.csv - from property 'OutputFile'
+                            if (CurrentBar < 10) return;
 
-                        var sTime = DateTime.Parse(rc.StartTime);
+                            //  first bar on chart
+                            DateTime StartDate = Time[CurrentBar - 1];
+
+                            //  last bar on chart
+                            DateTime EndDate = Time[0];
+
+                            //  days on chart - may need to use (d1 - d2).Days - Toatal days gives fraction of days
+                            int daysOnChart = (int)(EndDate - StartDate).TotalDays;
+
+                            //Print("Days on chart: " + daysOnChart.ToString());
+
+                            var sTime = DateTime.Parse(rc.StartTime);
 
                             //  need DAteTime.Now to calculate days between now and trade date
                             var timeNow = DateTime.Now;
 
-                            //  get number of days 
+                            //  get number of days to trade
                             int daysAgo = (timeNow - sTime).Days;
 
-                            //  instantiate outside of brackets
-                            double hi = 0;
-                            double lo = 0;
+                            //  number of days to trade needs to be less than the number of days on the chart
+                            if (daysAgo < daysOnChart)
+                            { 
+                                //  instantiate outside of brackets
+                                double hi = 0;
+                                double lo = 0;
+                                //  get high and low
+                                if (daysAgo > 0)
+                                {
+                                    hi = Bars.GetDayBar(daysAgo).High;
+                                    lo = Bars.GetDayBar(daysAgo).Low;
+                                }
+                                //var x = Bars.GetDayBar(daysAgo).Open;
 
-                            //  get high and low
-                            if (daysAgo > 0)
-                            {
-                                hi = Bars.GetDayBar(daysAgo).High;
-                                lo = Bars.GetDayBar(daysAgo).Low;
-                            }
-                            //var x = Bars.GetDayBar(daysAgo).Open;
-
-                            //var y = CurrentDayOHL().CurrentLow[0];
-                            //var nowTime = DateTime.Now;
+                                //var y = CurrentDayOHL().CurrentLow[0];
+                                //var nowTime = DateTime.Now;
 
                                 var eTime = rc.EndTime;
 
-                            if (rc.DailyTotal > 0)
-                            {
-                                Print ("rc.Endtime = " + rc.EndTime.ToString());
-                                Print(string.Format("Daily total is {0}", rc.DailyTotal.ToString("0.00")));
-                                var etDateOnly = DateTime.Parse(rc.EndTime);
-                                var etDateOnlySubString = rc.EndTime.Substring(9);
-                                Print("etDateOnlySubString" + etDateOnlySubString);
-                                Print(string.Format("High = {0} Low = {1}", hi, lo));
-                                //Print(barsAgo.ToString());
-                                Print("Number of Days: " + (timeNow - etDateOnly).Days);
-                                Print("Number of Days: " + (timeNow - sTime).Days);
+                                if (rc.DailyTotal > 0)
+                                {
+                                    Print("\nrc.Endtime = " + rc.EndTime.ToString());
+                                    Print(string.Format("Daily total is {0}", rc.DailyTotal.ToString("0.00")));
+                                    var etDateOnly = DateTime.Parse(rc.EndTime);
+                                    var etDateOnlySubString = rc.EndTime.Substring(9);
+                                    //Print("etDateOnlySubString" + etDateOnlySubString);
+                                    Print(string.Format("High = {0} Low = {1}", hi, lo));
+                                    //Print(barsAgo.ToString());
+                                    //Print("Number of Days: " + (timeNow - etDateOnly).Days);
+                                    Print("Number of Days: " + (timeNow - sTime).Days + "\n");
 
+                                }
                             }
                         }
-                       //}
+                        //}
                     }, null);
 
             }
