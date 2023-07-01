@@ -28,7 +28,7 @@ namespace NinjaTrader.Custom.AddOns
         public double? Exit { get; set; }                                                                //	class CSV
         public string Long_Short { get; set; }
         public double P_L { get; set; }
-        public double DailyTotal { get; set; }
+        public double? DailyTotal { get; set; }
         public int? TotalTrades { get; set; }
 
 
@@ -382,13 +382,13 @@ namespace NinjaTrader.Custom.AddOns
         public string EndTime { get; set; }
         public double EndY { get; set; }
         public double P_L { get; set; }
-        public double DailyTotal { get; set; }
+        public double? DailyTotal { get; set; }
         public int? TotalTrades { get; set; }
 
         public NTDrawLine() { }
 
         public NTDrawLine(int id, string symbol, string long_Short, long startTimeTicks, string startTime, double startY, long endTimeTicks, string endTime, double endY,
-            double p_L, double dailyTotal, int? totalTrades)
+            double p_L, double? dailyTotal, int? totalTrades)
         {
             Id = id;
             Symbol = symbol;
@@ -427,7 +427,7 @@ namespace NinjaTrader.Custom.AddOns
         [CsvColumn(FieldIndex = 10)]
         public double P_L { get; set; }
         [CsvColumn(FieldIndex = 11)]
-        public double DailyTotal { get; set; }
+        public double? DailyTotal { get; set; }
         [CsvColumn(FieldIndex = 12)]
         public int? TotalTrades { get; set; }
 

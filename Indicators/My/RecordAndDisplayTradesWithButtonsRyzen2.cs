@@ -55,7 +55,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
     public class RecordAndDisplayTradesWithButtons : Indicator
     {
-
+        #region Create variables
         private bool drawSwitch = true;
         private bool indiSwitch;
         private bool p_LSwitch = true;
@@ -83,6 +83,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         //  Get Username from Environment.UserName for InputFile and OutputFile initialization
         private string userName = Environment.UserName;
 
+        #endregion Create variables
         protected override void OnStateChange()
         {
             if (State == State.SetDefaults)
@@ -138,11 +139,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 }
             }
         }
-
         protected override void OnBarUpdate()
         {
         }
-
         #region Properties
         //	https://ninjatrader.com/support/forum/forum/ninjatrader-8/indicator-development/1050873-date-picker-property#post1050892
         [NinjaScriptProperty]
@@ -250,7 +249,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         #endregion
 
         #endregion Properties
-
         private void AddButtonToToolbar()
         {
             //Obtain the Chart on which the indicator is configured
@@ -343,11 +341,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             // toolbar multiple times if NS code is refreshed
             IsToolBarButtonAdded = true;
         }
-
         protected override void OnRender(ChartControl chartControl, ChartScale chartScale)
         {
         }
-
         //  Toggle trade lines
         private void btnTradeLinesClick(object sender, RoutedEventArgs e)
         {
@@ -358,9 +354,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 hideDrawsFunc();
             }
         }
-
         //  Toggle P/L
-
         private void btnP_LClick(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.Button button = sender as System.Windows.Controls.Button;
@@ -370,8 +364,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 hideP_LFunc();
             }
         }
-
-
         //  Toggle user drawn objects
         private void btnUserDrawObjsClick(object sender, RoutedEventArgs e)
         {
@@ -381,7 +373,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 hideUserDrawsFunc();
             }
         }
-
         private void btnIndicatorsClick(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.Button button = sender as System.Windows.Controls.Button;
@@ -420,7 +411,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 ForceRefresh();
             }
         }
-
         private void btnShowTradesClick(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.Button button = sender as System.Windows.Controls.Button;
@@ -475,7 +465,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 ForceRefresh();
             }
         }
-
         private void btnHideWicksClick(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.Button button = sender as System.Windows.Controls.Button;
@@ -492,9 +481,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 CreateCvsFunc();
             }
         }
-
         private void ReadCsvAndDrawLines()
         {
+            ClearOutputWindow();
             #region Use LINQtoCSV to read "csvNTDrawline.csv"
             CsvFileDescription scvDescript = new CsvFileDescription();
             CsvContext cc = new CsvContext();
@@ -627,19 +616,19 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
                                 var eTime = rc.EndTime;
 
-                                if (rc.DailyTotal > 0)
-                                {
-                                    Print("\nrc.Endtime = " + rc.EndTime.ToString());
-                                    Print(string.Format("Daily total is {0}", rc.DailyTotal.ToString("0.00")));
-                                    var etDateOnly = DateTime.Parse(rc.EndTime);
-                                    var etDateOnlySubString = rc.EndTime.Substring(9);
-                                    //Print("etDateOnlySubString" + etDateOnlySubString);
-                                    Print(string.Format("High = {0} Low = {1}", hi, lo));
-                                    //Print(barsAgo.ToString());
-                                    //Print("Number of Days: " + (timeNow - etDateOnly).Days);
-                                    Print("Number of Days: " + (timeNow - sTime).Days + "\n");
+                                //if (rc.DailyTotal > 0)
+                                //{
+                                //    Print("\nrc.Endtime = " + rc.EndTime.ToString());
+                                //    Print(string.Format("Daily total is {0}", rc.DailyTotal.ToString()));
+                                //    var etDateOnly = DateTime.Parse(rc.EndTime);
+                                //    var etDateOnlySubString = rc.EndTime.Substring(9);
+                                //    //Print("etDateOnlySubString" + etDateOnlySubString);
+                                //    Print(string.Format("High = {0} Low = {1}", hi, lo));
+                                //    //Print(barsAgo.ToString());
+                                //    //Print("Number of Days: " + (timeNow - etDateOnly).Days);
+                                //    Print("Number of Days: " + (timeNow - sTime).Days + "\n");
 
-                                }
+                                //}
                             }
                         }
                         //}
@@ -652,6 +641,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     // Submits an entry into the Control Center logs to inform the user of an error				
                     Log("SampleTryCatch Error: Please check your indicator for errors.", NinjaTrader.Cbi.LogLevel.Warning);
                 }
+
 
                 //  calculate position for text for trade P/L and Daily Total
                 //  print both
@@ -673,11 +663,12 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                         SimpleFont chartFont = chartControl;
 
                         //  chart font (default is Arial 12) increase size to 50 so that I can see the fucker
-                        SimpleFont fontDailyTotal = new NinjaTrader.Gui.Tools.SimpleFont("Arial", 12) { Size = 50, Bold = true };
+                        SimpleFont fontDailyTotal = new NinjaTrader.Gui.Tools.SimpleFont("Arial", 12) { Size = 25, Bold = true };
 
                         //  CurrentBar is -1 for a while && check for enough bar on the chart
                         if (CurrentBar > 0 && CurrentBar > barsAgo)
                         {
+
                             // Print P/L in blue below line start
                             if (rc.P_L >= 0)
                             {
@@ -689,8 +680,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                                 Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString(), sTime, rc.StartY, PixelsAboveBelowBar, Brushes.Red, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
                             }
 
+
                             //  if DailyTotal is available draw it at midpoint of day
-                            if (rc.DailyTotal != 0)
+                            if (rc.DailyTotal != 0 && rc.DailyTotal != null)
                             {
                                 //  calculate text x position - 11:00 AM
                                 //  get day 'MM/dd/yyyy' from string rc.StartTime - substring date
@@ -698,28 +690,43 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
                                 //  add 11 hours
                                 startDayText = startDayText.AddHours(11);
+                                
+                                //  round double? to 2 places - double? may be null which causes problems
+                                var dailyTotal = rc.DailyTotal.HasValue
+                                                ? (double?)Math.Round(rc.DailyTotal.Value, 2)
+                                                : null; 
+                                 ///*
 
-                                //  add TotalTrades to DailyTotal
-                                var daillyTotalPlusTotalTrades = rc.DailyTotal.ToString() + " (" + rc.TotalTrades.ToString() + ")";
-                                //Print("\nstartDayText: " + startDayText.ToString());
-                                //Print("\nlo: " + lo.ToString() + " pixel offset: " + PixelsAboveBelowDay.ToString() + "Lo : " + lo);
+
+                               //  add TotalTrades to DailyTotal
+                                var daillyTotalPlusTotalTrades = dailyTotal.ToString() + " (" + rc.TotalTrades.ToString() + ")";
+
+
+                                Print("\nstartDayText: " + startDayText.ToString());
+                                Print("\nlo: " + lo.ToString() + " pixel offset: " + PixelsAboveBelowDay.ToString() + "Lo : " + lo);
                                 //Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), sTime, rc.StartY, -PixelsAboveBelowDay, Brushes.Yellow, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
                                 //Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay - 200, Brushes.Orange, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
 
                                 //  use red for loss and blue for gain
                                 if (rc.DailyTotal >= 0)
                                 {
+                                    int correctDaysAgo = (DateTime.Now - sTime).Days - 1;
+                                    var newLo = Bars.GetDayBar(correctDaysAgo).Low;
+
                                     //Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay, Brushes.Blue, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
-                                    Draw.Text(this, i.ToString() + "DailyText", false, daillyTotalPlusTotalTrades, startDayText, lo, -PixelsAboveBelowDay, Brushes.Blue, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                                    Draw.Text(this, i.ToString() + "DailyText", false, daillyTotalPlusTotalTrades, startDayText, newLo, -PixelsAboveBelowDay, Brushes.Blue, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
 
                                 }
                                 else
                                 {
+                                    int correctDaysAgo = (DateTime.Now - sTime).Days - 1;
+                                    var newLo = Bars.GetDayBar(correctDaysAgo).Low;
+
                                     //Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay, Brushes.Red, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
-                                    Draw.Text(this, i.ToString() + "DailyText", false, daillyTotalPlusTotalTrades, startDayText, lo, -PixelsAboveBelowDay, Brushes.Red, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                                    Draw.Text(this, i.ToString() + "DailyText", false, daillyTotalPlusTotalTrades, startDayText, newLo, -PixelsAboveBelowDay, Brushes.Red, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
 
                                 }
-
+                            //*/
 
                             }
                         }
@@ -734,8 +741,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     Print(Time[0] + " " + ex.ToString());
 
                 }
-                #endregion Draw.Text()
 
+                #endregion Draw.Text()
                 i++;
             }
             #endregion 
@@ -782,7 +789,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             //  Call main()
             SqLiteExecutionsToListAndQueryResults.Program.main(parameters);
         }
-
         private void hideDrawsFunc()
         {
 //            ClearOutputWindow();
@@ -890,7 +896,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             chartWindow.ActiveChartControl.InvalidateVisual();
             ForceRefresh();
         }
-
         private void hideUserDrawsFunc()
         {
             // turns off historical drawings but future drawings will show until hidden
@@ -941,7 +946,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             chartWindow.ActiveChartControl.InvalidateVisual();
             ForceRefresh();
         }
-
         private void hideSelectedDrawFunc()
         {
             // turns off historical drawings but future drawings will show until hidden
@@ -960,7 +964,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             chartWindow.ActiveChartControl.InvalidateVisual();
             ForceRefresh();
         }
-
         private void hideWicksFunc()
         {
             // toggle wicks
@@ -991,14 +994,12 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             chartWindow.ActiveChartControl.InvalidateVisual();
             ForceRefresh();
         }
-
         public void OnKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Oem3 && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))) hideWicksFunc();
             if (e.Key == Key.D && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))) hideDrawsFunc();
             if (e.Key == Key.H && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))) hideSelectedDrawFunc();
         }
-
         public void OnMouseLeftDown(object sender, MouseEventArgs e)
         {
             // Hide selected drawing if CTRL + SHIFT + CLICK on a drawing
@@ -1020,7 +1021,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 ForceRefresh();
             }
         }
-
         private void OnMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (chartWindow.ActiveChartControl != null && ChartBars != null)
@@ -1043,7 +1043,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 }
             }
         }
-
         private void OnMouseEnter(object sender, MouseEventArgs e)
         {
             if (chartWindow != null && chartWindow.ActiveChartControl.GetType() == typeof(ChartControl) && colorActiveCursor)
@@ -1051,7 +1050,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 chartWindow.ActiveChartControl.Properties.CrosshairLabelBackground = ActiveCursorColor;
             }
         }
-
         private void OnMouseLeave(object sender, MouseEventArgs e)
         {
             if (chartWindow != null && chartWindow.ActiveChartControl.GetType() == typeof(ChartControl) && colorActiveCursor)
@@ -1059,7 +1057,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 chartWindow.ActiveChartControl.Properties.CrosshairLabelBackground = InactiveCursorColor;
             }
         }
-
         private void DisposeCleanUp()
         {
             // remove toolbar items and unsubscribe from events

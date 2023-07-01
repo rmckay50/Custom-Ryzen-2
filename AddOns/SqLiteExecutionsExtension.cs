@@ -38,7 +38,7 @@ namespace NinjaTrader.Custom.AddOns
                             DateTime.Parse(csv.EndTime).ToString("HH:mm:ss  MM/dd/yyy"),
                             (double)csv.Exit,
                             (double)csv.P_L,
-                            (double)csv.DailyTotal,
+                            (double?)csv.DailyTotal,
                             (int?)csv.TotalTrades
                         )
                     );
