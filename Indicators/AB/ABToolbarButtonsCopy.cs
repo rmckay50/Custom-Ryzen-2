@@ -172,30 +172,59 @@ namespace NinjaTrader.NinjaScript.Indicators.AB
 		
 		private void btnDrawObjsClick(object sender, RoutedEventArgs e)
 		{
+            #region PriorDAyOHLC
+    //        try
+    //        {
+    //            TriggerCustomEvent(o =>
+    //            {
+				//	var sTime = new DateTime(2023, 6,20, 1, 0, 0);
+				//	int barsAgo = CurrentBar - Bars.GetBar(sTime);
+				//	if (CurrentBar > 0 && CurrentBar > barsAgo)
+				//{
+    //                    var x = CurrentDayOHL().CurrentLow[1];
+    //                    Print(x);
+    //                }
+				//}, null);
+
+    //        }
+    //        catch (Exception ex)
+    //        {
+				//Print(ex.ToString());
+				//Print("In first Custom event");
+    //        }
+
+
+            #endregion PriorDAyOHLC
+
+
+
             #region Using GetBar() function
-			            DateTime StartTime = DateTime.Parse("08:54:05  05/25/2023");
-            DateTime EndTime = DateTime.Parse("09:26:12  05/25/2023");
-            Draw.Line
-                (this,
-                "First Line",
-                false,
-                StartTime,
-                183.94,
-                DateTime.Parse(EndTime.ToString()),
-                184.7,
-                Brushes.Blue,
-                DashStyleHelper.Solid,
-                5);
+            // Prints the value of the prior session low
+            //double value = PriorDayOHLC().PriorLow[0];
+            //Print("The prior session low value is " + value.ToString());
+            //   DateTime StartTime = DateTime.Parse("08:54:05  05/25/2023");
+            //DateTime EndTime = DateTime.Parse("09:26:12  05/25/2023");
+            //Draw.Line
+            //    (this,
+            //    "First Line",
+            //    false,
+            //    StartTime,
+            //    183.94,
+            //    DateTime.Parse(EndTime.ToString()),
+            //    184.7,
+            //    Brushes.Blue,
+            //    DashStyleHelper.Solid,
+            //    5);
 
-            //var sTime = DateTime.Parse(rc.StartTime);
-            int barsAgo = CurrentBar - Bars.GetBar(StartTime);
-            if (barsAgo > 0)
-            {
-                var _textYStartingPoint = Low[barsAgo];
+            ////var sTime = DateTime.Parse(rc.StartTime);
+            //int barsAgo = CurrentBar - Bars.GetBar(StartTime);
+            //if (barsAgo > 0)
+            //{
+            //    var _textYStartingPoint = Low[barsAgo];
 
-                Draw.Text(this, CurrentBar.ToString() + "P/L", "6.7", barsAgo, Low[barsAgo]);
+            //    Draw.Text(this, CurrentBar.ToString() + "P/L", "6.7", barsAgo, Low[barsAgo]);
 
-            }
+            //}
 
             #endregion Using GetBar() function
 

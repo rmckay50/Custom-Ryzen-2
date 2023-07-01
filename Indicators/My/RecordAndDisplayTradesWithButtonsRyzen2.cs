@@ -575,8 +575,50 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 {
                     TriggerCustomEvent(o =>
                     {
+                        if (CurrentBar > 0)
+                        {
+
                         var sTime = DateTime.Parse(rc.StartTime);
 
+                        int barsAgo = CurrentBar - Bars.GetBar(sTime);
+                            var x = Bars.GetDayBar(1).Open;
+                            var hi = Bars.GetDayBar(1).High;
+                            var lo = Bars.GetDayBar(1).Low;
+                            var y = CurrentDayOHL().CurrentLow[0];
+
+                        //Print(x.ToString());
+                            //}
+                                var eTime = rc.EndTime;
+
+                            if (rc.DailyTotal > 0)
+                            {
+                                Print ("rc.Endtime = " + rc.EndTime.ToString());
+                                Print(string.Format("Daily total is {0}", rc.DailyTotal.ToString("0.000")));
+                                var etDateOnly = DateTime.Parse(rc.EndTime);
+                                var etDateOnlySubString = rc.EndTime.Substring(9);
+                                Print("etDateOnlySubString" + etDateOnlySubString);
+                                Print(string.Format("High = {0} Low = {1}", hi, lo));
+                                //Print(barsAgo.ToString());
+
+                            }
+                        }
+                       //}
+                    }, null);
+
+            }
+                        catch (Exception ex)
+                        {
+                            Print (ex.ToString());
+                    // Submits an entry into the Control Center logs to inform the user of an error				
+                    Log("SampleTryCatch Error: Please check your indicator for errors.", NinjaTrader.Cbi.LogLevel.Warning);
+
+                }
+
+                try
+                        {
+                    TriggerCustomEvent(o =>
+                    {
+                        var sTime = DateTime.Parse(rc.StartTime);
 
                         int barsAgo = CurrentBar - Bars.GetBar(sTime);
                         //  get chart font for Draw.Text()
@@ -587,6 +629,10 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
                         if (CurrentBar > 0 && CurrentBar > barsAgo)
                         {
+                            //Print("The prior trading day's close is: " + Bars.GetDayBar(1).Close);
+
+
+
                             // Print P/L in blue below line start
                             if (rc.P_L >= 0)
                             {
@@ -600,17 +646,15 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                             }
 
                             //  if DailyTotal is available draw it at midpoint of day
-                            if (rc.DailyTotal != 0)
-                            {
-                                var noon = sTime.Date.AddHours(12);
-                            }
-
-
-                        }
+                            //if (rc.DailyTotal != 0)
+                            //{
+                                //var noon = sTime.Date.AddHours(12);
+                            //}
+                       }
 
 
                     }, null);
-                }
+               }
                 catch (Exception ex)
                 {
                     Print(ex);
@@ -622,7 +666,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
                 i++;
             }
-            #endregion foreach() Through returnedClass, Draw.Line(), and Draw.Text()
+            #endregion 
         }
         private void CreateCvsFunc()
         {
@@ -669,7 +713,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
         private void hideDrawsFunc()
         {
-            ClearOutputWindow();
+//            ClearOutputWindow();
             // Sets drawSwitch based on whether there are any drawings on the chart
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {
@@ -718,7 +762,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         //  toggle P/L
         private void hideP_LFunc()
         {
-            ClearOutputWindow();
+//            ClearOutputWindow();
 
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {
