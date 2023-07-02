@@ -628,28 +628,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
                                 var eTime = rc.EndTime;
 
-                                //if (rc.DailyTotal > 0)
-                                //{
-                                //Print("days ago: " + daysAgo.ToString());
-                                //Print("daysAgo.ToString()   5  " + Bars.GetDayBar(5).Low.ToString());
-                                //Print("daysAgo.ToString()   6  " + Bars.GetDayBar(6).Low.ToString());
-                                //Print("daysAgo.ToString()      " + Bars.GetDayBar(7).Low.ToString());
-                                //Print("daysAgo.ToString()   8  " + Bars.GetDayBar(8).Low.ToString());
-                                //Print("daysAgo.ToString()      " + Bars.GetDayBar(9).Low.ToString());
-                                //Print("daysAgo.ToString()   10  " + Bars.GetDayBar(10).Low.ToString());
-                                //Print("daysAgo.ToString()      " + Bars.GetDayBar(11).Low.ToString());
-                                //Print("daysAgo.ToString()  12  " + Bars.GetDayBar(12).Low.ToString());
-                                //Print("daysAgo.ToString()  16  " + Bars.GetDayBar(16).Low.ToString());
-
-                                //    var etDateOnly = DateTime.Parse(rc.EndTime);
-                                //    var etDateOnlySubString = rc.EndTime.Substring(9);
-                                //    //Print("etDateOnlySubString" + etDateOnlySubString);
-                                //    Print(string.Format("High = {0} Low = {1}", hi, lo));
-                                //    //Print(barsAgo.ToString());
-                                //    //Print("Number of Days: " + (timeNow - etDateOnly).Days);
-                                //    Print("Number of Days: " + (timeNow - sTime).Days + "\n");
-
-                                //}
                             }
                         }
                         //}
@@ -669,6 +647,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 dateForDailyText = rc.StartTime.Substring(10);
                 //var dictResult = dictDayClose[dateForDailyText];
                 var dictResult = dictDayClose[dateForDailyText];
+                Print (string.Format("dateForDailyText: \t{1}dictResult:\t{0}", dictResult, dateForDailyText));
 
                 #endregion get low from dictionary
 
@@ -744,7 +723,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                                     var newLo = Bars.GetDayBar(correctDaysAgo).Low;
 
                                     //Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay, Brushes.Blue, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
-                                    Draw.Text(this, i.ToString() + "DailyText", false, daillyTotalPlusTotalTrades, startDayText, newLo, -PixelsAboveBelowDay, Brushes.Blue, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                                    Draw.Text(this, i.ToString() + "DailyText", false, daillyTotalPlusTotalTrades, startDayText, dictResult, -PixelsAboveBelowDay, Brushes.Blue, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
 
                                 }
                                 else
@@ -753,7 +732,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                                     var newLo = Bars.GetDayBar(correctDaysAgo).Low;
 
                                     //Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay, Brushes.Red, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
-                                    Draw.Text(this, i.ToString() + "DailyText", false, daillyTotalPlusTotalTrades, startDayText, newLo, -PixelsAboveBelowDay, Brushes.Red, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                                    Draw.Text(this, i.ToString() + "DailyText", false, daillyTotalPlusTotalTrades, startDayText, dictResult, -PixelsAboveBelowDay, Brushes.Red, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
 
                                 }
                             //*/
