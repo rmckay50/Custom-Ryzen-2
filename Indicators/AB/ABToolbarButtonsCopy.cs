@@ -173,19 +173,38 @@ namespace NinjaTrader.NinjaScript.Indicators.AB
 		
 		private void btnDrawObjsClick(object sender, RoutedEventArgs e)
 		{
-			#region Create Dictionary of day date and lows
-			try
+			ClearOutputWindow();
+            IDictionary<string, double> dictDayClose = new Dictionary<string, double>();
+            //dictDayClose.Add(1, "One"); //adding key/value using the Add() method
+            //dictDayClose.Add(3, "Three");
+            //dictDayClose.Add(2, "Two");
+			for (int i = 0; i < BarsArray[1].Count; i++)
 			{
+				var x = BarsArray[1].GetTime(i).ToString("MM/dd/yyyy");
+				var y = BarsArray[1].GetLow(i);
+				dictDayClose.Add(x, y);
+
+            }
+			foreach(var d in dictDayClose)
+			{
+				Print(string.Format("Date: {0}  \tLow: {1}", d.Key, d.Value));
+			}
+            #region Create Dictionary of day date and lows
+            try
+			{
+				//dictDayClose[1] = 
 				TriggerCustomEvent(o =>
 				{
-                    for (int j = 1; j < BarsArray[1].Count; j++)
-                    {
-                        Print(string.Format("\nBarsArray[1].GetLow({0}); {1}", j, BarsArray[1].GetLow(j).ToString()));
-                        //BarsArray[1].GetTime(i);
-                        Print(string.Format("BarsArray[1].GetTime(i)); {1}", j, BarsArray[1].GetTime(j).ToString()));
-                    }
-                    if ("6/21/2023" == BarsArray[1].GetTime(1).ToString("M/dd/yyy"))
-                        Print("MATCH!");
+
+
+                    //for (int j = 1; j < BarsArray[1].Count; j++)
+                    //{
+                    //    Print(string.Format("\nBarsArray[1].GetLow({0}); {1}", j, BarsArray[1].GetLow(j).ToString()));
+                    //    //BarsArray[1].GetTime(i);
+                    //    Print(string.Format("BarsArray[1].GetTime(i)); {1}", j, BarsArray[1].GetTime(j).ToString()));
+                    //}
+                    //if ("6/21/2023" == BarsArray[1].GetTime(1).ToString("M/dd/yyy"))
+                    //    Print("MATCH!");
                 }, null);
 
 			}
