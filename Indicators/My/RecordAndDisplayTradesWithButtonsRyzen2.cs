@@ -1008,10 +1008,10 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 dictDayClose.Add(x, y);
 
             }
-            foreach (var d in dictDayClose)
-            {
-                Print(string.Format("Date: {0}  \tLow: {1}", d.Key, d.Value));
-            }
+            //foreach (var d in dictDayClose)
+            //{
+            //    Print(string.Format("Date: {0}  \tLow: {1}", d.Key, d.Value));
+            //}
 
 
             return dictDayClose;
