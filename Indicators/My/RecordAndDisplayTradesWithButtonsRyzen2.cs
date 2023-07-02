@@ -572,82 +572,15 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
                 #region Draw.Text()
 
-
-                //  check number of bars on chart is greater than needed for the first trade - throws an exception otherwise - out of bounds on 'barsAgo'
-                //  instantiate outside of brackets
-                double hi = 0;
-                double lo = 0;
-
-                try
-                {
-                    TriggerCustomEvent(o =>
-                    {
-                        if (CurrentBar > 0)
-                        {
-                            //  get days on chart
-                            //  needs to be greater than 1st day in C:\Users\Rod\Documents\NinjaTrader 8\csvNTDrawline.csv - from property 'OutputFile'
-                            if (CurrentBar < 10) return;
-
-                            //  first bar on chart
-                            DateTime StartDate = Time[CurrentBar - 1];
-
-                            //  last bar on chart
-                            DateTime EndDate = Time[0];
-
-                            //  days on chart - may need to use (d1 - d2).Days - Toatal days gives fraction of days
-                            int daysOnChart = (int)(EndDate - StartDate).TotalDays;
-
-                            //Print("Days on chart: " + daysOnChart.ToString());
-
-                            var sTime = DateTime.Parse(rc.StartTime);
-
-                            //  need DAteTime.Now to calculate days between now and trade date
-                            var timeNow = DateTime.Now;
-
-                            //  get number of days to trade - needs an adjustment for some reason
-                            int daysAgo = (timeNow - sTime).Days - 1;
-
-                            //  number of days to trade needs to be less than the number of days on the chart
-                            if (daysAgo < daysOnChart)
-                            { 
-                                ////  instantiate outside of brackets
-                                //double hi = 0;
-                                //double lo = 0;
-                                //  get high and low
-                                //if (daysAgo > 0)
-                                    if (daysAgo > 10 )
-
-                                    {
-                                    hi = Bars.GetDayBar(daysAgo).High;
-                                    lo = Bars.GetDayBar(daysAgo).Low;
-                                }
-                                //var x = Bars.GetDayBar(daysAgo).Open;
-
-                                //var y = CurrentDayOHL().CurrentLow[0];
-                                //var nowTime = DateTime.Now;
-
-                                var eTime = rc.EndTime;
-
-                            }
-                        }
-                        //}
-                    }, null);
-
-                }
-                catch (Exception ex)
-                {
-                    Print (ex.ToString());
-                    // Submits an entry into the Control Center logs to inform the user of an error				
-                    Log("SampleTryCatch Error: Please check your indicator for errors.", NinjaTrader.Cbi.LogLevel.Warning);
-                }
-
                 #region get low from dictionary
 
+                //  get substring from rc.StartTime and take date to use in dictionary
                 var dateForDailyText = "";
                 dateForDailyText = rc.StartTime.Substring(10);
-                //var dictResult = dictDayClose[dateForDailyText];
+
+                //  use dictionry to retreive low
                 var dictResult = dictDayClose[dateForDailyText];
-                Print (string.Format("dateForDailyText: \t{1}dictResult:\t{0}", dictResult, dateForDailyText));
+                //Print (string.Format("dateForDailyText: \t{1}dictResult:\t{0}", dictResult, dateForDailyText));
 
                 #endregion get low from dictionary
 
@@ -673,10 +606,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                         //  chart font (default is Arial 12) increase size to 50 so that I can see the fucker
                         SimpleFont fontDailyTotal = new NinjaTrader.Gui.Tools.SimpleFont("Arial", 12) { Size = 25, Bold = true };
 
-                        //  CurrentBar is -1 for a while && check for enough bar on the chart
+                        //  CurrentBar is -1 for a while && check for enough bars on the chart
                         if (CurrentBar > 0 && CurrentBar > barsAgo)
                         {
-
                             // Print P/L in blue below line start
                             if (rc.P_L >= 0)
                             {
@@ -687,7 +619,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                             {
                                 Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString(), sTime, rc.StartY, PixelsAboveBelowBar, Brushes.Red, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
                             }
-
 
                             //  if DailyTotal is available draw it at midpoint of day
                             if (rc.DailyTotal != 0 && rc.DailyTotal != null)
@@ -703,44 +634,21 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                                 var dailyTotal = rc.DailyTotal.HasValue
                                                 ? (double?)Math.Round(rc.DailyTotal.Value, 2)
                                                 : null; 
-                                 ///*
-
 
                                //  add TotalTrades to DailyTotal
                                 var daillyTotalPlusTotalTrades = dailyTotal.ToString() + " (" + rc.TotalTrades.ToString() + ")";
 
-
-                                Print("\nstartDayText: " + startDayText.ToString());
-                                Print("\nlo: " + lo.ToString() + " pixel offset: " + PixelsAboveBelowDay.ToString() + "Lo : " + lo);
-                                //Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), sTime, rc.StartY, -PixelsAboveBelowDay, Brushes.Yellow, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
-                                //Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay - 200, Brushes.Orange, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
-
                                 //  use red for loss and blue for gain
                                 if (rc.DailyTotal >= 0)
                                 {
-                                    //var c = BarsArray[2][1];
-                                    int correctDaysAgo = (DateTime.Now - sTime).Days - 1;
-                                    var newLo = Bars.GetDayBar(correctDaysAgo).Low;
-
-                                    //Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay, Brushes.Blue, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
                                     Draw.Text(this, i.ToString() + "DailyText", false, daillyTotalPlusTotalTrades, startDayText, dictResult, -PixelsAboveBelowDay, Brushes.Blue, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
-
                                 }
                                 else
                                 {
-                                    int correctDaysAgo = (DateTime.Now - sTime).Days - 1;
-                                    var newLo = Bars.GetDayBar(correctDaysAgo).Low;
-
-                                    //Draw.Text(this, i.ToString() + "DailyText", false, rc.DailyTotal.ToString(), startDayText, lo, -PixelsAboveBelowDay, Brushes.Red, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
                                     Draw.Text(this, i.ToString() + "DailyText", false, daillyTotalPlusTotalTrades, startDayText, dictResult, -PixelsAboveBelowDay, Brushes.Red, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
-
                                 }
-                            //*/
-
                             }
                         }
-
-
                     }, null);
                }
                 catch (Exception ex)
@@ -748,7 +656,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     Print(ex);
                     // Prints the caught exception in the Output Window
                     Print(Time[0] + " " + ex.ToString());
-
                 }
 
                 #endregion Draw.Text()
