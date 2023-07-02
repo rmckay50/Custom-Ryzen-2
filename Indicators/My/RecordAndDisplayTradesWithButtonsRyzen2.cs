@@ -112,6 +112,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             else if (State == State.Configure)
             {
                 IsOverlay = false;
+                AddDataSeries(BarsPeriodType.Day,1);
             }
             if (State == State.Historical)
             {
@@ -604,8 +605,10 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                                 //double hi = 0;
                                 //double lo = 0;
                                 //  get high and low
-                                if (daysAgo > 0)
-                                {
+                                //if (daysAgo > 0)
+                                    if (daysAgo > 10 )
+
+                                    {
                                     hi = Bars.GetDayBar(daysAgo).High;
                                     lo = Bars.GetDayBar(daysAgo).Low;
                                 }
@@ -618,8 +621,17 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
                                 //if (rc.DailyTotal > 0)
                                 //{
-                                //    Print("\nrc.Endtime = " + rc.EndTime.ToString());
-                                //    Print(string.Format("Daily total is {0}", rc.DailyTotal.ToString()));
+                                Print("days ago: " + daysAgo.ToString());
+                                Print("daysAgo.ToString()   5  " + Bars.GetDayBar(5).Low.ToString());
+                                Print("daysAgo.ToString()   6  " + Bars.GetDayBar(6).Low.ToString());
+                                Print("daysAgo.ToString()      " + Bars.GetDayBar(7).Low.ToString());
+                                Print("daysAgo.ToString()   8  " + Bars.GetDayBar(8).Low.ToString());
+                                Print("daysAgo.ToString()      " + Bars.GetDayBar(9).Low.ToString());
+                                Print("daysAgo.ToString()   10  " + Bars.GetDayBar(10).Low.ToString());
+                                Print("daysAgo.ToString()      " + Bars.GetDayBar(11).Low.ToString());
+                                Print("daysAgo.ToString()  12  " + Bars.GetDayBar(12).Low.ToString());
+                                Print("daysAgo.ToString()  16  " + Bars.GetDayBar(16).Low.ToString());
+
                                 //    var etDateOnly = DateTime.Parse(rc.EndTime);
                                 //    var etDateOnlySubString = rc.EndTime.Substring(9);
                                 //    //Print("etDateOnlySubString" + etDateOnlySubString);
@@ -710,6 +722,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                                 //  use red for loss and blue for gain
                                 if (rc.DailyTotal >= 0)
                                 {
+                                    //var c = BarsArray[2][1];
                                     int correctDaysAgo = (DateTime.Now - sTime).Days - 1;
                                     var newLo = Bars.GetDayBar(correctDaysAgo).Low;
 
