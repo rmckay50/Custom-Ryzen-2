@@ -175,24 +175,21 @@ namespace NinjaTrader.NinjaScript.Indicators.AB
 		{
 			ClearOutputWindow();
             IDictionary<string, double> dictDayClose = new Dictionary<string, double>();
-            //dictDayClose.Add(1, "One"); //adding key/value using the Add() method
-            //dictDayClose.Add(3, "Three");
-            //dictDayClose.Add(2, "Two");
-			for (int i = 0; i < BarsArray[1].Count; i++)
-			{
-				var x = BarsArray[1].GetTime(i).ToString("MM/dd/yyyy");
-				var y = BarsArray[1].GetLow(i);
-				dictDayClose.Add(x, y);
+			dictDayClose = DictDayClose();
+			//for (int i = 0; i < BarsArray[1].Count; i++)
+			//{
+			var x = BarsArray[1].GetTime(0).ToString("MM/dd/yyyy");
+			//	var y = BarsArray[1].GetLow(i);
+			//	dictDayClose.Add(x, y);
 
-            }
-			foreach(var d in dictDayClose)
+			//         }
+			//foreach(var d in dictDayClose)
+			//{
+			//	Print(string.Format("Date: {0}  \tLow: {1}", d.Key, d.Value));
+			//}
+			#region Create Dictionary of day date and lows
+			try
 			{
-				Print(string.Format("Date: {0}  \tLow: {1}", d.Key, d.Value));
-			}
-            #region Create Dictionary of day date and lows
-            try
-			{
-				//dictDayClose[1] = 
 				TriggerCustomEvent(o =>
 				{
 
@@ -532,7 +529,29 @@ namespace NinjaTrader.NinjaScript.Indicators.AB
 				btnHideWicks.Click -= btnHideWicksClick;
 		}
 		
-		
+		public  IDictionary<string, double> DictDayClose ()
+	{
+			//	create dictionary
+            IDictionary<string, double> dictDayClose = new Dictionary<string, double>();
+
+			//	add date, low for day from BarsArray[1] from AddDataSeries()
+            for (int i = 0; i < BarsArray[1].Count; i++)
+            {
+                var x = BarsArray[1].GetTime(i).ToString("MM/dd/yyyy");
+                var y = BarsArray[1].GetLow(i);
+                dictDayClose.Add(x, y);
+
+            }
+			//	display results
+            //foreach (var d in dictDayClose)
+            //{
+            //    Print(string.Format("Date: {0}  \tLow: {1}", d.Key, d.Value));
+            //}
+
+
+            return dictDayClose;
+}
+
 		
 		#region Properties
 		[NinjaScriptProperty]

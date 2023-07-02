@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections;
 using LINQtoCSV;
 using System.Data.SQLite;
+using NinjaTrader.Core;
 #endregion
 
 //This namespace holds Add ons in this folder and is required. Do not change it. 
@@ -159,6 +160,7 @@ namespace NinjaTrader.Custom.AddOns
     }
     public static class Methods
     {
+
         //public static List<Ret> instList = new List<Ret>();
         public static List<Ret> getInstList(string name,
             string startDate, string endDate, bool bPlayback, string pathFromCall)
@@ -368,6 +370,7 @@ namespace NinjaTrader.Custom.AddOns
             return (List<Ret>)instList.ToList();
 
         }
+
     }
     public class NTDrawLine
     {

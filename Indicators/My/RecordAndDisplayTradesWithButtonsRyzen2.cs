@@ -485,25 +485,24 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         private void ReadCsvAndDrawLines()
         {
             ClearOutputWindow();
-            Print(string.Format("BarsArray[1].GetLow(0); {0}", BarsArray[1].GetLow(0).ToString()));
-            Print(string.Format("BarsArray[1].GetLow(1); {0}", BarsArray[1].GetLow(1).ToString()));
-            Print(string.Format("BarsArray[1].GetLow(0); {0}", BarsArray[1].GetLow(2).ToString()));
 
-            for (int j = 1; j < BarsArray[1].Count; j++)
-            {
-                Print(string.Format("\nBarsArray[1].GetLow({0}); {1}", j, BarsArray[1].GetLow(j).ToString()));
-                //BarsArray[1].GetTime(i);
-                Print(string.Format("BarsArray[1].GetTime(i)); {1}", j, BarsArray[1].GetTime(j).ToString()));
-            }
-            if ("6/21/2023" == BarsArray[1].GetTime(1).ToString())
-                Print("MATCH!");
+            //  create dictionary of daily closes to be used with placing text
+            IDictionary<string, double> dictDayClose = new Dictionary<string, double>();
+            dictDayClose = DictDayClose();
 
-            //for (int i1 = 0; i1 < BarsArray[1].Count; i1++)
+            //for (int j = 0; j < BarsArray[1].Count; j++)
             //{
-            //    Print(string.Format("BarsArray[1].GetLow({0}); {1}", i1, BarsArray[1].GetLow(i1).ToString()));
+            //    var x = BarsArray[1].GetTime(j).ToString("MM/dd/yyyy");
+            //    var y = BarsArray[1].GetLow(j);
+            //    dictDayClose.Add(x, y);
 
             //}
-
+            //var counter = 0;
+            //foreach (var d in dictDayClose)
+            //{
+            //    Print(string.Format("Count: \t{0}\tDate: {1}  \tLow: {2}", counter.ToString(), d.Key, d.Value));
+            //    counter++;
+            //}
             #region Use LINQtoCSV to read "csvNTDrawline.csv"
             CsvFileDescription scvDescript = new CsvFileDescription();
             CsvContext cc = new CsvContext();
@@ -1114,6 +1113,25 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnCreateCsv.Click -= btnCreateCsvClick;
 
         }
+        public IDictionary<string, double> DictDayClose()
+        {
+            IDictionary<string, double> dictDayClose = new Dictionary<string, double>();
+            for (int i = 0; i < BarsArray[1].Count; i++)
+            {
+                var x = BarsArray[1].GetTime(i).ToString("MM/dd/yyyy");
+                var y = BarsArray[1].GetLow(i);
+                dictDayClose.Add(x, y);
+
+            }
+            //foreach (var d in dictDayClose)
+            //{
+            //    Print(string.Format("Date: {0}  \tLow: {1}", d.Key, d.Value));
+            //}
+
+
+            return dictDayClose;
+        }
+
 
         #region Properties
         [NinjaScriptProperty]
