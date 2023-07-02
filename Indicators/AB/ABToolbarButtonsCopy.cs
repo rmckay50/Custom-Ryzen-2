@@ -176,20 +176,17 @@ namespace NinjaTrader.NinjaScript.Indicators.AB
 			ClearOutputWindow();
             IDictionary<string, double> dictDayClose = new Dictionary<string, double>();
 			dictDayClose = DictDayClose();
-			//for (int i = 0; i < BarsArray[1].Count; i++)
-			//{
 			var x = BarsArray[1].GetTime(0).ToString("MM/dd/yyyy");
-			//	var y = BarsArray[1].GetLow(i);
-			//	dictDayClose.Add(x, y);
+            #region Create Dictionary of day date and lows
 
-			//         }
-			//foreach(var d in dictDayClose)
-			//{
-			//	Print(string.Format("Date: {0}  \tLow: {1}", d.Key, d.Value));
-			//}
-			#region Create Dictionary of day date and lows
-			try
-			{
+            #region Get value from dictionary
+
+
+
+            #endregion Get value from dictionary
+
+            try
+            {
 				TriggerCustomEvent(o =>
 				{
 

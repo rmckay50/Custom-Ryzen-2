@@ -486,23 +486,14 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         {
             ClearOutputWindow();
 
+            #region Create dictionary
             //  create dictionary of daily closes to be used with placing text
             IDictionary<string, double> dictDayClose = new Dictionary<string, double>();
+
+            //  dictionary is created in method
             dictDayClose = DictDayClose();
+            #endregion Create dictionary
 
-            //for (int j = 0; j < BarsArray[1].Count; j++)
-            //{
-            //    var x = BarsArray[1].GetTime(j).ToString("MM/dd/yyyy");
-            //    var y = BarsArray[1].GetLow(j);
-            //    dictDayClose.Add(x, y);
-
-            //}
-            //var counter = 0;
-            //foreach (var d in dictDayClose)
-            //{
-            //    Print(string.Format("Count: \t{0}\tDate: {1}  \tLow: {2}", counter.ToString(), d.Key, d.Value));
-            //    counter++;
-            //}
             #region Use LINQtoCSV to read "csvNTDrawline.csv"
             CsvFileDescription scvDescript = new CsvFileDescription();
             CsvContext cc = new CsvContext();
@@ -672,6 +663,14 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     Log("SampleTryCatch Error: Please check your indicator for errors.", NinjaTrader.Cbi.LogLevel.Warning);
                 }
 
+                #region get low from dictionary
+
+                var dateForDailyText = "";
+                dateForDailyText = rc.StartTime.Substring(10);
+                //var dictResult = dictDayClose[dateForDailyText];
+                var dictResult = dictDayClose[dateForDailyText];
+
+                #endregion get low from dictionary
 
                 //  calculate position for text for trade P/L and Daily Total
                 //  print both
@@ -1123,10 +1122,10 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 dictDayClose.Add(x, y);
 
             }
-            //foreach (var d in dictDayClose)
-            //{
-            //    Print(string.Format("Date: {0}  \tLow: {1}", d.Key, d.Value));
-            //}
+            foreach (var d in dictDayClose)
+            {
+                Print(string.Format("Date: {0}  \tLow: {1}", d.Key, d.Value));
+            }
 
 
             return dictDayClose;
