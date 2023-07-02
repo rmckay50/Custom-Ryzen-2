@@ -62,9 +62,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 				for (int i = 1; i < BarsArray[1].Count; i++)
 				{
 					Print(string.Format("\nBarsArray[1].GetLow({0}); {1}", i, BarsArray[1].GetLow(i).ToString()));
-					var x = BarsArray[1].GetDayBar(i).Time;
 					BarsArray[1].GetTime(i);
-					//Print(string.Format("BarsArray[1].GetDayBar(i).Time; {1}", i, BarsArray[1].GetDayBar(i).Time.ToString()));
 					Print(string.Format("BarsArray[1].GetTime(i)); {1}", i, BarsArray[1].GetTime(i).ToString()));
 				}
 

@@ -63,8 +63,9 @@ namespace NinjaTrader.NinjaScript.Indicators.AB
 			}
 			else if (State == State.Configure)
 			{
-			}
-			else if (State == State.Realtime)
+                AddDataSeries(BarsPeriodType.Day, 1);
+            }
+            else if (State == State.Realtime)
 			{
 				//Call the custom method in State.Historical or State.Realtime to ensure it is only done when applied to a chart not when loaded in the Indicators window				
 				if (ChartControl != null && !IsToolBarButtonAdded)
@@ -172,72 +173,73 @@ namespace NinjaTrader.NinjaScript.Indicators.AB
 		
 		private void btnDrawObjsClick(object sender, RoutedEventArgs e)
 		{
-            #region PriorDAyOHLC
-    //        try
-    //        {
-    //            TriggerCustomEvent(o =>
-    //            {
-				//	var sTime = new DateTime(2023, 6,20, 1, 0, 0);
-				//	int barsAgo = CurrentBar - Bars.GetBar(sTime);
-				//	if (CurrentBar > 0 && CurrentBar > barsAgo)
-				//{
-    //                    var x = CurrentDayOHL().CurrentLow[1];
-    //                    Print(x);
-    //                }
-				//}, null);
+			#region Create Dictionary of day date and lows
+			try
+			{
+				TriggerCustomEvent(o =>
+				{
+                    for (int j = 1; j < BarsArray[1].Count; j++)
+                    {
+                        Print(string.Format("\nBarsArray[1].GetLow({0}); {1}", j, BarsArray[1].GetLow(j).ToString()));
+                        //BarsArray[1].GetTime(i);
+                        Print(string.Format("BarsArray[1].GetTime(i)); {1}", j, BarsArray[1].GetTime(j).ToString()));
+                    }
+                    if ("6/21/2023" == BarsArray[1].GetTime(1).ToString("M/dd/yyy"))
+                        Print("MATCH!");
+                }, null);
 
-    //        }
-    //        catch (Exception ex)
-    //        {
-				//Print(ex.ToString());
-				//Print("In first Custom event");
-    //        }
-
-
-            #endregion PriorDAyOHLC
+			}
+			catch (Exception ex)
+			{
+				Print(ex.ToString());
+				Print("In first Custom event");
+			}
 
 
+			#endregion PriorDAyOHLC
 
-            #region Using GetBar() function
-            // Prints the value of the prior session low
-            //double value = PriorDayOHLC().PriorLow[0];
-            //Print("The prior session low value is " + value.ToString());
-            //   DateTime StartTime = DateTime.Parse("08:54:05  05/25/2023");
-            //DateTime EndTime = DateTime.Parse("09:26:12  05/25/2023");
-            //Draw.Line
-            //    (this,
-            //    "First Line",
-            //    false,
-            //    StartTime,
-            //    183.94,
-            //    DateTime.Parse(EndTime.ToString()),
-            //    184.7,
-            //    Brushes.Blue,
-            //    DashStyleHelper.Solid,
-            //    5);
 
-            ////var sTime = DateTime.Parse(rc.StartTime);
-            //int barsAgo = CurrentBar - Bars.GetBar(StartTime);
-            //if (barsAgo > 0)
-            //{
-            //    var _textYStartingPoint = Low[barsAgo];
 
-            //    Draw.Text(this, CurrentBar.ToString() + "P/L", "6.7", barsAgo, Low[barsAgo]);
+			#region Using GetBar() function
+			// Prints the value of the prior session low
+			//double value = PriorDayOHLC().PriorLow[0];
+			//Print("The prior session low value is " + value.ToString());
+			//   DateTime StartTime = DateTime.Parse("08:54:05  05/25/2023");
+			//DateTime EndTime = DateTime.Parse("09:26:12  05/25/2023");
+			//Draw.Line
+			//    (this,
+			//    "First Line",
+			//    false,
+			//    StartTime,
+			//    183.94,
+			//    DateTime.Parse(EndTime.ToString()),
+			//    184.7,
+			//    Brushes.Blue,
+			//    DashStyleHelper.Solid,
+			//    5);
 
-            //}
+			////var sTime = DateTime.Parse(rc.StartTime);
+			//int barsAgo = CurrentBar - Bars.GetBar(StartTime);
+			//if (barsAgo > 0)
+			//{
+			//    var _textYStartingPoint = Low[barsAgo];
 
-            #endregion Using GetBar() function
+			//    Draw.Text(this, CurrentBar.ToString() + "P/L", "6.7", barsAgo, Low[barsAgo]);
 
-            #region Original btnDrawObjsClick
-            /*
+			//}
+
+			#endregion Using GetBar() function
+
+			#region Original btnDrawObjsClick
+			/*
             System.Windows.Controls.Button button = sender as System.Windows.Controls.Button;
 			if (button != null)
 			{								
 				hideDrawsFunc();
 			}
 			*/
-            #endregion Original btnDrawObjsClick
-        }
+			#endregion Original btnDrawObjsClick
+		}
 
         private void btnIndicatorsClick(object sender, RoutedEventArgs e)
 		{

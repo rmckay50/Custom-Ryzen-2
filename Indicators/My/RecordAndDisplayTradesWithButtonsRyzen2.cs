@@ -495,6 +495,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 //BarsArray[1].GetTime(i);
                 Print(string.Format("BarsArray[1].GetTime(i)); {1}", j, BarsArray[1].GetTime(j).ToString()));
             }
+            if ("6/21/2023" == BarsArray[1].GetTime(1).ToString())
+                Print("MATCH!");
 
             //for (int i1 = 0; i1 < BarsArray[1].Count; i1++)
             //{
@@ -638,16 +640,16 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
                                 //if (rc.DailyTotal > 0)
                                 //{
-                                Print("days ago: " + daysAgo.ToString());
-                                Print("daysAgo.ToString()   5  " + Bars.GetDayBar(5).Low.ToString());
-                                Print("daysAgo.ToString()   6  " + Bars.GetDayBar(6).Low.ToString());
-                                Print("daysAgo.ToString()      " + Bars.GetDayBar(7).Low.ToString());
-                                Print("daysAgo.ToString()   8  " + Bars.GetDayBar(8).Low.ToString());
-                                Print("daysAgo.ToString()      " + Bars.GetDayBar(9).Low.ToString());
-                                Print("daysAgo.ToString()   10  " + Bars.GetDayBar(10).Low.ToString());
-                                Print("daysAgo.ToString()      " + Bars.GetDayBar(11).Low.ToString());
-                                Print("daysAgo.ToString()  12  " + Bars.GetDayBar(12).Low.ToString());
-                                Print("daysAgo.ToString()  16  " + Bars.GetDayBar(16).Low.ToString());
+                                //Print("days ago: " + daysAgo.ToString());
+                                //Print("daysAgo.ToString()   5  " + Bars.GetDayBar(5).Low.ToString());
+                                //Print("daysAgo.ToString()   6  " + Bars.GetDayBar(6).Low.ToString());
+                                //Print("daysAgo.ToString()      " + Bars.GetDayBar(7).Low.ToString());
+                                //Print("daysAgo.ToString()   8  " + Bars.GetDayBar(8).Low.ToString());
+                                //Print("daysAgo.ToString()      " + Bars.GetDayBar(9).Low.ToString());
+                                //Print("daysAgo.ToString()   10  " + Bars.GetDayBar(10).Low.ToString());
+                                //Print("daysAgo.ToString()      " + Bars.GetDayBar(11).Low.ToString());
+                                //Print("daysAgo.ToString()  12  " + Bars.GetDayBar(12).Low.ToString());
+                                //Print("daysAgo.ToString()  16  " + Bars.GetDayBar(16).Low.ToString());
 
                                 //    var etDateOnly = DateTime.Parse(rc.EndTime);
                                 //    var etDateOnlySubString = rc.EndTime.Substring(9);
