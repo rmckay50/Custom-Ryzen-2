@@ -488,6 +488,20 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             Print(string.Format("BarsArray[1].GetLow(0); {0}", BarsArray[1].GetLow(0).ToString()));
             Print(string.Format("BarsArray[1].GetLow(1); {0}", BarsArray[1].GetLow(1).ToString()));
             Print(string.Format("BarsArray[1].GetLow(0); {0}", BarsArray[1].GetLow(2).ToString()));
+
+            for (int j = 1; j < BarsArray[1].Count; j++)
+            {
+                Print(string.Format("\nBarsArray[1].GetLow({0}); {1}", j, BarsArray[1].GetLow(j).ToString()));
+                //BarsArray[1].GetTime(i);
+                Print(string.Format("BarsArray[1].GetTime(i)); {1}", j, BarsArray[1].GetTime(j).ToString()));
+            }
+
+            //for (int i1 = 0; i1 < BarsArray[1].Count; i1++)
+            //{
+            //    Print(string.Format("BarsArray[1].GetLow({0}); {1}", i1, BarsArray[1].GetLow(i1).ToString()));
+
+            //}
+
             #region Use LINQtoCSV to read "csvNTDrawline.csv"
             CsvFileDescription scvDescript = new CsvFileDescription();
             CsvContext cc = new CsvContext();

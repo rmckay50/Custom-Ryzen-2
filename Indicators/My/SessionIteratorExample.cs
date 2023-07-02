@@ -52,13 +52,25 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 			{
                 AddDataSeries(BarsPeriodType.Day, 1);
 			}
-            if (State == State.DataLoaded)
-            {
+			if (State == State.DataLoaded)
+			{
 				ClearOutputWindow();
 				//stores the sessions once bars are ready, but before OnBarUpdate is called
 				sessionIterator = new SessionIterator(Bars);
+				if (State == State.Historical)
+				{
+				for (int i = 1; i < BarsArray[1].Count; i++)
+				{
+					Print(string.Format("\nBarsArray[1].GetLow({0}); {1}", i, BarsArray[1].GetLow(i).ToString()));
+					var x = BarsArray[1].GetDayBar(i).Time;
+					BarsArray[1].GetTime(i);
+					//Print(string.Format("BarsArray[1].GetDayBar(i).Time; {1}", i, BarsArray[1].GetDayBar(i).Time.ToString()));
+					Print(string.Format("BarsArray[1].GetTime(i)); {1}", i, BarsArray[1].GetTime(i).ToString()));
+				}
+
+				}
+			}
             }
-        }
 
 		protected override void OnBarUpdate()
 		{
@@ -66,25 +78,25 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             // on new bars session, find the next trading session
             if (Bars.IsFirstBarOfSession)
             {
-                Print("Calculating trading day for " + Time[0]);
+                //Print("Calculating trading day for " + Time[0]);
                 // use the current bar time to calculate the next session
                 sessionIterator.GetNextSession(Time[0], true);
 
-                // store the desired session information
-                DateTime tradingDay = sessionIterator.ActualTradingDayExchange;
-                DateTime beginTime = sessionIterator.ActualSessionBegin;
-                DateTime endTime = sessionIterator.ActualSessionEnd;
+                //// store the desired session information
+                //DateTime tradingDay = sessionIterator.ActualTradingDayExchange;
+                //DateTime beginTime = sessionIterator.ActualSessionBegin;
+                //DateTime endTime = sessionIterator.ActualSessionEnd;
 
-                Print(string.Format("The Current Trading Day {0} starts at {1} and ends at {2}",
-                                    tradingDay.ToShortDateString(), beginTime, endTime));
-                Print(string.Format("The Current BarsArray[1].Count {0}", BarsArray[1].Count.ToString()));
+                //Print(string.Format("The Current Trading Day {0} starts at {1} and ends at {2}",
+                //                    tradingDay.ToShortDateString(), beginTime, endTime));
+                //Print(string.Format("The Current BarsArray[1].Count {0}", BarsArray[1].Count.ToString()));
 
 
                 // Output:
                 // Calculating trading day from 9/30/2015 4:01:00 PM
                 //The Current Trading Day 10/1/2015 starts at 9/30/2015 4:00:00 PM and ends at 10/1/2015 3:00:00 PM
             }
-			if (BarsArray[1].Count > 3)
+			if (CurrentBar > 20)
 			{
 				if (firstPass)
 				{
@@ -95,11 +107,19 @@ namespace NinjaTrader.NinjaScript.Indicators.My
      //               Print(string.Format("BarsArray[1].GetLow(1); {0}", BarsArray[1].GetLow(1).ToString()));
      //               Print(string.Format("BarsArray[1].GetLow(0); {0}", BarsArray[1].GetLow(2).ToString ()));
                     firstPass = false;
-                    //barsArray = BarsArray[1].ToList();
-					for (int i = 0; i < BarsArray[1].Count;i++)
+					//barsArray = BarsArray[1].ToList();
+					if (BarsArray[1].Count > 8)
 					{
-                        Print(string.Format("BarsArray[1].GetLow({0}); {1}", i, BarsArray[1].GetLow(i).ToString()));
+						//for (int i = 1; i < BarsArray[1].Count; i++)
+						//{
+						//	Print(string.Format("\nBarsArray[1].GetLow({0}); {1}", i, BarsArray[1].GetLow(i).ToString()));
+						//	var x = BarsArray[1].GetDayBar(i).Time;
+						//	BarsArray[1].GetTime(i);
+      //                      //Print(string.Format("BarsArray[1].GetDayBar(i).Time; {1}", i, BarsArray[1].GetDayBar(i).Time.ToString()));
+						//	Print(string.Format("BarsArray[1].GetTime(i)); {1}", i, BarsArray[1].GetTime(i).ToString()));
 
+
+						//}
                     }
                 }
 
