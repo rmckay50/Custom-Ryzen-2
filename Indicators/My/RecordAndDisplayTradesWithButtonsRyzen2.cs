@@ -485,6 +485,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         private void ReadCsvAndDrawLines()
         {
             ClearOutputWindow();
+            Print(string.Format("BarsArray[1].GetLow(0); {0}", BarsArray[1].GetLow(0).ToString()));
+            Print(string.Format("BarsArray[1].GetLow(1); {0}", BarsArray[1].GetLow(1).ToString()));
+            Print(string.Format("BarsArray[1].GetLow(0); {0}", BarsArray[1].GetLow(2).ToString()));
             #region Use LINQtoCSV to read "csvNTDrawline.csv"
             CsvFileDescription scvDescript = new CsvFileDescription();
             CsvContext cc = new CsvContext();

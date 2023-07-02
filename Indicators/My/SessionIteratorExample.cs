@@ -29,6 +29,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         
 		private SessionIterator sessionIterator;
 		private bool firstPass = true;
+		private List<Bars> barsArray = new List<Bars> ();
         protected override void OnStateChange()
 		{
 			if (State == State.SetDefaults)
@@ -90,11 +91,17 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 					//var b = BarsPeriod;
 					//Print(string.Format("The Current BarsPeriod is {0}", b.ToString()));
 					//var b1 = BarsArray[1].GetLow(1);
-					Print(string.Format("BarsArray[1].GetLow(0); {0}", BarsArray[1].GetLow(0).ToString()));
-                    Print(string.Format("BarsArray[1].GetLow(1); {0}", BarsArray[1].GetLow(1).ToString()));
-                    Print(string.Format("BarsArray[1].GetLow(0); {0}", BarsArray[1].GetLow(2).ToString ()));
+					//Print(string.Format("BarsArray[1].GetLow(0); {0}", BarsArray[1].GetLow(0).ToString()));
+     //               Print(string.Format("BarsArray[1].GetLow(1); {0}", BarsArray[1].GetLow(1).ToString()));
+     //               Print(string.Format("BarsArray[1].GetLow(0); {0}", BarsArray[1].GetLow(2).ToString ()));
                     firstPass = false;
-				}
+                    //barsArray = BarsArray[1].ToList();
+					for (int i = 0; i < BarsArray[1].Count;i++)
+					{
+                        Print(string.Format("BarsArray[1].GetLow({0}); {1}", i, BarsArray[1].GetLow(i).ToString()));
+
+                    }
+                }
 
             }
 
