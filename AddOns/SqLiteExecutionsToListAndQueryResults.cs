@@ -259,8 +259,8 @@ namespace NinjaTrader.Custom.AddOns
                                                 EndTime = l.EndTime,
                                                 EndY = l.EndY,
                                                 P_L = l.P_L,
-                                                DailyTotal= l.DailyTotal,
-                                                TotalTrades= l.TotalTrades
+                                                DailyTotal = l.DailyTotal,
+                                                TotalTrades = l.TotalTrades
                                             };
                 columnsWithAttributes.ToList();
 

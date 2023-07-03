@@ -112,7 +112,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             else if (State == State.Configure)
             {
                 IsOverlay = false;
-                AddDataSeries(BarsPeriodType.Day,1);
+                AddDataSeries(BarsPeriodType.Day, 1);
             }
             if (State == State.Historical)
             {
@@ -756,7 +756,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         //  toggle P/L
         private void hideP_LFunc()
         {
-//            ClearOutputWindow();
+            //  ClearOutputWindow();
 
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {

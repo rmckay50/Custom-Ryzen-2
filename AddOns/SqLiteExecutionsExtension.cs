@@ -604,11 +604,4 @@ namespace NinjaTrader.Custom.AddOns
 
         //}
     }
-
-      
-          
-       
-
-       
-
 }
