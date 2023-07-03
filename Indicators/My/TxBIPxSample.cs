@@ -27,7 +27,7 @@ using NinjaTrader.NinjaScript.DrawingTools;
 //This namespace holds Indicators in this folder and is required. Do not change it. 
 namespace NinjaTrader.NinjaScript.Indicators
 {
-	public class TxBIPxSample : Indicator
+	public class TxBIPxSample : Indicator 
 	{ 
 		
 			private TimeSpan endTime = new TimeSpan(16,15,00);
