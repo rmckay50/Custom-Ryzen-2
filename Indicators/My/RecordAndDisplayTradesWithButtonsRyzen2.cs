@@ -86,7 +86,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         //  create dictionary
         IDictionary<string, double> dictDayClose = new Dictionary<string, double>();
 
-
         #endregion Create variables
         protected override void OnStateChange()
         {
@@ -106,7 +105,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 PixelsAboveBelowBar = 50;
                 PixelsAboveBelowDay = 200;
                 IsSuspendedWhileInactive = true;
-                StartTime = DateTime.Parse("06/01/2023");
+                StartTime = DateTime.Parse("06/15/2023");
                 EndTime = DateTime.Parse("07/30/2023");
                 EnumValue = MyEnum.Futures;
                 //  The userName needs to be correct to keep ReadCsvAndDrawLines() in State.Historical from throwing exception
@@ -582,98 +581,91 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
                 #region Draw.Text()
 
-
                 //  calculate position for text for trade P/L and Daily Total
                 //  print both
                 try
                 {
-                    //TriggerCustomEvent(o =>
-                    //{
-                        //  start time of line that P/L is plotted below/above in Draw.Text()
-                        var sTime = DateTime.Parse(rc.StartTime);
+                    //  start time of line that P/L is plotted below/above in Draw.Text()
+                    var sTime = DateTime.Parse(rc.StartTime);
 
-                        //  number of bars back from left side of chart to the trade line start time
-                        //  it needs to be less than the number of bars on the chart
-                        int barsAgo = CurrentBar - Bars.GetBar(sTime);
+                    //  number of bars back from left side of chart to the trade line start time
+                    //  it needs to be less than the number of bars on the chart
+                    int barsAgo = CurrentBar - Bars.GetBar(sTime);
 
-                        //  get chart font for Draw.Text()
-                        var chartControl = ChartControl.Properties.LabelFont;
+                    //  get chart font for Draw.Text()
+                    var chartControl = ChartControl.Properties.LabelFont;
 
-                        //var pixels 
-                        SimpleFont chartFont = chartControl;
+                    //var pixels 
+                    SimpleFont chartFont = chartControl;
 
-                        //  chart font (default is Arial 12) increase size to 50 so that I can see the fucker
-                        SimpleFont fontDailyTotal = new NinjaTrader.Gui.Tools.SimpleFont("Arial", 12) { Size = 25, Bold = true };
+                    //  chart font (default is Arial 12) increase size to 50 so that I can see the fucker
+                    SimpleFont fontDailyTotal = new NinjaTrader.Gui.Tools.SimpleFont("Arial", 12) { Size = 25, Bold = true };
 
-                        //  CurrentBar is -1 for a while && check for enough bars on the chart
-                        if (CurrentBar > 0 && CurrentBar > barsAgo)
+                    //  CurrentBar is -1 for a while && check for enough bars on the chart
+                    if (CurrentBar > 0 && CurrentBar > barsAgo)
+                    {
+                        // Print P/L in blue below line start
+                        if (rc.P_L >= 0)
                         {
-                            // Print P/L in blue below line start
-                            if (rc.P_L >= 0)
+                            Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString(), sTime, rc.StartY, -PixelsAboveBelowBar, Brushes.Blue, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                        }
+                        // Print P/L in red above line start
+                        else
+                        {
+                            Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString(), sTime, rc.StartY, PixelsAboveBelowBar, Brushes.Red, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                        }
+
+                        //  if DailyTotal is available draw it at midpoint of day
+                        if (rc.DailyTotal != 0 && rc.DailyTotal != null)
+                        {
+                            //  calculate text x position - 11:00 AM
+                            //  get day 'MM/dd/yyyy' from string rc.StartTime - substring date
+                            DateTime startDayText = DateTime.Parse(rc.StartTime.Substring(9));
+
+                            //  add 11 hours
+                            startDayText = startDayText.AddHours(11);
+
+                            //  round double? to 2 places - double? may be null which causes problems
+                            var dailyTotal = rc.DailyTotal.HasValue
+                                            ? (double?)Math.Round(rc.DailyTotal.Value, 2)
+                                            : null;
+
+                            //  add TotalTrades to DailyTotal
+                            var daillyTotalPlusTotalTrades = dailyTotal.ToString() + " (" + rc.TotalTrades.ToString() + ")";
+
+                            #region get low from dictionary
+
+                            //  dict throws exception if on todays date - skip
+                            var dtNowString = DateTime.Now.ToString("MM/dd/yyyy");
+
+                            //  get substring from rc.StartTime and take date to use in dictionary
+                            var dateForDailyText = "";
+                            dateForDailyText = rc.StartTime.Substring(10);
+
+                            //  check for last day on chart - dictionary does not add todays date
+                            //  if last day do nothing
+                            Print(string.Format("dtNowString: {0}\t dateForDailyText: {1}", dtNowString, dateForDailyText));
+
+                            if (dtNowString != dateForDailyText)
                             {
-                                Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString(), sTime, rc.StartY, -PixelsAboveBelowBar, Brushes.Blue, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
-                            }
-                            // Print P/L in red above line start
-                            else
-                            {
-                                Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString(), sTime, rc.StartY, PixelsAboveBelowBar, Brushes.Red, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
-                            }
+                                //  use dictionry to retreive low
+                                var dictResult = dictDayClose[dateForDailyText];
+                                //Print (string.Format("dateForDailyText: \t{1}dictResult:\t{0}", dictResult, dateForDailyText));
 
-                            //  if DailyTotal is available draw it at midpoint of day
-                            if (rc.DailyTotal != 0 && rc.DailyTotal != null)
-                            {
-                                //  calculate text x position - 11:00 AM
-                                //  get day 'MM/dd/yyyy' from string rc.StartTime - substring date
-                                DateTime startDayText = DateTime.Parse(rc.StartTime.Substring(9));
+                                #endregion get low from dictionary
 
-                                //  add 11 hours
-                                startDayText = startDayText.AddHours(11);
-
-                                //  round double? to 2 places - double? may be null which causes problems
-                                var dailyTotal = rc.DailyTotal.HasValue
-                                                ? (double?)Math.Round(rc.DailyTotal.Value, 2)
-                                                : null;
-
-                                //  add TotalTrades to DailyTotal
-                                var daillyTotalPlusTotalTrades = dailyTotal.ToString() + " (" + rc.TotalTrades.ToString() + ")";
-
-                                #region get low from dictionary
-
-                                //  dict throws exception if on todays date - skip
-                                var dtNowString = DateTime.Now.ToString("MM/dd/yyyy");
-
-                                //  get substring from rc.StartTime and take date to use in dictionary
-                                var dateForDailyText = "";
-                                dateForDailyText = rc.StartTime.Substring(10);
-
-                                //  check for last day on chart - dictionary does not add todays date
-                                //  if last day do nothing
-                                Print(string.Format("dtNowString: {0}\t dateForDailyText: {1}", dtNowString, dateForDailyText));
-
-                                if (dtNowString != dateForDailyText)
+                                //  use red for loss and blue for gain
+                                if (rc.DailyTotal >= 0)
                                 {
-                                    //  use dictionry to retreive low
-                                    var dictResult = dictDayClose[dateForDailyText];
-                                    //Print (string.Format("dateForDailyText: \t{1}dictResult:\t{0}", dictResult, dateForDailyText));
-
-                                    #endregion get low from dictionary
-
-
-
-                                    //  use red for loss and blue for gain
-                                    if (rc.DailyTotal >= 0)
-                                    {
-                                        Draw.Text(this, i.ToString() + "DailyText", false, daillyTotalPlusTotalTrades, startDayText, dictResult, -PixelsAboveBelowDay, Brushes.Blue, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
-                                    }
-                                    else
-                                    {
-                                        Draw.Text(this, i.ToString() + "DailyText", false, daillyTotalPlusTotalTrades, startDayText, dictResult, -PixelsAboveBelowDay, Brushes.Red, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
-                                    }
+                                    Draw.Text(this, i.ToString() + "DailyText", false, daillyTotalPlusTotalTrades, startDayText, dictResult, -PixelsAboveBelowDay, Brushes.Blue, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                                }
+                                else
+                                {
+                                    Draw.Text(this, i.ToString() + "DailyText", false, daillyTotalPlusTotalTrades, startDayText, dictResult, -PixelsAboveBelowDay, Brushes.Red, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
                                 }
                             }
                         }
-                        //}, null);
-                    //}
+                    }
                }
                 catch (Exception ex)
                 {
