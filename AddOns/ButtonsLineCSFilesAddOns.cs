@@ -5,7 +5,6 @@ using System.Linq;
 using System.Collections;
 using LINQtoCSV;
 using System.Data.SQLite;
-using NinjaTrader.Core;
 #endregion
 
 //This namespace holds Add ons in this folder and is required. Do not change it. 
@@ -137,14 +136,14 @@ namespace NinjaTrader.Custom.AddOns
         public string OutputPath { get; set; }
         public string TimeFirstBarOnChart { get; set; }
         public string TimeLastBarOnChart { get; set; }
-		public long Expiry { get; set; }
-
+        public string Expiry { get; set; }
+        public long Instrument { get; set; }
 
         public Input()
         {
         }
 
-        public Input(bool bPlayback, string name, string startDate, string endDate, string inputPath, string outputPath, string timeFirstBarOnChart, string timeLastBarOnChart, long expiry)
+        public Input(bool bPlayback, string name, string startDate, string endDate, string inputPath, string outputPath, string timeFirstBarOnChart, string timeLastBarOnChart, string expiry, long instrument)
         {
             BPlayback = bPlayback;
             Name = name;
@@ -155,46 +154,31 @@ namespace NinjaTrader.Custom.AddOns
             TimeFirstBarOnChart = timeFirstBarOnChart;
             TimeLastBarOnChart = timeLastBarOnChart;
             Expiry = expiry;
+            Instrument = instrument;
         }
 
     }
     public static class Methods
     {
-
-        //public static List<Ret> instList = new List<Ret>();
-        public static List<Ret> getInstList(string name,
-            string startDate, string endDate, bool bPlayback, string pathFromCall)
+        public static List<Ret> getInstList(Input input)
         {
-            //var path = @"Data Source = C:\Users\Owner\Documents\NinjaTrader 8\db\NinjaTrader.sqlite";
-            var path = pathFromCall;
+            //  using input for parameters
+            var path = input.InputPath;
+
             //  list to hold valiables in Executions table from NinjaTrader.sqlite
             List<Executions> listExecution = new List<Executions>();
+
             //  list to hold Ret() format from listExecution
             List<Ret> listExecutionRet = new List<Ret>();
-            //List<Query> selectedList = new List<Query>();
-            //List<Ret> instList = new List<Ret>();
+
             var instList = new List<Ret>();
-
-            //List<Query> listFromQuery = new List<Query>();
-
-            //  Below is code from getInstList for filling in Expiry
-            //  Expiry is located in Instruments 
-            //  Can either load Instruments and do query or get info from chart 
-            //  Will try char and in interim just add string 'Dec 2022'
-            //  Format from .sdf instList was 'Dec 2022' 
-            //  Expiry = new DateTime((long)mInsIns.Expiry).ToString(" MMM yyyy"),
-            //  public string Expiry { get; set; }
-            //var symbol = "NQ";
-            //var instrument = 699839150758595;
-
-
 
             // Convert dates to Utc ticks
             // Used for start and stop times
-            DateTime sDate = DateTime.Parse(startDate);                         //.Dump("sDate")
+            DateTime sDate = DateTime.Parse(input.StartDate);                         //.Dump("sDate")
             DateTime sDateUtc = TimeZoneInfo.ConvertTimeToUtc(sDate);           //.Dump("sDateUtc")
             var startTicks = sDateUtc.Ticks;
-            DateTime eDate = DateTime.Parse(endDate);                           //.Dump("eDate")
+            DateTime eDate = DateTime.Parse(input.EndDate);                           //.Dump("eDate")
             DateTime eDateUtc = TimeZoneInfo.ConvertTimeToUtc(eDate);           //.Dump("eDateUtc")
             var endTicks = eDateUtc.Ticks;
 
@@ -288,7 +272,7 @@ namespace NinjaTrader.Custom.AddOns
                         //	fill new list 
                         list.InstId = (long?)0;
                         list.ExecId = execList.Id;
-                        list.Name = name;
+                        list.Name = input.Name;
                         list.Account = execList.Account;
                         list.Position = execList.Position;
                         list.Quantity = execList.Quantity;
@@ -298,6 +282,7 @@ namespace NinjaTrader.Custom.AddOns
                         list.Time = execList.Time;
                         list.HumanTime = TimeZoneInfo.ConvertTimeFromUtc(new DateTime((long)execList.Time), TimeZoneInfo.Local).ToString("  HH:mm:ss MM/dd/yyyy  ");
                         list.Instrument = execList.Instrument;
+                        list.Expiry = input.Expiry;
                         list.P_L = 0;
                         list.Long_Short = "";
 
@@ -324,13 +309,15 @@ namespace NinjaTrader.Custom.AddOns
                 //  If bPlayback == true set account == 1
                 //  default is account == 2
                 var account = 2;
-                if (bPlayback == true)
+                if (input.BPlayback == true)
                 {
                     account = 1;
                 }
                 instList = (from list in listExecutionRet
                             where list.Time > sDateUtc.Ticks && list.Time < eDateUtc.Ticks
                             where list.Account == account
+                            where list.Name == input.Name
+                            where list.Instrument == input.Instrument
                             select new Ret()
                             {
                                 InstId = (long?)0,
@@ -345,12 +332,19 @@ namespace NinjaTrader.Custom.AddOns
                                 Time = list.Time,
                                 HumanTime = list.HumanTime,
                                 Instrument = list.Instrument,
-                                Expiry = "Dec 2022",
+                                Expiry = list.Expiry,
                                 P_L = 0,
                                 Long_Short = ""
 
                             }).ToList();
                 instList = instList.OrderByDescending(e => e.ExecId).ToList();
+
+                //  if the list is empty it means the instrument symbol was not found
+                //  display MessageBox ("Check symbol") and return
+                if ( instList.Count == 0)
+                {
+                    return (List<Ret>)instList.ToList(); ;
+                }
 
                 // add Id to selectetRetList
                 var instId = 0;
@@ -470,7 +464,6 @@ namespace NinjaTrader.Custom.AddOns
         public long? Time { get; set; }
         public string HumanTime { get; set; }
         public long Instrument { get; set; }
-        //Expiry is located innInstruent list and will no be used
         public string Expiry { get; set; }
         public double? P_L { get; set; }
         public string Long_Short { get; set; }
