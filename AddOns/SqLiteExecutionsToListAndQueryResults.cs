@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-//using Executions = ExecutionsClass.Executions;
-//using Query = ListExecutionQueryClass.ListExecutionQuery;
-//using ExtensionCreateNTDrawline;
 using LINQtoCSV;
 using System.IO;
 
@@ -14,16 +11,11 @@ namespace NinjaTrader.Custom.AddOns
         public class Program
         {
             #region Set Parameters
-            ////	Set to true for playback (account - 1)
+            //	Set to true for playback (account - 1)
             //  These parameters are passed from calling progran
             public static bool bPlayback = false;
-            public static string name = "nq";
-            public static string startDate = "  10:40:56 03/22/2023  ";
             // Set to "12/12/2022" to get all of data
-            public static string endDate = "03/24/2022";
             #endregion Set Parameters
-
-
 
             /// <summary>
             /// <switch between static void Main(string[] args) & public static void main(Paramaters.Input input)
@@ -32,18 +24,13 @@ namespace NinjaTrader.Custom.AddOns
             /// <param name="input"></param>
             /// </summary>
             /// 
-            //static void Main(string[] args)
             //  can use 'Input' becaue using statement is 'using Parameters.Paramaters;'
-            //public static void main(Parameters.Input input, string output)
-//            public static void main(Parameters.Input input, List<Trade> workingTrades)
-				public static void main(Input input)
 
-
+            public static bool Main(Input parameters)
             {
-                var timeIn = input.TimeLastBarOnChart;
-                var path = input.InputPath;
 
                 List<CSV> CSv = new List<CSV>();
+
                 //  list to hold valiables in Executions table from NinjaTrader.sqlite
                 List<Executions> listExecution = new List<Executions>();
                 List<NTDrawLine> nTDrawline = new List<NTDrawLine>();
@@ -52,7 +39,7 @@ namespace NinjaTrader.Custom.AddOns
                 Source source = new Source();
                 List<Trade> workingTrades = new List<Trade>();
                 List<Trade> trades = new List<Trade>();
-
+                var isEmpty = false;
 
                 ///
                 ///<summary>
@@ -70,24 +57,42 @@ namespace NinjaTrader.Custom.AddOns
                 //};
                 #endregion Uncomment for use as .exe
 
+                //var instList = Methods.getInstList
+                //    (
+                //#region Uncomment for use as .exe
+                //    //name,
+                //    //startDate,
+                //    //endDate,
+                //    //bPlayback,
+                //    //@"
+                //#endregion Uncomment for use as .exe
+
+                //#region Uncomment for use as .dll
+                //    input.Name,
+                //    input.StartDate,
+                //    input.EndDate,
+                //    input.BPlayback,
+                //    input.InputPath
+                //#endregion Uncomment for use as .dll
+                //    );
+                /********************************************************************************/
                 var instList = Methods.getInstList
                     (
                 #region Uncomment for use as .exe
-                    //name,
-                    //startDate,
-                    //endDate,
-                    //bPlayback,
-                    //@"
+                    //  parameters                
                 #endregion Uncomment for use as .exe
 
                 #region Uncomment for use as .dll
-                    input.Name,
-                    input.StartDate,
-                    input.EndDate,
-                    input.BPlayback,
-                    input.InputPath
+                    parameters
                 #endregion Uncomment for use as .dll
                     );
+
+                //  check for empty list - means symbol not found
+                if ( instList.Count == 0 )
+                {
+                    isEmpty = true;
+                    return isEmpty;
+                }
 
                 #region Create workingTrades
 
@@ -179,7 +184,6 @@ namespace NinjaTrader.Custom.AddOns
                         source.Fill();
                     }
 
-
                     //	Set reversal flags row numbers
                     if (t.IsEntry == true && t.IsExit == true)                                                          //	Main
                     {
@@ -269,27 +273,28 @@ namespace NinjaTrader.Custom.AddOns
                 cc.Write
                 (
                 columnsWithAttributes,
-                input.OutputPath
+                parameters.OutputPath
                 );
 
                 //  replace name (local declaration) to input.Name (calling program definition)
-                var fileName = input.Name.ToUpper() + "                " + input.TimeLastBarOnChart + ".csv";
-                var dir = Path.GetDirectoryName(input.OutputPath); ;
+                var fileName = parameters.Name.ToUpper() + "                " + parameters.TimeLastBarOnChart + ".csv";
+                var dir = Path.GetDirectoryName(parameters.OutputPath); ;
 
-                if (input.BPlayback != true)
+                if (parameters.BPlayback != true)
                 {
                     cc.Write(columnsWithAttributes, dir + @"\" + fileName);
                 }
                 else
                 {
                     //  lastBarTime is set in NT 'ChartBars.GetTimeByBarIdx(ChartControl, ChartBars.ToIndex)); //8/11/2015 4:30:00 AM'
-                    string l = input.TimeLastBarOnChart;
-                    fileName = input.Name.ToUpper() + " Playback " + input.TimeFirstBarOnChart + " To " + input.TimeLastBarOnChart + ".csv";
+                    string l = parameters.TimeLastBarOnChart;
+                    fileName = parameters.Name.ToUpper() + " Playback " + parameters.TimeFirstBarOnChart + " To " + parameters.TimeLastBarOnChart + ".csv";
                     cc.Write(columnsWithAttributes, dir + @"\" + fileName);
                 }
 
                 #endregion
-
+                isEmpty = false;
+                return isEmpty;
 
             }
         }
