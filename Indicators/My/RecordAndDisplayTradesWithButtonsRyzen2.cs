@@ -528,7 +528,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             foreach (var rc in returnedClass)
             {
                 #region Print rc - Commented Out
-                ///*
+                /*
                 Print(String.Format("\ncombinedQry.csv: {0} {1} {2} {3} {4} {5} {6} {7} {8} ", 
                     rc.Id, 
                     rc.StartTimeTicks, 
@@ -539,7 +539,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     rc.EndY, 
                     rc.P_L, 
                     rc.Long_Short));
-                //*/
+                */
                 #endregion Print rc - Commented Out
 
                 #region Determine brush color
@@ -644,12 +644,13 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
                             //  check for last day on chart - dictionary does not add todays date
                             //  if last day do nothing
-                            Print(string.Format("dtNowString: {0}\t dateForDailyText: {1}", dtNowString, dateForDailyText));
+                            //Print(string.Format("dtNowString: {0}\t dateForDailyText: {1}", dtNowString, dateForDailyText));
 
-                            if (dtNowString != dateForDailyText)
-                            {
-                                //  use dictionry to retreive low
-                                var dictResult = dictDayClose[dateForDailyText];
+                            //  check for days date is working on last day - it wasn't before
+                            //if (dtNowString != dateForDailyText)
+                            //{
+                            //  use dictionry to retreive low
+                            var dictResult = dictDayClose[dateForDailyText];
                                 //Print (string.Format("dateForDailyText: \t{1}dictResult:\t{0}", dictResult, dateForDailyText));
 
                                 #endregion get low from dictionary
@@ -663,7 +664,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                                 {
                                     Draw.Text(this, i.ToString() + "DailyText", false, daillyTotalPlusTotalTrades, startDayText, dictResult, -PixelsAboveBelowDay, Brushes.Red, fontDailyTotal, TextAlignment.Center, Brushes.White, Brushes.White, 100);
                                 }
-                            }
+                            //}
                         }
                     }
                }
@@ -688,9 +689,25 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             inputFirstBarOnChart = inputFirstBarTime.ToString("yy MM dd HH_mm");
             inputLastBarTime = ChartBars.GetTimeByBarIdx(ChartControl, ChartBars.ToIndex);
             inPutLastBarOnChart = inputLastBarTime.ToString("yy MM dd HH_mm");
-            //  Convert DateTime Instrument.Expiry to long 
-            var expiryAsDateTime = Convert.ToDateTime(Instrument.Expiry);
-            long expiry = expiryAsDateTime.Ticks;
+
+            ClearOutputWindow();
+
+            var expiryString = "";
+            //  if instrument is a stock set expiry to "   --   ""
+            if ( Instrument.MasterInstrument.ToString().Contains("Stock"))
+            {
+                expiryString = "     --";
+                Print(string.Format("Symbol is: \t{0}\tExpiry is:\t{1}", Bars.Instrument.MasterInstrument.Name,
+                    expiryString));
+            }
+            //  if instrument is a stock set expiry to "   Sep23   "
+            else if (Instrument.MasterInstrument.ToString().Contains("Future"))
+            {
+                expiryString = Instrument.ToString().Substring(3, 5); ;
+                Print(string.Format("Symbol is: \t{0}\tExpiry is:\t{1}", Bars.Instrument.MasterInstrument.Name,
+                    expiryString));
+
+            }
 
             Input parameters = new Input()
             {
@@ -702,7 +719,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 OutputPath = OutputFile,
                 TimeFirstBarOnChart = inputFirstBarOnChart,
                 TimeLastBarOnChart = inPutLastBarOnChart,
-                Expiry = expiry
+                Expiry = expiryString,
+                Instrument = Instrument.Id
             };
             if (EnumValue == MyEnum.Playback)
             {
@@ -719,9 +737,19 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             List<Trade> trades = new List<Trade>();
 
             //  Call main()
-            SqLiteExecutionsToListAndQueryResults.Program.main(parameters);
+            //  returns true for empty instList ( symbol not found)
+            var isEmpty = SqLiteExecutionsToListAndQueryResults.Program.Main(parameters);
+
+            //  display MessageBox is symbol no found
+            if ( isEmpty == true )
+            {
+                // Create a MessageBox window from a Chart
+                ChartControl.Dispatcher.InvokeAsync(new Action(() => {
+                    NinjaTrader.Gui.Tools.NTMessageBoxSimple.Show(Window.GetWindow(ChartControl.OwnerChart as DependencyObject), "\r\n\r\n                                      Symbol was not found", "                                 Check Symbol", MessageBoxButton.OK, MessageBoxImage.None);
+                }));
+            }
         }
-        private void hideDrawsFunc()
+    private void hideDrawsFunc()
         {
 //            ClearOutputWindow();
             // Sets drawSwitch based on whether there are any drawings on the chart
@@ -998,23 +1026,54 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             chartWindow.MouseEnter -= OnMouseEnter;
             chartWindow.MouseLeave -= OnMouseLeave;
 
-            if (btnTradeLines != null) chartWindow.MainMenu.Remove(btnTradeLines);
+        //  https://ninjatrader.com/support/helpGuides/nt8/NT%20HelpGuide%20English.html?usercontrolcollection.htm
+        //  did not have set button to null - buttons were not being removed - don't know if it works
+        //  is working so far
+        if (btnTradeLines != null)
+        {
+            chartWindow.MainMenu.Remove(btnTradeLines);
             btnTradeLines.Click -= btnTradeLinesClick;
-            if (btnP_L != null) chartWindow.MainMenu.Remove(btnP_L);
-            btnP_L.Click -= btnP_LClick;
-            if (btnUserDrawObjs != null) chartWindow.MainMenu.Remove(btnUserDrawObjs);
-            btnUserDrawObjs.Click -= btnUserDrawObjsClick;
-            if (btnIndicators != null) chartWindow.MainMenu.Remove(btnIndicators);
-            btnIndicators.Click -= btnIndicatorsClick;
-            if (btnShowTrades != null) chartWindow.MainMenu.Remove(btnShowTrades);
-            btnShowTrades.Click -= btnShowTradesClick;
-            if (btnHideWicks != null) chartWindow.MainMenu.Remove(btnHideWicks);
-            btnHideWicks.Click -= btnHideWicksClick;
-            if (btnCreateCsv != null) chartWindow.MainMenu.Remove(btnCreateCsv);
-            btnCreateCsv.Click -= btnCreateCsvClick;
-
+            btnTradeLines = null;
         }
-        public IDictionary<string, double> DictDayClose()
+        if (btnP_L != null)
+        {
+            chartWindow.MainMenu.Remove(btnP_L);
+            btnP_L.Click -= btnP_LClick;
+            btnP_L = null;
+        }
+        if (btnUserDrawObjs != null)
+        {
+            chartWindow.MainMenu.Remove(btnUserDrawObjs);
+            btnUserDrawObjs.Click -= btnUserDrawObjsClick;
+            btnUserDrawObjs = null;
+        }
+        if (btnIndicators != null)
+        {
+            chartWindow.MainMenu.Remove(btnIndicators);
+            btnIndicators.Click -= btnIndicatorsClick;
+            btnIndicators = null;
+        }
+        if (btnShowTrades != null)
+        {
+            chartWindow.MainMenu.Remove(btnShowTrades);
+            btnShowTrades.Click -= btnShowTradesClick;
+            btnShowTrades = null;
+        }
+        if (btnHideWicks != null)
+        {
+            chartWindow.MainMenu.Remove(btnHideWicks);
+            btnHideWicks.Click -= btnHideWicksClick;
+            btnHideWicks = null;
+        }
+        if (btnCreateCsv != null)
+        {
+            chartWindow.MainMenu.Remove(btnCreateCsv);
+            btnCreateCsv.Click -= btnCreateCsvClick;
+            btnHideWicks = null;
+        }
+
+    }
+    public IDictionary<string, double> DictDayClose()
         {
             IDictionary<string, double> dictDayClose = new Dictionary<string, double>();
             for (int i = 0; i < BarsArray[1].Count; i++)
