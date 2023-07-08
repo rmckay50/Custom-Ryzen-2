@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using LINQtoCSV;
 using System.IO;
+using NinjaTrader.NinjaScript;
+using NinjaTrader.Custom.AddOns.Properties;
 
 namespace NinjaTrader.Custom.AddOns
 {
@@ -10,12 +12,6 @@ namespace NinjaTrader.Custom.AddOns
     {
         public class Program
         {
-            #region Set Parameters
-            //	Set to true for playback (account - 1)
-            //  These parameters are passed from calling progran
-            public static bool bPlayback = false;
-            // Set to "12/12/2022" to get all of data
-            #endregion Set Parameters
 
             /// <summary>
             /// <switch between static void Main(string[] args) & public static void main(Paramaters.Input input)
@@ -268,31 +264,90 @@ namespace NinjaTrader.Custom.AddOns
                                             };
                 columnsWithAttributes.ToList();
 
-                CsvFileDescription scvDescript = new CsvFileDescription();
-                CsvContext cc = new CsvContext();
-                cc.Write
-                (
-                columnsWithAttributes,
-                parameters.OutputPath
-                );
+                //  bPlayback != true:
+                //      create CsvFileDescription
+                //      create and write to 'csvNTDrawline.csv'
+                //
+                //  bPlayback == true:
+                //      appendPlayback == true && firstPassAppend == true
+                //          create CsvFileDescription
+                //          create and write to 'csvNTDrawline.csv'
+                //          firstPassAppend = false
+                //      
+                //      appendPlayback == true && firstPassAppend == false ( second pass )
+                //          create CsvFileDescription with write headers set to false
+                //          append to 'csvNTDrawline.csv'
+                //  
+                //   'csvNTDrawline.csv' will start over each time script is reloaded
+                //
+                //  stored properties are:
+                //        Name                      Default  
+                //      storedDate                  01/01/2000
+                //      
 
-                //  replace name (local declaration) to input.Name (calling program definition)
-                var fileName = parameters.Name.ToUpper() + "                " + parameters.TimeLastBarOnChart + ".csv";
-                var dir = Path.GetDirectoryName(parameters.OutputPath); ;
+                //  set up date for persistence when reloading - the script variables are reset
+                var storedDate = NinjaTrader.Custom.AddOns.Properties.Settings.Default.storedDate;
+                var dateNow = DateTime.Now.ToString("MM/dd/yyyy");
+                var firstPassAppend = Settings.Default.firstPassAppend;
 
-                if (parameters.BPlayback != true)
+                //  if they are the same this is the first pass
+                //  append to csvNTDrawline
+                if ( storedDate != dateNow )
                 {
-                    cc.Write(columnsWithAttributes, dir + @"\" + fileName);
+                    Settings.Default.storedDate = DateTime.Now.ToString("MM/dd/yyyy");
+                    Properties.Settings.Default.Save();
                 }
+                if (parameters.BPlayback == false)
+                {
+                    CsvFileDescription scvDescript = new CsvFileDescription();
+                    CsvContext cc = new CsvContext();
+                    //  write to parameters.OutputPath - normally cscNTDrawline
+                    cc.Write
+                    (
+                    columnsWithAttributes,
+                    parameters.OutputPath
+                    );
+                }
+                //  this section is used when bPlayback is true
                 else
                 {
-                    //  lastBarTime is set in NT 'ChartBars.GetTimeByBarIdx(ChartControl, ChartBars.ToIndex)); //8/11/2015 4:30:00 AM'
-                    string l = parameters.TimeLastBarOnChart;
-                    fileName = parameters.Name.ToUpper() + " Playback " + parameters.TimeFirstBarOnChart + " To " + parameters.TimeLastBarOnChart + ".csv";
-                    cc.Write(columnsWithAttributes, dir + @"\" + fileName);
+                    //  create and write to 'csvNTDrawline.csv'
+                    if (parameters.AppendPlayback == true && firstPassAppend == true )
+                    {
+                        CsvFileDescription scvDescript = new CsvFileDescription();
+                        CsvContext cc = new CsvContext();
+                        //  write to parameters.OutputPath - normally cscNTDrawline
+                        cc.Write
+                        (
+                        columnsWithAttributes,
+                        parameters.OutputPath
+                        );
+                        //  set firstPass flag to false
+                        Settings.Default.firstPassAppend = false;
+                        Properties.Settings.Default.Save();
+                    }
+                    else if (parameters.AppendPlayback == true && firstPassAppend == false)
+                    {
+                        //  create a new file description that will does not use file headers
+                        var csvDescAppend = new CsvFileDescription();
+                        csvDescAppend.FirstLineHasColumnNames = false;
+                        csvDescAppend.EnforceCsvColumnAttribute = true;
+                        CsvContext ccApend = new CsvContext();
+
+                        //  write using StreamWriter to csvNTDrawline
+                        //  fileName, true - true is append (now with no columns)
+                        using (var stream = new StreamWriter(parameters.OutputPath, true))
+
+                        {
+                            ccApend.Write(columnsWithAttributes, stream, csvDescAppend);
+                        }
+
+                    }
                 }
 
-                #endregion
+
+
+                #endregion Use LINQtoCSV on combined list to write
                 isEmpty = false;
                 return isEmpty;
 
@@ -303,3 +358,4 @@ namespace NinjaTrader.Custom.AddOns
 
 
 }
+

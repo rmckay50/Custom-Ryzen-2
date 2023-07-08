@@ -138,12 +138,16 @@ namespace NinjaTrader.Custom.AddOns
         public string TimeLastBarOnChart { get; set; }
         public string Expiry { get; set; }
         public long Instrument { get; set; }
+        public bool AppendPlayback { get; set; }
 
         public Input()
         {
         }
 
-        public Input(bool bPlayback, string name, string startDate, string endDate, string inputPath, string outputPath, string timeFirstBarOnChart, string timeLastBarOnChart, string expiry, long instrument)
+        public Input( bool bPlayback, string name, string startDate, string endDate,
+            string inputPath, string outputPath, string timeFirstBarOnChart,
+            string timeLastBarOnChart, string expiry, long instrument,
+            bool appendPlayback )
         {
             BPlayback = bPlayback;
             Name = name;
@@ -155,6 +159,7 @@ namespace NinjaTrader.Custom.AddOns
             TimeLastBarOnChart = timeLastBarOnChart;
             Expiry = expiry;
             Instrument = instrument;
+            AppendPlayback = appendPlayback;
         }
 
     }

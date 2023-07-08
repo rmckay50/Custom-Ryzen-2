@@ -111,6 +111,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 //  The userName needs to be correct to keep ReadCsvAndDrawLines() in State.Historical from throwing exception
                 InputFile = @"C:\Users\" + userName + @"\Documents\NinjaTrader 8\db\NinjaTrader.sqlite";
                 OutputFile = @"C:\Users\" + userName + @"\Documents\NinjaTrader 8\csvNTDrawline.csv";
+                appendPlayback = true;
             }
             else if (State == State.Configure)
             {
@@ -146,6 +147,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         protected override void OnBarUpdate()
         {
         }
+
         #region Properties
         //	https://ninjatrader.com/support/forum/forum/ninjatrader-8/indicator-development/1050873-date-picker-property#post1050892
         [NinjaScriptProperty]
@@ -172,6 +174,12 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         //public string MyFile
         public string OutputFile
         { get; set; }
+
+        [NinjaScriptProperty]
+        [Display(Name = "Append Playback Results", Order = 6, GroupName = "Parameters")]
+        public bool appendPlayback
+        { get; set; }
+
 
         #endregion Properties
 
@@ -720,7 +728,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 TimeFirstBarOnChart = inputFirstBarOnChart,
                 TimeLastBarOnChart = inPutLastBarOnChart,
                 Expiry = expiryString,
-                Instrument = Instrument.Id
+                Instrument = Instrument.Id,
+                AppendPlayback = appendPlayback
+
             };
             if (EnumValue == MyEnum.Playback)
             {
@@ -1083,11 +1093,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 dictDayClose.Add(x, y);
 
             }
-            //foreach (var d in dictDayClose)
-            //{
-            //    Print(string.Format("Date: {0}  \tLow: {1}", d.Key, d.Value));
-            //}
-
 
             return dictDayClose;
         }
@@ -1147,18 +1152,18 @@ namespace NinjaTrader.NinjaScript.Indicators
 	public partial class Indicator : NinjaTrader.Gui.NinjaScript.IndicatorRenderBase
 	{
 		private My.RecordAndDisplayTradesWithButtons[] cacheRecordAndDisplayTradesWithButtons;
-		public My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor, int pixelsAboveBelowBar, int pixelsAboveBelowDay)
+		public My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool appendPlayback, bool colorActiveCursor, int pixelsAboveBelowBar, int pixelsAboveBelowDay)
 		{
-			return RecordAndDisplayTradesWithButtons(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor, pixelsAboveBelowBar, pixelsAboveBelowDay);
+			return RecordAndDisplayTradesWithButtons(Input, startTime, endTime, inputFile, outputFile, appendPlayback, colorActiveCursor, pixelsAboveBelowBar, pixelsAboveBelowDay);
 		}
 
-		public My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(ISeries<double> input, DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor, int pixelsAboveBelowBar, int pixelsAboveBelowDay)
+		public My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(ISeries<double> input, DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool appendPlayback, bool colorActiveCursor, int pixelsAboveBelowBar, int pixelsAboveBelowDay)
 		{
 			if (cacheRecordAndDisplayTradesWithButtons != null)
 				for (int idx = 0; idx < cacheRecordAndDisplayTradesWithButtons.Length; idx++)
-					if (cacheRecordAndDisplayTradesWithButtons[idx] != null && cacheRecordAndDisplayTradesWithButtons[idx].StartTime == startTime && cacheRecordAndDisplayTradesWithButtons[idx].EndTime == endTime && cacheRecordAndDisplayTradesWithButtons[idx].InputFile == inputFile && cacheRecordAndDisplayTradesWithButtons[idx].OutputFile == outputFile && cacheRecordAndDisplayTradesWithButtons[idx].colorActiveCursor == colorActiveCursor && cacheRecordAndDisplayTradesWithButtons[idx].PixelsAboveBelowBar == pixelsAboveBelowBar && cacheRecordAndDisplayTradesWithButtons[idx].PixelsAboveBelowDay == pixelsAboveBelowDay && cacheRecordAndDisplayTradesWithButtons[idx].EqualsInput(input))
+					if (cacheRecordAndDisplayTradesWithButtons[idx] != null && cacheRecordAndDisplayTradesWithButtons[idx].StartTime == startTime && cacheRecordAndDisplayTradesWithButtons[idx].EndTime == endTime && cacheRecordAndDisplayTradesWithButtons[idx].InputFile == inputFile && cacheRecordAndDisplayTradesWithButtons[idx].OutputFile == outputFile && cacheRecordAndDisplayTradesWithButtons[idx].appendPlayback == appendPlayback && cacheRecordAndDisplayTradesWithButtons[idx].colorActiveCursor == colorActiveCursor && cacheRecordAndDisplayTradesWithButtons[idx].PixelsAboveBelowBar == pixelsAboveBelowBar && cacheRecordAndDisplayTradesWithButtons[idx].PixelsAboveBelowDay == pixelsAboveBelowDay && cacheRecordAndDisplayTradesWithButtons[idx].EqualsInput(input))
 						return cacheRecordAndDisplayTradesWithButtons[idx];
-			return CacheIndicator<My.RecordAndDisplayTradesWithButtons>(new My.RecordAndDisplayTradesWithButtons(){ StartTime = startTime, EndTime = endTime, InputFile = inputFile, OutputFile = outputFile, colorActiveCursor = colorActiveCursor, PixelsAboveBelowBar = pixelsAboveBelowBar, PixelsAboveBelowDay = pixelsAboveBelowDay }, input, ref cacheRecordAndDisplayTradesWithButtons);
+			return CacheIndicator<My.RecordAndDisplayTradesWithButtons>(new My.RecordAndDisplayTradesWithButtons(){ StartTime = startTime, EndTime = endTime, InputFile = inputFile, OutputFile = outputFile, appendPlayback = appendPlayback, colorActiveCursor = colorActiveCursor, PixelsAboveBelowBar = pixelsAboveBelowBar, PixelsAboveBelowDay = pixelsAboveBelowDay }, input, ref cacheRecordAndDisplayTradesWithButtons);
 		}
 	}
 }
@@ -1167,14 +1172,14 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 {
 	public partial class MarketAnalyzerColumn : MarketAnalyzerColumnBase
 	{
-		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor, int pixelsAboveBelowBar, int pixelsAboveBelowDay)
+		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool appendPlayback, bool colorActiveCursor, int pixelsAboveBelowBar, int pixelsAboveBelowDay)
 		{
-			return indicator.RecordAndDisplayTradesWithButtons(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor, pixelsAboveBelowBar, pixelsAboveBelowDay);
+			return indicator.RecordAndDisplayTradesWithButtons(Input, startTime, endTime, inputFile, outputFile, appendPlayback, colorActiveCursor, pixelsAboveBelowBar, pixelsAboveBelowDay);
 		}
 
-		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(ISeries<double> input , DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor, int pixelsAboveBelowBar, int pixelsAboveBelowDay)
+		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(ISeries<double> input , DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool appendPlayback, bool colorActiveCursor, int pixelsAboveBelowBar, int pixelsAboveBelowDay)
 		{
-			return indicator.RecordAndDisplayTradesWithButtons(input, startTime, endTime, inputFile, outputFile, colorActiveCursor, pixelsAboveBelowBar, pixelsAboveBelowDay);
+			return indicator.RecordAndDisplayTradesWithButtons(input, startTime, endTime, inputFile, outputFile, appendPlayback, colorActiveCursor, pixelsAboveBelowBar, pixelsAboveBelowDay);
 		}
 	}
 }
@@ -1183,14 +1188,14 @@ namespace NinjaTrader.NinjaScript.Strategies
 {
 	public partial class Strategy : NinjaTrader.Gui.NinjaScript.StrategyRenderBase
 	{
-		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor, int pixelsAboveBelowBar, int pixelsAboveBelowDay)
+		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool appendPlayback, bool colorActiveCursor, int pixelsAboveBelowBar, int pixelsAboveBelowDay)
 		{
-			return indicator.RecordAndDisplayTradesWithButtons(Input, startTime, endTime, inputFile, outputFile, colorActiveCursor, pixelsAboveBelowBar, pixelsAboveBelowDay);
+			return indicator.RecordAndDisplayTradesWithButtons(Input, startTime, endTime, inputFile, outputFile, appendPlayback, colorActiveCursor, pixelsAboveBelowBar, pixelsAboveBelowDay);
 		}
 
-		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(ISeries<double> input , DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool colorActiveCursor, int pixelsAboveBelowBar, int pixelsAboveBelowDay)
+		public Indicators.My.RecordAndDisplayTradesWithButtons RecordAndDisplayTradesWithButtons(ISeries<double> input , DateTime startTime, DateTime endTime, string inputFile, string outputFile, bool appendPlayback, bool colorActiveCursor, int pixelsAboveBelowBar, int pixelsAboveBelowDay)
 		{
-			return indicator.RecordAndDisplayTradesWithButtons(input, startTime, endTime, inputFile, outputFile, colorActiveCursor, pixelsAboveBelowBar, pixelsAboveBelowDay);
+			return indicator.RecordAndDisplayTradesWithButtons(input, startTime, endTime, inputFile, outputFile, appendPlayback, colorActiveCursor, pixelsAboveBelowBar, pixelsAboveBelowDay);
 		}
 	}
 }
