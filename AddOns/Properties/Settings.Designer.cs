@@ -46,5 +46,17 @@ namespace NinjaTrader.Custom.AddOns.Properties {
                 this["firstPassAppend"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("01/01/2000")]
+        public string temp {
+            get {
+                return ((string)(this["temp"]));
+            }
+            set {
+                this["temp"] = value;
+            }
+        }
     }
 }

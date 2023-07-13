@@ -610,10 +610,11 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     SimpleFont fontDailyTotal = new NinjaTrader.Gui.Tools.SimpleFont("Arial", 12) { Size = 25, Bold = true };
 
                     //  CurrentBar is -1 for a while && check for enough bars on the chart
-                    if (CurrentBar > 0 && CurrentBar > barsAgo)
-                    {
-                        // Print P/L in blue below line start
-                        if (rc.P_L >= 0)
+                    if (CurrentBar >= 0 && CurrentBar > barsAgo)
+
+                        {
+                            // Print P/L in blue below line start
+                            if (rc.P_L >= 0)
                         {
                             Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString(), sTime, rc.StartY, -PixelsAboveBelowBar, Brushes.Blue, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
                         }
