@@ -20,11 +20,9 @@ namespace NinjaTrader.Custom.AddOns.Properties {
         }
         
         private void SettingChangingEventHandler(object sender, System.Configuration.SettingChangingEventArgs e) {
-            NinjaTrader.Code.Output.Process("Hello" , PrintTo.OutputTab1);
         }
 
         private void SettingsSavingEventHandler(object sender, System.ComponentModel.CancelEventArgs e) {
-            NinjaTrader.Code.Output.Process("Hello", PrintTo.OutputTab1);
         }
     }
 }

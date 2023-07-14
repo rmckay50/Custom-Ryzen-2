@@ -54,25 +54,35 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 ClearOutputWindow();
                 var b = Settings.Default.temp;
                 //var newB = Properties.Settings1.Date;
-                Print(b);
+                Print("Line 57 get an ddisplay temp " + Settings.Default.temp + "\n");
                 var c = DateTime.Now.ToString("MM/dd/yyyy");
                 Settings.Default.temp = "04/04/2023";
                 Settings.Default.Save();
-                Print(Settings.Default.temp);
+                Print("Line 61 temp should be 04/04/2023 " + Settings.Default.temp + "\n");
                 Settings.Default.temp = "04/05/2023";
                 Settings.Default.Save();
-                Print(Settings.Default.temp);
+                Print("Line 64 temp should be 04/05/2023 " + Settings.Default.temp + "\n");
 
-                Print(Settings.Default.storedDate + "\n");
+                Print("Line 66 storedDate should be 04/05/2023 " + Settings.Default.storedDate + "\n");
                 Settings.Default.storedDate = "04/04/2023";
                 Settings.Default.Save();
 
-                Print(Settings.Default.storedDate + "\n");
+                Print("Line 70 storedDate should be 04/04/2023 " + Settings.Default.storedDate + "\n");
 
                 Settings.Default.storedDate = "04/05/2023";
                 Settings.Default.Save();
 
-                Print(Settings.Default.storedDate + "\n");
+                Print("Line 75 storedDate should be 04/05/2023 " + Settings.Default.storedDate + "\n");
+
+				var firstPassAppend = Settings.Default.firstPassAppend;
+                Print("Line 78 firstPassAppend should be true " + Settings.Default.firstPassAppend + "\n");
+
+				Settings.Default.firstPassAppend = false;
+                Settings.Default.Save();
+
+                Print("Line 84 firstPassAppend should be false " + Settings.Default.firstPassAppend + "\n");
+
+
             }
         }
 

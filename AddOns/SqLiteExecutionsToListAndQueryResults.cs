@@ -297,6 +297,7 @@ namespace NinjaTrader.Custom.AddOns
                     Settings.Default.storedDate = DateTime.Now.ToString("MM/dd/yyyy");
                     Properties.Settings.Default.Save();
                 }
+                //  write to csvNTDrawline if not in Playback mode
                 if (parameters.BPlayback == false)
                 {
                     CsvFileDescription scvDescript = new CsvFileDescription();
@@ -309,6 +310,9 @@ namespace NinjaTrader.Custom.AddOns
                     );
                 }
                 //  this section is used when bPlayback is true
+                //  AppendPlay is initialized to true in 'State.SetDefaults'
+                //  firstPassAppend = Settings.Default.firstPassAppend is initialized from .setings
+                //  needs to be set to true for first pass which will add column titles to csvNTDrawline
                 else
                 {
                     //  create and write to 'csvNTDrawline.csv'
