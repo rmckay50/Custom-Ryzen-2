@@ -405,6 +405,11 @@ namespace NinjaTrader.Custom.AddOns
             DailyTotal = dailyTotal;
             TotalTrades = totalTrades;
         }
+        public IEnumerator GetEnumerator()                                                              //	class CSV
+        {
+            return (IEnumerator)this;                                                                       //	class CSV
+        }
+
     }
     public class NTDrawLineForLINQtoCSV
     {
@@ -432,6 +437,11 @@ namespace NinjaTrader.Custom.AddOns
         public double? DailyTotal { get; set; }
         [CsvColumn(FieldIndex = 12)]
         public int? TotalTrades { get; set; }
+        public IEnumerator GetEnumerator()                                                              //	class CSV
+        {
+            return (IEnumerator)this;                                                                       //	class CSV
+        }
+
 
     }
     public class Source

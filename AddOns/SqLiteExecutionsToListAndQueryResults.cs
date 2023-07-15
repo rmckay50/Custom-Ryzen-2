@@ -36,6 +36,10 @@ namespace NinjaTrader.Custom.AddOns
                 List<Trade> workingTrades = new List<Trade>();
                 List<Trade> trades = new List<Trade>();
                 var isEmpty = false;
+                IEnumerable<NTDrawLine> returnedClass;
+                //  combined existing list and new list
+                IEnumerable<NTDrawLine> listToPrint = new List<NTDrawLine>();
+
 
                 ///
                 ///<summary>
@@ -290,6 +294,7 @@ namespace NinjaTrader.Custom.AddOns
                 var dateNow = DateTime.Now.ToString("MM/dd/yyyy");
                 var firstPassAppend = Settings.Default.firstPassAppend;
 
+
                 //  if they are the same this is the first pass
                 //  append to csvNTDrawline
                 if ( storedDate != dateNow )
@@ -332,6 +337,99 @@ namespace NinjaTrader.Custom.AddOns
                     }
                     else if (parameters.AppendPlayback == true && firstPassAppend == false)
                     {
+                        //  read existing csvNTDrawline.csv
+                        //#region Use LINQtoCSV to read "csvNTDrawline.csv"
+
+                        CsvFileDescription scvDescript = new CsvFileDescription();
+                        CsvContext cc = new CsvContext();
+                        CsvFileDescription dataFromFile = new CsvFileDescription();
+
+                        //	Read in file 'C:\data\csvNTDrawline.csv'  Fills returnedClass
+                        returnedClass = cc.Read<NTDrawLine>
+                                        (
+                                            parameters.OutputPath,
+                                            dataFromFile
+                                        );
+                        //#endregion Use LINQtoCSV to read "csvNTDrawline.csv"
+
+                        //#region Compare trades in existing .csv file with columnsWithAttributes
+                        //IEnumerable<NTDrawLine> origLine;
+                        //try
+                        //{
+                        //foreach (var rcLine in columnsWithAttributes)
+                        //    {
+                        //  convert columnsWithAttributes to NTDrawLine - type mismatch that I couldn't resolve
+                        var columns = from l in columnsWithAttributes
+                                          select new NTDrawLine
+                                          {
+                                                            Id = l.Id,
+                                                            Symbol = l.Symbol,
+                                                            Long_Short = l.Long_Short,
+                                                            StartTimeTicks = l.StartTimeTicks,
+                                                            StartTime = l.StartTime,
+                                                            StartY = l.StartY,
+                                                            EndTimeTicks = l.EndTimeTicks,
+                                                            EndTime = l.EndTime,
+                                                            EndY = l.EndY,
+                                                            P_L = l.P_L,
+                                                            DailyTotal = l.DailyTotal,
+                                                            TotalTrades = l.TotalTrades
+                                                        };
+                            columns.ToList();
+
+                        foreach (var line in returnedClass)
+                        {
+                            foreach (var column in columns) 
+                            {
+                                if (column.StartTime == line.StartTime) 
+                                { 
+                                     //  add new line to listToPrint
+                                    listToPrint = (IEnumerable<NTDrawLine>)(from l in columnsWithAttributes
+                                        select new NTDrawLine
+                                        {
+                                            Id = l.Id,
+                                            Symbol = l.Symbol,
+                                            Long_Short = l.Long_Short,
+                                            StartTimeTicks = l.StartTimeTicks,
+                                            StartTime = l.StartTime,
+                                            StartY = l.StartY,
+                                            EndTimeTicks = l.EndTimeTicks,
+                                            EndTime = l.EndTime,
+                                            EndY = l.EndY,
+                                            P_L = l.P_L,
+                                            DailyTotal = l.DailyTotal,
+                                            TotalTrades = l.TotalTrades
+                                        });                                   
+                        listToPrint.ToList();
+                                }
+                            }
+                        }
+
+                        //}
+                        //{
+                        //origLine = (IEnumerable<NTDrawLine>)rcLine;
+                        //for (int j = 0; j <= columnsWithAttributes.Count(); i++)
+                        //{
+                        //    if ( rcLine.StartTime == columnsWithAttributes[j].)
+                        //}
+                        //foreach (var column in columnsWithAttributes)
+                        //{
+                        //    //    //    //origLine = (IEnumerable<NTDrawLine>)column;
+                        //  is this a new entry
+                        //if (origLine.StartTime == column.StartTime)
+                        //    //    //    //{
+                        //    //    //    //}
+                        //}
+
+                        //}
+                        //}
+                        //catch (Exception ex )
+                        //{ Console.WriteLine( ex.ToString() );}
+
+
+                        //#endregion Compare trades in existing .csv file with columnsWithAttributes
+
+
 
                         //  create a new file description that will does not use file headers
                         var csvDescAppend = new CsvFileDescription();
@@ -344,7 +442,10 @@ namespace NinjaTrader.Custom.AddOns
                         using (var stream = new StreamWriter(parameters.OutputPath, true))
 
                         {
-                            ccApend.Write(columnsWithAttributes, stream, csvDescAppend);
+                            //ccApend.Write(columnsWithAttributes, stream, csvDescAppend);
+                            ccApend.Write(listToPrint, stream, csvDescAppend);
+
+                            //listToPrint
                         }
 
                     }
