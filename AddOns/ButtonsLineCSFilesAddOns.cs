@@ -11,7 +11,6 @@ using System.Data.SQLite;
 namespace NinjaTrader.Custom.AddOns
 {
     //public class ButtonsLineCSFilesAddOns : NinjaTrader.NinjaScript.AddOnBase
-    //{
     public class CSV
     {
         //public int EntryId { get; set; }
@@ -46,7 +45,6 @@ namespace NinjaTrader.Custom.AddOns
         public Int64? BarIndex { get; set; }
 
         public Double? Commission { get; set; }
-        //public float? Commission { get; set; }
 
         public Int64? Exchange { get; set; }
 
@@ -373,7 +371,6 @@ namespace NinjaTrader.Custom.AddOns
     }
     public class NTDrawLine
     {
-        //DateTime startTime, double startY, DateTime endTime, double endY
         public int Id { get; set; }
         public string Symbol { get; set; }
         public string Long_Short { get; set; }
@@ -456,7 +453,6 @@ namespace NinjaTrader.Custom.AddOns
         public double? StartingExitPrice { get; set; }                                                   //	class source
         public int rowInTrades { get; set; }                                                            //	class source
         public int RowInTrades { get; set; }                                                            //	class source
-        //public int RowInCsv { get; set; }                                                               //	class source
         public long? ExitQty { get; set; }                                                                //	class source
         public long? Remaining { get; set; }                                                              //	class source
         public List<Trade> Trades { get; set; }                                                         //	class source
@@ -522,17 +518,17 @@ namespace NinjaTrader.Custom.AddOns
         public string Expiry { get; set; }
         public double? P_L { get; set; }
         public string Long_Short { get; set; }
-        public int TradeNo { get; set; }                                                                // 	class Trade
+        public int TradeNo { get; set; }                                                                
 
-        public IEnumerator GetEnumerator()                                                              // 	class Trade
+        public IEnumerator GetEnumerator()                                                             
         {
-            return (IEnumerator)this;                                                                   // 	class Trade
+            return (IEnumerator)this;                                                                  
         }
 
         public Trade() { }
 
-        // Without int execId (second cstr, code runs
-        //public Ret(int instId, int execId, string name, int? position, int? quantity, bool? isEntry, bool? isExit, double? price, long? time,
+        //  Without int execId (second cstr, code runs
+        //  public Ret(int instId, int execId, string name, int? position, int? quantity, bool? isEntry, bool? isExit, double? price, long? time,
         //	string humanTime, long instrument, string expiry, double? p_L, string long_Short)
         public Trade(long execId, long? position, string name, long? qty, bool? isEntry, bool? isExit, double? price, long? time,
             string humanTime, long instrument, string expiry, double? p_L, string long_Short)
