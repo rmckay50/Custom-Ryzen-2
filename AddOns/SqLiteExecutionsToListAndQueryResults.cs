@@ -37,6 +37,7 @@ namespace NinjaTrader.Custom.AddOns
                 List<Trade> workingTrades = new List<Trade>();
                 List<Trade> trades = new List<Trade>();
                 var isEmpty = false;
+                //  needs to be IEnmerable because thats what Read returns
                 IEnumerable<NTDrawLine> returnedClass;
                 //  combined existing list and new list
                 IEnumerable<NTDrawLine> listToPrint = new List<NTDrawLine>();
@@ -236,8 +237,8 @@ namespace NinjaTrader.Custom.AddOns
 
                 #region Fill in Daily Total Column
 
-                ////	Call 'FillDailyTotalColumn' to fill in csv Daily Total column
-                //source.FillDailyTotalColumn();
+                //	Call 'FillDailyTotalColumn' to fill in csv Daily Total column
+                source.FillDailyTotalColumn();
 
                 #endregion Fill in Daily Total Column
 
@@ -360,51 +361,74 @@ namespace NinjaTrader.Custom.AddOns
                         var columns = from l in columnsWithAttributes
                                           select new NTDrawLine
                                           {
-                                                            Id = l.Id,
-                                                            Symbol = l.Symbol,
-                                                            Long_Short = l.Long_Short,
-                                                            StartTimeTicks = l.StartTimeTicks,
-                                                            StartTime = l.StartTime,
-                                                            StartY = l.StartY,
-                                                            EndTimeTicks = l.EndTimeTicks,
-                                                            EndTime = l.EndTime,
-                                                            EndY = l.EndY,
-                                                            P_L = l.P_L,
-                                                            DailyTotal = l.DailyTotal,
-                                                            TotalTrades = l.TotalTrades
+                                                            Id = (int)l.Id,
+                                                            Symbol = (string)l.Symbol,
+                                                            Long_Short = (string)l.Long_Short,
+                                                            StartTimeTicks = (long)l.StartTimeTicks,
+                                                            StartTime = (string)l.StartTime,
+                                                            StartY = (double)l.StartY,
+                                                            EndTimeTicks = (long)l.EndTimeTicks,
+                                                            EndTime = (string)l.EndTime,
+                                                            EndY = (double)l.EndY,
+                                                            P_L = (double)l.P_L,
+                                                            DailyTotal = (double)l.DailyTotal,
+                                                            TotalTrades = l.TotalTrades ?? 0
                                                         };
                             columns.ToList();
 
-                        //foreach (var line in returnedClass)
-                        //{
-                        //    foreach (var column in columns)
-                        //    {
-                        //        //  compare each line of existing file with new list by start time
-                        //        //  when there is a difference (existing trade or new trade) add it to list
-                        //        if (column.StartTime == line.StartTime)
-                        //        {
-                        //            //  add new line to listToPrint
-                        //            listToPrint = (IEnumerable<NTDrawLine>)
-                        //                (from l in columnsWithAttributes
-                        //                 select new NTDrawLine
-                        //                 {
-                        //                     Id = l.Id,
-                        //                     Symbol = l.Symbol,
-                        //                     Long_Short = l.Long_Short,
-                        //                     StartTimeTicks = l.StartTimeTicks,
-                        //                     StartTime = l.StartTime,
-                        //                     StartY = l.StartY,
-                        //                     EndTimeTicks = l.EndTimeTicks,
-                        //                     EndTime = l.EndTime,
-                        //                     EndY = l.EndY,
-                        //                     P_L = l.P_L,
-                        //                     DailyTotal = l.DailyTotal,
-                        //                     TotalTrades = l.TotalTrades
-                        //                 });
-                        //            listToPrint.ToList();
-                        //        }
-                        //    }
-                        //}
+                        //  returnedClass may be empty - copy 
+                        foreach (var line in returnedClass)
+                        {
+                            foreach (var column in columns)
+                            {
+                                //  compare each line of existing file with new list by start time
+                                //  when there is a difference (existing trade or new trade) add it to list
+                                if (column.StartTime == line.StartTime)
+                                {
+                                    //  add new line to listToPrint
+                                    listToPrint = (List<NTDrawLine>)
+                                        (from l in columnsWithAttributes
+                                         select new NTDrawLine
+                                         {
+                                             Id = l.Id,
+                                             Symbol = l.Symbol,
+                                             Long_Short = l.Long_Short,
+                                             StartTimeTicks = l.StartTimeTicks,
+                                             StartTime = l.StartTime,
+                                             StartY = l.StartY,
+                                             EndTimeTicks = l.EndTimeTicks,
+                                             EndTime = l.EndTime,
+                                             EndY = l.EndY,
+                                             P_L = l.P_L,
+                                             DailyTotal = l.DailyTotal,
+                                             TotalTrades = l.TotalTrades
+                                         });
+                                    listToPrint.ToList();
+                                }
+                            }
+                        }
+
+                        //  convert listToPrint to List<NTDrawLIne>
+
+                        List<NTDrawLine> listToPrintUpdated = (List<NTDrawLine>)(from l in listToPrint
+                                                                                 select new NTDrawLine
+                                                                      {
+                                                                          Id = l.Id,
+                                                                          Symbol = l.Symbol,
+                                                                          Long_Short = l.Long_Short,
+                                                                          StartTimeTicks = l.StartTimeTicks,
+                                                                          StartTime = l.StartTime,
+                                                                          StartY = l.StartY,
+                                                                          EndTimeTicks = l.EndTimeTicks,
+                                                                          EndTime = l.EndTime,
+                                                                          EndY = l.EndY,
+                                                                          P_L = l.P_L,
+                                                                          DailyTotal = l.DailyTotal,
+                                                                          TotalTrades = l.TotalTrades
+                                                                      });
+                        listToPrintUpdated.ToList();
+
+                        listToPrintUpdated.FillDailyTotalColumn();
                         //#endregion Compare trades in existing .csv file with columnsWithAttributes
                         //int fu = 2;
                         //#region Recalculate daily totals
@@ -499,7 +523,7 @@ namespace NinjaTrader.Custom.AddOns
                         #region Convert list with attributes to get correct order
 
                         var printWithAttributes = from l in listToPrint
-                                                  select new NTDrawLineForLINQtoCSV
+                                                                                  select new NTDrawLineForLINQtoCSV
                                                     {
                                                         Id = l.Id,
                                                         Symbol = l.Symbol,
