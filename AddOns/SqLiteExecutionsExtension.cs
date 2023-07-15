@@ -130,20 +130,23 @@ namespace NinjaTrader.Custom.AddOns
 
         #region FillDailyTotalColumn
 
-        public static Source FillDailyTotalColumn(this Source source)
+        //public static Source FillDailyTotalColumn(this Source source)
+        public static List<NTDrawLine> FillDailyTotalColumn
+            (this List<NTDrawLine> source)
+
         {
 
             //  get date ("MM/dd/yyyy") portion of end date
             //  compare on each pass with starting date
             //  when date changes (string compare) enter new total into DailyTotal column
-            var startingDate = source.Csv[0].EndTime.Substring(11);
+            var startingDate = source[0].EndTime.Substring(11);
 
             //  use to get trade end date to be used for comparison
             var currentTradeDate = "";
 
             //  use as register to total trade P/L values
             //  initialize with first value because starting poing for foreach is line 2
-            double runningTotal = source.Csv[0].P_L;
+            double runningTotal = source[0].P_L;
 
             //  use as register to count number of trades in the day
             int TotalTrades = 1;
@@ -153,7 +156,7 @@ namespace NinjaTrader.Custom.AddOns
 
             //  cycle through trades - compare trade end date with previous - record total on change
             //   zero accumulator
-            foreach (var c in source.Csv)
+            foreach (var c in source)
             {
                 //  get date of trade ("/MM/dd/yyy")
                 currentTradeDate = c.EndTime.Substring(11);
@@ -172,10 +175,10 @@ namespace NinjaTrader.Custom.AddOns
                 else if (iD != 0)
                 {
                     //  insert total in DailyTotal column 1 line up
-                    source.Csv[iD - 1].DailyTotal = runningTotal;
+                    source[iD - 1].DailyTotal = runningTotal;
 
                     //  insert total in TotalTrades column 1 line up
-                    source.Csv[iD - 1].TotalTrades = TotalTrades;
+                    source[iD - 1].TotalTrades = TotalTrades;
 
 
                     //  zero accumulator - this if is hit when dates are unequal so running total 
@@ -196,12 +199,12 @@ namespace NinjaTrader.Custom.AddOns
                 iD++;
 
                 //  if ID  == list.count - at end of list - enter last total
-                if (iD == source.Csv.Count)
+                if (iD == source.Count)
                 {
-                    source.Csv[iD - 1].DailyTotal = runningTotal;
+                    source[iD - 1].DailyTotal = runningTotal;
 
                     //  enter number of trades in TotalTrades
-                    source.Csv[iD - 1].TotalTrades = TotalTrades;
+                    source[iD - 1].TotalTrades = TotalTrades;
 
                 }
             }

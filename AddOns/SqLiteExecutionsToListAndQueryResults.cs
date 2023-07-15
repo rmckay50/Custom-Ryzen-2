@@ -39,7 +39,7 @@ namespace NinjaTrader.Custom.AddOns
                 IEnumerable<NTDrawLine> returnedClass;
                 //  combined existing list and new list
                 IEnumerable<NTDrawLine> listToPrint = new List<NTDrawLine>();
-
+                List<NTDrawLine> listToPrintWithDailies = new List<NTDrawLine>();
 
                 ///
                 ///<summary>
@@ -235,8 +235,8 @@ namespace NinjaTrader.Custom.AddOns
 
                 #region Fill in Daily Total Column
 
-                //	Call 'FillDailyTotalColumn' to fill in csv Daily Total column
-                source.FillDailyTotalColumn();
+                ////	Call 'FillDailyTotalColumn' to fill in csv Daily Total column
+                //source.FillDailyTotalColumn();
 
                 #endregion Fill in Daily Total Column
 
@@ -407,11 +407,43 @@ namespace NinjaTrader.Custom.AddOns
 
                         #endregion Compare trades in existing .csv file with columnsWithAttributes
 
+                        #region Recalculate daily 
+
+                        //var x = listToPrint.ToList();
+
+                        //listToPrintWithDailies = listToPrint.ToList().FillDailyTotalColumn();
+                        listToPrintWithDailies = Methods.FillDailyTotalColumn((List<NinjaTrader.Custom.AddOns.NTDrawLine>)listToPrint);
+
+                        #endregion Compare trades in existing .csv file with columnsWithAttributes
+
+
+                        #region Convert list with attributes to get correct order
+
+                        var printWithAttributes = from l in listToPrint
+                                                  select new NTDrawLineForLINQtoCSV
+                                                    {
+                                                        Id = l.Id,
+                                                        Symbol = l.Symbol,
+                                                        Long_Short = l.Long_Short,
+                                                        StartTimeTicks = l.StartTimeTicks,
+                                                        StartTime = l.StartTime,
+                                                        StartY = l.StartY,
+                                                        EndTimeTicks = l.EndTimeTicks,
+                                                        EndTime = l.EndTime,
+                                                        EndY = l.EndY,
+                                                        P_L = l.P_L,
+                                                        DailyTotal = l.DailyTotal,
+                                                        TotalTrades = l.TotalTrades
+                                                    };
+                        printWithAttributes.ToList();
+
+                        #endregion Convert list with attributes to get correct order
+
 
                         cc.Write
                         (
                             //columnsWithAttributes,
-                            listToPrint,
+                            printWithAttributes,
                             parameters.OutputPath
                         );
 
