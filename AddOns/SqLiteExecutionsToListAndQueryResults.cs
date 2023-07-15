@@ -332,6 +332,7 @@ namespace NinjaTrader.Custom.AddOns
                     }
                     else if (parameters.AppendPlayback == true && firstPassAppend == false)
                     {
+
                         //  create a new file description that will does not use file headers
                         var csvDescAppend = new CsvFileDescription();
                         csvDescAppend.FirstLineHasColumnNames = false;
