@@ -5,6 +5,7 @@ using LINQtoCSV;
 using System.IO;
 using NinjaTrader.NinjaScript;
 using NinjaTrader.Custom.AddOns.Properties;
+using System.Collections;
 
 namespace NinjaTrader.Custom.AddOns
 {
@@ -374,47 +375,125 @@ namespace NinjaTrader.Custom.AddOns
                                                         };
                             columns.ToList();
 
-                        foreach (var line in returnedClass)
-                        {
-                            foreach (var column in columns) 
-                            {
-                                //  compare each line of existing file with new list by start time
-                                //  when there is a difference (existing trade or new trade) add it to list
-                                if (column.StartTime == line.StartTime) 
-                                { 
-                                     //  add new line to listToPrint
-                                    listToPrint = (IEnumerable<NTDrawLine>)
-                                        (from l in columnsWithAttributes
-                                            select new NTDrawLine
-                                            {
-                                                Id = l.Id,
-                                                Symbol = l.Symbol,
-                                                Long_Short = l.Long_Short,
-                                                StartTimeTicks = l.StartTimeTicks,
-                                                StartTime = l.StartTime,
-                                                StartY = l.StartY,
-                                                EndTimeTicks = l.EndTimeTicks,
-                                                EndTime = l.EndTime,
-                                                EndY = l.EndY,
-                                                P_L = l.P_L,
-                                                DailyTotal = l.DailyTotal,
-                                                TotalTrades = l.TotalTrades
-                                            });                                   
-                                    listToPrint.ToList();
-                                }
-                            }
-                        }
+                        //foreach (var line in returnedClass)
+                        //{
+                        //    foreach (var column in columns)
+                        //    {
+                        //        //  compare each line of existing file with new list by start time
+                        //        //  when there is a difference (existing trade or new trade) add it to list
+                        //        if (column.StartTime == line.StartTime)
+                        //        {
+                        //            //  add new line to listToPrint
+                        //            listToPrint = (IEnumerable<NTDrawLine>)
+                        //                (from l in columnsWithAttributes
+                        //                 select new NTDrawLine
+                        //                 {
+                        //                     Id = l.Id,
+                        //                     Symbol = l.Symbol,
+                        //                     Long_Short = l.Long_Short,
+                        //                     StartTimeTicks = l.StartTimeTicks,
+                        //                     StartTime = l.StartTime,
+                        //                     StartY = l.StartY,
+                        //                     EndTimeTicks = l.EndTimeTicks,
+                        //                     EndTime = l.EndTime,
+                        //                     EndY = l.EndY,
+                        //                     P_L = l.P_L,
+                        //                     DailyTotal = l.DailyTotal,
+                        //                     TotalTrades = l.TotalTrades
+                        //                 });
+                        //            listToPrint.ToList();
+                        //        }
+                        //    }
+                        //}
+                        //#endregion Compare trades in existing .csv file with columnsWithAttributes
+                        //int fu = 2;
+                        //#region Recalculate daily totals
 
-                        #endregion Compare trades in existing .csv file with columnsWithAttributes
-
-                        #region Recalculate daily 
-
-                        //var x = listToPrint.ToList();
+                        //List<NTDrawLine> x = listToPrint.ToList();
+                        // var xreturn = x.FillDailyTotalColumn();
 
                         //listToPrintWithDailies = listToPrint.ToList().FillDailyTotalColumn();
-                        listToPrintWithDailies = Methods.FillDailyTotalColumn((List<NinjaTrader.Custom.AddOns.NTDrawLine>)listToPrint);
+                        //listToPrintWithDailies = Methods.FillDailyTotalColumn((List<NinjaTrader.Custom.AddOns.NTDrawLine>)listToPrint);
 
-                        #endregion Compare trades in existing .csv file with columnsWithAttributes
+                        #endregion Recalculate daily totals
+
+                        //foreach (var n in listToPrint)
+                        //    //  get date ("MM/dd/yyyy") portion of end date
+                        //    //  compare on each pass with starting date
+                        //    //  when date changes (string compare) enter new total into DailyTotal column
+                        //    listToPrint.ElementAt(1);
+                        //var startingDate = listToPrint.ElementAt(0).EndTime.Substring(11);
+
+
+                        ////  use to get trade end date to be used for comparison
+                        //var currentTradeDate = "";
+
+                        ////  use as register to total trade P/L values
+                        ////  initialize with first value because starting poing for foreach is line 2
+                        //double runningTotal = source[0].P_L;
+
+                        ////  use as register to count number of trades in the day
+                        //int TotalTrades = 1;
+
+                        ////  need to keep track of line number in list
+                        //int iD = 0;
+
+                        ////  cycle through trades - compare trade end date with previous - record total on change
+                        ////   zero accumulator
+                        //foreach (var c in source)
+                        //{
+                        //    //  get date of trade ("/MM/dd/yyy")
+                        //    currentTradeDate = c.EndTime.Substring(11);
+
+                        //    //  has date changed - value less than zero is change
+                        //    if (currentTradeDate.CompareTo(startingDate) == 0 && iD != 0)
+                        //    {
+                        //        //  add curent line P/L to accumulator
+                        //        runningTotal = runningTotal + c.P_L;
+
+                        //        //  add to number of days trades
+                        //        TotalTrades++;
+                        //    }
+
+                        //    //  date has changed
+                        //    else if (iD != 0)
+                        //    {
+                        //        //  insert total in DailyTotal column 1 line up
+                        //        source[iD - 1].DailyTotal = runningTotal;
+
+                        //        //  insert total in TotalTrades column 1 line up
+                        //        source[iD - 1].TotalTrades = TotalTrades;
+
+
+                        //        //  zero accumulator - this if is hit when dates are unequal so running total 
+                        //        //      needs to be set to rows P/L - zero is not needed
+                        //        runningTotal = 0;
+
+                        //        //  zero TotalTrades
+                        //        TotalTrades = 1;
+
+                        //        //  add curent line P/L to accumulator
+                        //        runningTotal = runningTotal + c.P_L;
+
+                        //        //  update trade end date
+                        //        startingDate = currentTradeDate;
+                        //    };
+
+                        //    //  update line ID
+                        //    iD++;
+
+                        //    //  if ID  == list.count - at end of list - enter last total
+                        //    if (iD == source.Count)
+                        //    {
+                        //        source[iD - 1].DailyTotal = runningTotal;
+
+                        //        //  enter number of trades in TotalTrades
+                        //        source[iD - 1].TotalTrades = TotalTrades;
+
+                        //    }
+                        //}
+
+
 
 
                         #region Convert list with attributes to get correct order
@@ -486,7 +565,5 @@ namespace NinjaTrader.Custom.AddOns
         }
 
     }
-
-
 }
 
