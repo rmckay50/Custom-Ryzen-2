@@ -472,22 +472,56 @@ namespace NinjaTrader.Custom.AddOns
                             }
                         }
 
-                        //  create a new file description that will does not use file headers
-                        var csvDescAppend = new CsvFileDescription();
-                        csvDescAppend.FirstLineHasColumnNames = false;
-                        csvDescAppend.EnforceCsvColumnAttribute = true;
-                        CsvContext ccApend = new CsvContext();
-
-                        //  write using StreamWriter to csvNTDrawline
-                        //  fileName, true - true is append (now with no columns)
-                        using (var stream = new StreamWriter(parameters.OutputPath, true))
-
+                        //  add columnsWithAttributes (latest list of Playbacktrades) to listToPrint
+                        foreach (var column in columns) 
                         {
-                            //ccApend.Write(columnsWithAttributes, stream, csvDescAppend);
-                            ccApend.Write(listToPrint, stream, csvDescAppend);
+                            listToPrint.Add
+                            (new NTDrawLine()
+                            {
+                                Id = column.Id,
+                                Playback = column.Playback,
+                                Symbol = column.Symbol,
+                                Long_Short = column.Long_Short,
+                                StartTimeTicks = column.StartTimeTicks,
+                                StartTime = column.StartTime,
+                                StartY = column.StartY,
+                                EndTimeTicks = column.EndTimeTicks,
+                                EndTime = column.EndTime,
+                                EndY = column.EndY,
+                                P_L = column.P_L,
+                                DailyTotal = column.DailyTotal,
+                                TotalTrades = column.TotalTrades
 
-                            //listToPrint
+                            });
+
                         }
+
+                        //  create a new file description that will does not use file headers
+
+                        //CsvFileDescription scvDescript = new CsvFileDescription();
+                        //CsvContext cc = new CsvContext();
+                        //  write to parameters.OutputPath - normally cscNTDrawline
+                        cc.Write
+                        (
+                        listToPrint,
+                        parameters.OutputPath
+                        );
+
+                        //var csvDescAppend = new CsvFileDescription();
+                        //csvDescAppend.FirstLineHasColumnNames = false;
+                        //csvDescAppend.EnforceCsvColumnAttribute = true;
+                        //CsvContext ccApend = new CsvContext();
+
+                        ////  write using StreamWriter to csvNTDrawline
+                        ////  fileName, true - true is append (now with no columns)
+                        //using (var stream = new StreamWriter(parameters.OutputPath, true))
+
+                        //{
+                        //    //ccApend.Write(columnsWithAttributes, stream, csvDescAppend);
+                        //    ccApend.Write(listToPrint, stream, csvDescAppend);
+
+                        //    //listToPrint
+                        //}
 
                     }
                 }
