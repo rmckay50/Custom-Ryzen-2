@@ -469,56 +469,8 @@ namespace NinjaTrader.Custom.AddOns
                                         break;
                                     }
                                 }
-
-                                //    line.Playback == true)
-                                //{
-                                //    //  add new line to listToPrint
-                                //    listToPrint = (IEnumerable<NTDrawLine>)(from l in columnsWithAttributes
-                                //                                            select new NTDrawLine
-                                //                                            {
-                                //                                                Id = l.Id,
-                                //                                                Symbol = l.Symbol,
-                                //                                                Long_Short = l.Long_Short,
-                                //                                                StartTimeTicks = l.StartTimeTicks,
-                                //                                                StartTime = l.StartTime,
-                                //                                                StartY = l.StartY,
-                                //                                                EndTimeTicks = l.EndTimeTicks,
-                                //                                                EndTime = l.EndTime,
-                                //                                                EndY = l.EndY,
-                                //                                                P_L = l.P_L,
-                                //                                                DailyTotal = l.DailyTotal,
-                                //                                                TotalTrades = l.TotalTrades
-                                //                                            });
-                                //    listToPrint.ToList();
-                                //}
                             }
                         }
-
-                        //}
-                        //{
-                        //origLine = (IEnumerable<NTDrawLine>)rcLine;
-                        //for (int j = 0; j <= columnsWithAttributes.Count(); i++)
-                        //{
-                        //    if ( rcLine.StartTime == columnsWithAttributes[j].)
-                        //}
-                        //foreach (var column in columnsWithAttributes)
-                        //{
-                        //    //    //    //origLine = (IEnumerable<NTDrawLine>)column;
-                        //  is this a new entry
-                        //if (origLine.StartTime == column.StartTime)
-                        //    //    //    //{
-                        //    //    //    //}
-                        //}
-
-                        //}
-                        //}
-                        //catch (Exception ex )
-                        //{ Console.WriteLine( ex.ToString() );}
-
-
-                        //#endregion Compare trades in existing .csv file with columnsWithAttributes
-
-
 
                         //  create a new file description that will does not use file headers
                         var csvDescAppend = new CsvFileDescription();
@@ -548,9 +500,61 @@ namespace NinjaTrader.Custom.AddOns
 
             }
         }
-
     }
-
-
 }
+
+#region Code that was commented out - may be needed
+/*
+                                //    line.Playback == true)
+                                //{
+                                //    //  add new line to listToPrint
+                                //    listToPrint = (IEnumerable<NTDrawLine>)(from l in columnsWithAttributes
+                                //                                            select new NTDrawLine
+                                //                                            {
+                                //                                                Id = l.Id,
+                                //                                                Symbol = l.Symbol,
+                                //                                                Long_Short = l.Long_Short,
+                                //                                                StartTimeTicks = l.StartTimeTicks,
+                                //                                                StartTime = l.StartTime,
+                                //                                                StartY = l.StartY,
+                                //                                                EndTimeTicks = l.EndTimeTicks,
+                                //                                                EndTime = l.EndTime,
+                                //                                                EndY = l.EndY,
+                                //                                                P_L = l.P_L,
+                                //                                                DailyTotal = l.DailyTotal,
+                                //                                                TotalTrades = l.TotalTrades
+                                //                                            });
+                                //    listToPrint.ToList();
+                                //}
+
+                        //}
+                        //{
+                        //origLine = (IEnumerable<NTDrawLine>)rcLine;
+                        //for (int j = 0; j <= columnsWithAttributes.Count(); i++)
+                        //{
+                        //    if ( rcLine.StartTime == columnsWithAttributes[j].)
+                        //}
+                        //foreach (var column in columnsWithAttributes)
+                        //{
+                        //    //    //    //origLine = (IEnumerable<NTDrawLine>)column;
+                        //  is this a new entry
+                        //if (origLine.StartTime == column.StartTime)
+                        //    //    //    //{
+                        //    //    //    //}
+                        //}
+
+                        //}
+                        //}
+                        //catch (Exception ex )
+                        //{ Console.WriteLine( ex.ToString() );}
+
+
+                        //#endregion Compare trades in existing .csv file with columnsWithAttributes
+
+
+
+
+ * */
+
+#endregion Code that was commented out - may be needed
 
