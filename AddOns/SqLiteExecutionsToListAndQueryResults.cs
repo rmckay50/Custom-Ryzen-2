@@ -496,6 +496,45 @@ namespace NinjaTrader.Custom.AddOns
 
                         }
 
+                        //  use NTDrawLineForLINQtoCSV to get litToPrint order correct
+                        var listToPrintWithAttributes = from l in listToPrint
+                                                        select new NTDrawLineForLINQtoCSV
+                                                    {
+                                                        Id = l.Id,
+                                                        Playback = false,
+                                                        Symbol = l.Symbol,
+                                                        Long_Short = l.Long_Short,
+                                                        StartTimeTicks = l.StartTimeTicks,
+                                                        StartTime = l.StartTime,
+                                                        StartY = l.StartY,
+                                                        EndTimeTicks = l.EndTimeTicks,
+                                                        EndTime = l.EndTime,
+                                                        EndY = l.EndY,
+                                                        P_L = l.P_L,
+                                                        DailyTotal = l.DailyTotal,
+                                                        TotalTrades = l.TotalTrades
+                                                    };
+                        listToPrintWithAttributes = listToPrintWithAttributes.ToList();
+                        //  convert columnsWithAttributes to NTDrawLine - type mismatch that I couldn't resolve
+                        var listToPrintAfterAttributes = from l in listToPrintWithAttributes
+                                      select new NTDrawLine
+                                      {
+                                          Id = l.Id,
+                                          Playback = l.Playback,
+                                          Symbol = l.Symbol,
+                                          Long_Short = l.Long_Short,
+                                          StartTimeTicks = l.StartTimeTicks,
+                                          StartTime = l.StartTime,
+                                          StartY = l.StartY,
+                                          EndTimeTicks = l.EndTimeTicks,
+                                          EndTime = l.EndTime,
+                                          EndY = l.EndY,
+                                          P_L = l.P_L,
+                                          DailyTotal = l.DailyTotal,
+                                          TotalTrades = l.TotalTrades
+                                      };
+
+
                         //  create a new file description that will does not use file headers
 
                         //CsvFileDescription scvDescript = new CsvFileDescription();
@@ -503,7 +542,7 @@ namespace NinjaTrader.Custom.AddOns
                         //  write to parameters.OutputPath - normally cscNTDrawline
                         cc.Write
                         (
-                        listToPrint,
+                        listToPrintWithAttributes,
                         parameters.OutputPath
                         );
 
