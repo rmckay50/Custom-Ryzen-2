@@ -38,7 +38,9 @@ namespace NinjaTrader.Custom.AddOns
                 var isEmpty = false;
                 IEnumerable<NTDrawLine> returnedClass;
                 //  combined existing list and new list
-                IEnumerable<NTDrawLine> listToPrint = new List<NTDrawLine>();
+                List<NTDrawLine> listToPrint = new List<NTDrawLine>();
+                IEnumerable<NTDrawLine> returnedClassPlayBackTrades = new List<NTDrawLine>();
+
 
 
                 ///
@@ -250,10 +252,12 @@ namespace NinjaTrader.Custom.AddOns
                 #region Use LINQtoCSV on combined list to write
                 //  foreach through source.NTDrawLine to create list with correct order for cc.write
                 //  uses 'NTDrawLineForLINQtoCSV' which has column attributes
+                //  returned value is
                 var columnsWithAttributes = from l in source.NTDrawLine
                                             select new NTDrawLineForLINQtoCSV
                                             {
                                                 Id = l.Id,
+                                                Playback = false,
                                                 Symbol = l.Symbol,
                                                 Long_Short = l.Long_Short,
                                                 StartTimeTicks = l.StartTimeTicks,
@@ -266,7 +270,11 @@ namespace NinjaTrader.Custom.AddOns
                                                 DailyTotal = l.DailyTotal,
                                                 TotalTrades = l.TotalTrades
                                             };
-                columnsWithAttributes.ToList();
+
+                //  linq query returns IEnumerable list which is read only
+                //  save back to itself as a list if it needs to be modified
+                 columnsWithAttributes = columnsWithAttributes.ToList();
+                //var X = columnsWithAttributes.Select(X => X).ToList();
 
                 //  bPlayback != true:
                 //      create CsvFileDescription
@@ -320,6 +328,12 @@ namespace NinjaTrader.Custom.AddOns
                 //  needs to be set to true for first pass which will add column titles to csvNTDrawline
                 else
                 {
+                    //  processing playback trades
+                    //  set Playback column to true
+                    foreach ( var p in columnsWithAttributes ) 
+                    {
+                        p.Playback = true;
+                    }
                     //  create and write to 'csvNTDrawline.csv'
                     if (parameters.AppendPlayback == true && firstPassAppend == true)
                     {
@@ -337,6 +351,7 @@ namespace NinjaTrader.Custom.AddOns
                     }
                     else if (parameters.AppendPlayback == true && firstPassAppend == false)
                     {
+                        
                         //  read existing csvNTDrawline.csv
                         //#region Use LINQtoCSV to read "csvNTDrawline.csv"
 
@@ -345,11 +360,49 @@ namespace NinjaTrader.Custom.AddOns
                         CsvFileDescription dataFromFile = new CsvFileDescription();
 
                         //	Read in file 'C:\data\csvNTDrawline.csv'  Fills returnedClass
+                        //  type is IENumerable<> - doesn't have count
                         returnedClass = cc.Read<NTDrawLine>
                                         (
                                             parameters.OutputPath,
                                             dataFromFile
                                         );
+
+                        //  need to check contents of returned class for Playback trades
+                        //  if Playback trades are present the will be retained, compared to new list, appended to
+                        //  if no playback trades ar present replace list withnew list
+                        int returnedClassPlaybackTrades = 0;
+                        
+                        //  get playback trades from CsvNTDrawline (parameters.Output)
+                        returnedClassPlayBackTrades = from l in returnedClass
+                                                          where l.Playback == true
+                                                          select new NTDrawLine                                                                                              
+                                            {
+                                                Id = l.Id,
+                                                Playback = l.Playback,
+                                                Symbol = l.Symbol,
+                                                Long_Short = l.Long_Short,
+                                                StartTimeTicks = l.StartTimeTicks,
+                                                StartTime = l.StartTime,
+                                                StartY = l.StartY,
+                                                EndTimeTicks = l.EndTimeTicks,
+                                                EndTime = l.EndTime,
+                                                EndY = l.EndY,
+                                                P_L = l.P_L,
+                                                DailyTotal = l.DailyTotal,
+                                                TotalTrades = l.TotalTrades
+                                            }; 
+
+                        //  convert to list 
+                        //  if not done original IEnumerable list will be used
+                        returnedClassPlayBackTrades = returnedClassPlayBackTrades.ToList();
+
+                        foreach (var r in returnedClass)
+                        {
+                            if (r.Playback == true)
+                            {
+                                returnedClassPlaybackTrades++;
+                            }
+                        }
                         //#endregion Use LINQtoCSV to read "csvNTDrawline.csv"
 
                         //#region Compare trades in existing .csv file with columnsWithAttributes
@@ -363,6 +416,7 @@ namespace NinjaTrader.Custom.AddOns
                                       select new NTDrawLine
                                       {
                                           Id = l.Id,
+                                          Playback = l.Playback,
                                           Symbol = l.Symbol,
                                           Long_Short = l.Long_Short,
                                           StartTimeTicks = l.StartTimeTicks,
@@ -375,33 +429,68 @@ namespace NinjaTrader.Custom.AddOns
                                           DailyTotal = l.DailyTotal,
                                           TotalTrades = l.TotalTrades
                                       };
-                        columns.ToList();
+                        var columnsToList = columns.ToList();
 
-                        foreach (var line in returnedClass)
+                        //  add trades from returnedClass that are Playback trades and not duplicates
+                        foreach (var line in returnedClassPlayBackTrades)
                         {
+                            //  solution to break from second foreach
+                            bool breakme = false;
+
                             foreach (var column in columns)
                             {
-                                if (column.StartTime == line.StartTime)
+                                if (column.StartTime != line.StartTime )                                   
                                 {
-                                    //  add new line to listToPrint
-                                    listToPrint = (IEnumerable<NTDrawLine>)(from l in columnsWithAttributes
-                                                                            select new NTDrawLine
-                                                                            {
-                                                                                Id = l.Id,
-                                                                                Symbol = l.Symbol,
-                                                                                Long_Short = l.Long_Short,
-                                                                                StartTimeTicks = l.StartTimeTicks,
-                                                                                StartTime = l.StartTime,
-                                                                                StartY = l.StartY,
-                                                                                EndTimeTicks = l.EndTimeTicks,
-                                                                                EndTime = l.EndTime,
-                                                                                EndY = l.EndY,
-                                                                                P_L = l.P_L,
-                                                                                DailyTotal = l.DailyTotal,
-                                                                                TotalTrades = l.TotalTrades
-                                                                            });
-                                    listToPrint.ToList();
+                                    listToPrint.Add
+                                        ( new NTDrawLine()
+                                        {
+                                            Id= line.Id,
+                                            Playback = line.Playback,
+                                            Symbol = line.Symbol,
+                                            Long_Short = line.Long_Short,
+                                            StartTimeTicks = line.StartTimeTicks,
+                                            StartTime = line.StartTime,
+                                            StartY = line.StartY,
+                                            EndTimeTicks = line.EndTimeTicks,
+                                            EndTime = line.EndTime,
+                                            EndY = line.EndY,
+                                            P_L = line.P_L,
+                                            DailyTotal = line.DailyTotal,
+                                            TotalTrades = line.TotalTrades
+
+                                        });
+                                    //Stop the first foreach then go back to first foreach
+                                    breakme = true;
+                                    break;
+
+                                    //  break out of second foreach loop
+                                    if (breakme)
+                                    {
+                                        break;
+                                    }
                                 }
+
+                                //    line.Playback == true)
+                                //{
+                                //    //  add new line to listToPrint
+                                //    listToPrint = (IEnumerable<NTDrawLine>)(from l in columnsWithAttributes
+                                //                                            select new NTDrawLine
+                                //                                            {
+                                //                                                Id = l.Id,
+                                //                                                Symbol = l.Symbol,
+                                //                                                Long_Short = l.Long_Short,
+                                //                                                StartTimeTicks = l.StartTimeTicks,
+                                //                                                StartTime = l.StartTime,
+                                //                                                StartY = l.StartY,
+                                //                                                EndTimeTicks = l.EndTimeTicks,
+                                //                                                EndTime = l.EndTime,
+                                //                                                EndY = l.EndY,
+                                //                                                P_L = l.P_L,
+                                //                                                DailyTotal = l.DailyTotal,
+                                //                                                TotalTrades = l.TotalTrades
+                                //                                            });
+                                //    listToPrint.ToList();
+                                //}
                             }
                         }
 

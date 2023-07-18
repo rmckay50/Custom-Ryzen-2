@@ -536,6 +536,7 @@ namespace NinjaTrader.Custom.AddOns
     public class NTDrawLine
     {
         public int Id { get; set; }
+        public bool Playback { get; set; }
         public string Symbol { get; set; }
         public string Long_Short { get; set; }
         public long StartTimeTicks { get; set; }
@@ -550,10 +551,11 @@ namespace NinjaTrader.Custom.AddOns
 
         public NTDrawLine() { }
 
-        public NTDrawLine(int id, string symbol, string long_Short, long startTimeTicks, string startTime, double startY, long endTimeTicks, string endTime, double endY,
+        public NTDrawLine(int id, bool playback, string symbol, string long_Short, long startTimeTicks, string startTime, double startY, long endTimeTicks, string endTime, double endY,
             double p_L, double? dailyTotal, int? totalTrades)
         {
             Id = id;
+            Playback = playback;
             Symbol = symbol;
             Long_Short = long_Short;
             StartTimeTicks = startTimeTicks;
@@ -577,26 +579,28 @@ namespace NinjaTrader.Custom.AddOns
         [CsvColumn(FieldIndex = 1)]
         public int Id { get; set; }
         [CsvColumn(FieldIndex = 2)]
-        public string Symbol { get; set; }
+        public bool Playback { get; set; }
         [CsvColumn(FieldIndex = 3)]
-        public string Long_Short { get; set; }
+        public string Symbol { get; set; }
         [CsvColumn(FieldIndex = 4)]
-        public long StartTimeTicks { get; set; }
+        public string Long_Short { get; set; }
         [CsvColumn(FieldIndex = 5)]
-        public string StartTime { get; set; }
+        public long StartTimeTicks { get; set; }
         [CsvColumn(FieldIndex = 6)]
-        public double StartY { get; set; }
+        public string StartTime { get; set; }
         [CsvColumn(FieldIndex = 7)]
-        public long EndTimeTicks { get; set; }
+        public double StartY { get; set; }
         [CsvColumn(FieldIndex = 8)]
-        public string EndTime { get; set; }
+        public long EndTimeTicks { get; set; }
         [CsvColumn(FieldIndex = 9)]
-        public double EndY { get; set; }
+        public string EndTime { get; set; }
         [CsvColumn(FieldIndex = 10)]
-        public double P_L { get; set; }
+        public double EndY { get; set; }
         [CsvColumn(FieldIndex = 11)]
-        public double? DailyTotal { get; set; }
+        public double P_L { get; set; }
         [CsvColumn(FieldIndex = 12)]
+        public double? DailyTotal { get; set; }
+        [CsvColumn(FieldIndex = 13)]
         public int? TotalTrades { get; set; }
         public IEnumerator GetEnumerator()                                                              //	class CSV
         {

@@ -29,6 +29,7 @@ namespace NinjaTrader.Custom.AddOns
                         new NTDrawLine
                         (
                             0,
+                            false,
                             csv.Name,
                             csv.Long_Short,
                             (long)csv.StartTimeTicks,
