@@ -311,7 +311,7 @@ namespace NinjaTrader.Custom.AddOns
                     Properties.Settings.Default.Save();
                 }
                 //  write to csvNTDrawline if not in Playback mode
-                if (parameters.BPlayback == false)
+                if (parameters.BPlayback == false) 
                 {
                     CsvFileDescription scvDescript = new CsvFileDescription();
                     CsvContext cc = new CsvContext();
