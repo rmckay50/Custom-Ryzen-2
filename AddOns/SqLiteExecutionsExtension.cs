@@ -409,7 +409,7 @@ namespace NinjaTrader.Custom.AddOns
         }
         #endregion FillLongShortColumnInTradesList
 
-        #region Fill in workingTrades P/L column
+        #region Fill in workingTrades P/L column using Source
 
         public static Source FillProfitLossColumnInTradesList(this Source source)
         {
@@ -458,10 +458,63 @@ namespace NinjaTrader.Custom.AddOns
                 }
             }
             return source; 
-
         }
 
-        #endregion Fill in workingTrades P/L column
+        #endregion Fill in workingTrades P/L column using Source
+
+        #region Fill in workingTrades P/L column using List<NTDrawLine>
+
+        public static List<NTDrawLine> FillProfitLossColumnInTradesList(this List<NTDrawLine> source)
+        {
+            foreach (var pl in source)
+            {
+                //// 	Check for null - condition when prices have not been filled in yet in finList
+                //if (pl.Exit.HasValue && pl.Entry.HasValue)
+                //{
+                //    // long
+                //    if (pl.Long_Short == "Long")
+                //    {
+                //        try
+                //        {
+                //            // Exception for ExitPrice is null -- caused by making calculation on partial fill before price columns are filled in
+                //            //ln = LineNumber();
+                //            //ln.Dump("long try blockExitPrice");
+
+
+                //            //fl.P_L = (double)fl.ExitPrice.Dump("long try blockExitPrice") - (double)fl.EntryPrice.Dump("EntryPrice");
+                //            pl.P_L = (double)pl.Exit - (double)pl.Entry;
+
+                //            pl.P_L = Math.Round((Double)pl.P_L, 2);
+                //        }
+                //        catch
+                //        {
+                //            //ln = LineNumber();
+                //            //ln.Dump("long catch block");
+                //            //pl.Exit.Dump("catch ExitPrice");
+                //            //pl.Entry.Dump("EntryPrice");
+                //        }
+                //    }
+
+                //    // short
+                //    if (pl.Long_Short == "Short")
+                //    {
+                //        try
+                //        {
+                //            pl.P_L = (double)pl.Entry - (double)pl.Exit;
+                //            pl.P_L = Math.Round((Double)pl.P_L, 2);
+                //        }
+                //        catch (Exception ex)
+                //        {
+                //            Console.WriteLine(ex.Message);
+                //        }
+                //    }
+                //}
+            }
+            return source;
+        }
+
+        #endregion Fill in workingTrades P/L column using List<NTDrawLine>
+
 
         #region GetActiveEntry - Finds applicable entry in Trades 
         //	On first pass ActiveEntry numbers have been set in Main()

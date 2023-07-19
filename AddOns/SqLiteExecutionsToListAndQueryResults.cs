@@ -495,7 +495,7 @@ namespace NinjaTrader.Custom.AddOns
                             });
 
                         }
-
+                        listToPrint.FillDailyTotalColumn();
                         //  use NTDrawLineForLINQtoCSV to get litToPrint order correct
                         var listToPrintWithAttributes = from l in listToPrint
                                                         select new NTDrawLineForLINQtoCSV
@@ -516,8 +516,12 @@ namespace NinjaTrader.Custom.AddOns
                                                         DailyTotal = l.DailyTotal,
                                                         TotalTrades = l.TotalTrades
                                                     };
-                        listToPrintWithAttributes = listToPrintWithAttributes.ToList();
+
+
+                        var listToPrintWithAttributesAndDailyTotal = listToPrintWithAttributes.ToList();
+//                        listToPrintWithAttributesAndDailyTotal.FillProfitLossColumnInTradesList();
                         //  convert columnsWithAttributes to NTDrawLine - type mismatch that I couldn't resolve
+
                         var listToPrintAfterAttributes = from l in listToPrintWithAttributes
                                       select new NTDrawLine
                                       {
