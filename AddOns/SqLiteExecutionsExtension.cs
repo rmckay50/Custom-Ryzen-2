@@ -457,7 +457,7 @@ namespace NinjaTrader.Custom.AddOns
                     }
                 }
             }
-            return source;
+            return source; 
 
         }
 
