@@ -501,7 +501,9 @@ namespace NinjaTrader.Custom.AddOns
                                                         select new NTDrawLineForLINQtoCSV
                                                     {
                                                         Id = l.Id,
-                                                        Playback = false,
+                                                        //  save Playback trades with Playback set to true
+                                                        //Playback = false,
+                                                        Playback = true,
                                                         Symbol = l.Symbol,
                                                         Long_Short = l.Long_Short,
                                                         StartTimeTicks = l.StartTimeTicks,
