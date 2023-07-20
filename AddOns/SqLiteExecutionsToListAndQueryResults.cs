@@ -519,9 +519,9 @@ namespace NinjaTrader.Custom.AddOns
 
 
                         var listToPrintWithAttributesAndDailyTotal = listToPrintWithAttributes.ToList();
-//                        listToPrintWithAttributesAndDailyTotal.FillProfitLossColumnInTradesList();
-                        //  convert columnsWithAttributes to NTDrawLine - type mismatch that I couldn't resolve
 
+                        //  convert columnsWithAttributes to NTDrawLine - type mismatch that I couldn't resolve
+                        //  problemwas that query returns IENumerable
                         var listToPrintAfterAttributes = from l in listToPrintWithAttributes
                                       select new NTDrawLine
                                       {
@@ -551,22 +551,6 @@ namespace NinjaTrader.Custom.AddOns
                         listToPrintWithAttributes,
                         parameters.OutputPath
                         );
-
-                        //var csvDescAppend = new CsvFileDescription();
-                        //csvDescAppend.FirstLineHasColumnNames = false;
-                        //csvDescAppend.EnforceCsvColumnAttribute = true;
-                        //CsvContext ccApend = new CsvContext();
-
-                        ////  write using StreamWriter to csvNTDrawline
-                        ////  fileName, true - true is append (now with no columns)
-                        //using (var stream = new StreamWriter(parameters.OutputPath, true))
-
-                        //{
-                        //    //ccApend.Write(columnsWithAttributes, stream, csvDescAppend);
-                        //    ccApend.Write(listToPrint, stream, csvDescAppend);
-
-                        //    //listToPrint
-                        //}
 
                     }
                 }
