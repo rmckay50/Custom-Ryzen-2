@@ -495,9 +495,9 @@ namespace NinjaTrader.Custom.AddOns
                             });
 
                         }
-                        listToPrint.FillDailyTotalColumn();
+                        var listToPrintWithDailyTotals = listToPrint.FillDailyTotalColumn();
                         //  use NTDrawLineForLINQtoCSV to get litToPrint order correct
-                        var listToPrintWithAttributes = from l in listToPrint
+                        var listToPrintWithAttributes = from l in listToPrintWithDailyTotals
                                                         select new NTDrawLineForLINQtoCSV
                                                     {
                                                         Id = l.Id,

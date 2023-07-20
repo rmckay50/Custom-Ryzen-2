@@ -546,7 +546,7 @@ namespace NinjaTrader.Custom.AddOns
         public string EndTime { get; set; }
         public double EndY { get; set; }
         public double P_L { get; set; }
-        public double? DailyTotal { get; set; }
+        public double? DailyTotal { get; set; } 
         public int? TotalTrades { get; set; }
 
         public NTDrawLine() { }

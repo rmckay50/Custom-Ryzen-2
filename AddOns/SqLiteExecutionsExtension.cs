@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using MoreLinq;
+//using MoreLinq.Extensions;
 using NinjaTrader.NinjaScript;
 
 
@@ -236,12 +237,57 @@ namespace NinjaTrader.Custom.AddOns
             //  need to keep track of line number in list
             int iD = 0;
 
+            // remove duplicates
+            var sourceDistinct = source.DistinctBy(c => c.StartTimeTicks);
+
+
+
+            //returnedClassPlayBackTrades = from l in returnedClass
+            //                              where l.Playback == true
+
+
+            //  order list with MoreLinq
+            //  DistinctBy returns IENumerable which is what OrderBy wants do not change DistinctBy to list - dowsn't work
+            var sourceOrderBy = sourceDistinct.OrderBy(e => e.StartTimeTicks).ToList();
+
+            var sourceDistinctToList = (from l in sourceOrderBy
+                                       select new NTDrawLine
+                                       {
+                                           Id = l.Id,
+                                           Playback = l.Playback,
+                                           Symbol = l.Symbol,
+                                           Long_Short = l.Long_Short,
+                                           StartTimeTicks = l.StartTimeTicks,
+                                           StartTime = l.StartTime,
+                                           StartY = l.StartY,
+                                           EndTimeTicks = l.EndTimeTicks,
+                                           EndTime = l.EndTime,
+                                           EndY = l.EndY,
+                                           P_L = l.P_L,
+                                           DailyTotal = null,
+                                           TotalTrades = null
+                                       }).ToList();
+
+
+            //  delete contents of DailyTotal and TotalTrades and fill in Id column
+            int id = 0;
+            foreach ( var s in sourceOrderBy)
+            {
+                s.Id = id;
+                id++;
+
+                s.DailyTotal = true ? (double?)null : null; 
+                s.TotalTrades = (int?)null;
+            }
+
             //  cycle through trades - compare trade end date with previous - record total on change
             //   zero accumulator
-            foreach (var c in source)
-            {
-                //  get date of trade ("/MM/dd/yyy")
-                currentTradeDate = c.EndTime.Substring(11);
+            //foreach (var c in source)
+            foreach (var c in sourceOrderBy)
+
+                {
+                    //  get date of trade ("/MM/dd/yyy")
+                    currentTradeDate = c.EndTime.Substring(11);
 
                 //  has date changed - value less than zero is change
                 if (currentTradeDate.CompareTo(startingDate) == 0 && iD != 0)
@@ -257,7 +303,7 @@ namespace NinjaTrader.Custom.AddOns
                 else if (iD != 0)
                 {
                     //  insert total in DailyTotal column 1 line up
-                    source[iD - 1].DailyTotal = runningTotal;
+                    sourceOrderBy[iD - 1].DailyTotal = runningTotal;
 
                     //  insert total in TotalTrades column 1 line up
                     source[iD - 1].TotalTrades = TotalTrades;
@@ -281,18 +327,18 @@ namespace NinjaTrader.Custom.AddOns
                 iD++;
 
                 //  if ID  == list.count - at end of list - enter last total
-                if (iD == source.Count)
+                if (iD == sourceOrderBy.Count)
                 {
-                    source[iD - 1].DailyTotal = runningTotal;
+                    sourceOrderBy[iD - 1].DailyTotal = runningTotal;
 
                     //  enter number of trades in TotalTrades
-                    source[iD - 1].TotalTrades = TotalTrades;
+                    sourceOrderBy[iD - 1].TotalTrades = TotalTrades;
 
                 }
             }
 
 
-            return source;
+            return sourceOrderBy;
         }
 
         #endregion FillDailyTotalColumn        
