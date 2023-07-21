@@ -616,12 +616,12 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                             // Print P/L in blue below line start
                             if (rc.P_L >= 0)
                         {
-                            Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString(), sTime, rc.StartY, -PixelsAboveBelowBar, Brushes.Blue, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                            Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString("0.00"), sTime, rc.StartY, -PixelsAboveBelowBar, Brushes.Blue, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
                         }
                         // Print P/L in red above line start
                         else
                         {
-                            Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString(), sTime, rc.StartY, PixelsAboveBelowBar, Brushes.Red, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                            Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString("0.00"), sTime, rc.StartY, PixelsAboveBelowBar, Brushes.Red, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
                         }
 
                         //  if DailyTotal is available draw it at midpoint of day
