@@ -56,6 +56,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
     public class RecordAndDisplayTradesWithButtons : Indicator
     {
         #region Create variables
+        private bool arrowLinesSwitch = true;
         private bool drawSwitch = true;
         private bool indiSwitch;
         private bool p_LSwitch = true;
@@ -310,7 +311,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnTradeLines.Content = "Toggle Trade Lines";
             btnP_L.Content = "Toggle P/L";
             btnUserDrawObjs.Content = "Toggle Draw";
-            btnArrowLines.Content = "Arrow Lines";
+            btnArrowLines.Content = "Toggle ArrowLines";
             btnIndicators.Content = "Toggle Indicators";
             btnShowTrades.Content = "Toggle Trades";
             btnHideWicks.Content = "Toggle Wicks";
@@ -832,7 +833,33 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             ForceRefresh();
         }
         private void hideArrowLines()
-        { }
+        {
+            // create list of arrowlines
+
+            // Sets drawSwitch based on whether there are any drawings on the chart
+            //foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
+            foreach (DrawingTool dTL in DrawObjects.ToList())
+            {
+                var anchors = dTL.Anchors.ToList();
+                var draw = dTL as DrawingTool;
+                if (draw != null)
+                {
+                    if (draw.IsVisible && draw.IsUserDrawn)
+                    {
+                        arrowLinesSwitch = true;
+                        btnArrowLines.Background = Brushes.Green;
+                        break;
+                    }
+                    else
+                    {
+                        arrowLinesSwitch = false;
+                        btnArrowLines.Background = Brushes.DimGray;
+                    }
+                }
+
+            }
+
+        }
         private void hideP_LFunc()
         {
             //  ClearOutputWindow();
