@@ -58,5 +58,16 @@ namespace NinjaTrader.Custom.AddOns.Properties {
                 this["temp"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.ArrayList array {
+            get {
+                return ((global::System.Collections.ArrayList)(this["array"]));
+            }
+            set {
+                this["array"] = value;
+            }
+        }
     }
 }

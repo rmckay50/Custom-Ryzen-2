@@ -875,6 +875,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             //foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {
+                var anchors = dTL.Anchors.ToList();
                 var draw = dTL as DrawingTool;
                 if (draw != null)
                 {
@@ -890,6 +891,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                         btnUserDrawObjs.Background = Brushes.DimGray;
                     }
                 }
+                
             }
 
             //foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)

@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NinjaTrader.Custom.AddOns.Properties" GeneratedClassName="Settings1">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NinjaTrader.Custom.AddOns.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="storedDate" Type="System.String" Scope="User">
@@ -10,6 +10,9 @@
     </Setting>
     <Setting Name="temp" Type="System.String" Scope="User">
       <Value Profile="(Default)">01/01/2000</Value>
+    </Setting>
+    <Setting Name="array" Type="System.Collections.ArrayList" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

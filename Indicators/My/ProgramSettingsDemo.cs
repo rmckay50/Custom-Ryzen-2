@@ -82,7 +82,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
                 Print("Line 84 firstPassAppend should be false " + Settings		.Default.firstPassAppend + "\n");
 
-
+				Settings.Default.array[0] = 2; Settings.Default.array[1] = 1;
+                Settings.Default.Save();
             }
         }
 
