@@ -877,7 +877,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             {
                 var anchors = dTL.Anchors.ToList();
                 var draw = dTL as DrawingTool;
-                if (draw != null)
+                if (draw != null) 
                 {
                     if (draw.IsVisible && draw.IsUserDrawn)
                     {
