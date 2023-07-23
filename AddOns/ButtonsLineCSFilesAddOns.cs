@@ -11,6 +11,25 @@ using System.Data.SQLite;
 namespace NinjaTrader.Custom.AddOns
 {
     //public class ButtonsLineCSFilesAddOns : NinjaTrader.NinjaScript.AddOnBase
+    public class ArrowLines
+    {
+        public string StartTime { get; set; }
+        public double StartY { get; set; }
+        public string EndTime { get; set; }
+        public double EndY { get; set; }
+        public ArrowLines() { }
+        public ArrowLines ( string startTime, double startY, string endTime, double endY ) 
+        { 
+            StartTime = startTime;
+            StartY = startY;
+            EndTime = endTime;
+            EndY = endY;
+        }
+        public IEnumerator GetEnumerator() 
+        {
+            return (IEnumerator)this;
+        }
+    }
     public class CSV
     {
         //public int EntryId { get; set; }
@@ -568,9 +587,9 @@ namespace NinjaTrader.Custom.AddOns
             DailyTotal = dailyTotal;
             TotalTrades = totalTrades;
         }
-        public IEnumerator GetEnumerator()                                                              //	class CSV
+        public IEnumerator GetEnumerator()
         {
-            return (IEnumerator)this;                                                                       //	class CSV
+            return (IEnumerator)this;
         }
 
     }
