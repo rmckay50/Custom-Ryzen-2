@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using MoreLinq;
+//using MoreLinq.Extensions;
 using NinjaTrader.NinjaScript;
 
 
@@ -29,6 +30,7 @@ namespace NinjaTrader.Custom.AddOns
                         new NTDrawLine
                         (
                             0,
+                            false,
                             csv.Name,
                             csv.Long_Short,
                             (long)csv.StartTimeTicks,
@@ -129,7 +131,7 @@ namespace NinjaTrader.Custom.AddOns
         #endregion Fill        
 
         #region FillDailyTotalColumn
-
+        //  for source
         public static Source FillDailyTotalColumn(this Source source)
         {
 
@@ -208,6 +210,135 @@ namespace NinjaTrader.Custom.AddOns
 
 
             return source;
+        }
+
+
+        //  for List<NTDrawline>
+        public static List<NTDrawLine> FillDailyTotalColumn
+            (this List<NTDrawLine> source)
+
+        {
+
+            //  get date ("MM/dd/yyyy") portion of end date
+            //  compare on each pass with starting date
+            //  when date changes (string compare) enter new total into DailyTotal column
+            var startingDate = source[0].EndTime.Substring(11);
+
+            //  use to get trade end date to be used for comparison
+            var currentTradeDate = "";
+
+            //  use as register to total trade P/L values
+            //  initialize with first value because starting poing for foreach is line 2
+            double runningTotal = source[0].P_L;
+
+            //  use as register to count number of trades in the day
+            int TotalTrades = 1;
+
+            //  need to keep track of line number in list
+            int iD = 0;
+
+            // remove duplicates
+            var sourceDistinct = source.DistinctBy(c => c.StartTimeTicks);
+
+
+
+            //returnedClassPlayBackTrades = from l in returnedClass
+            //                              where l.Playback == true
+
+
+            //  order list with MoreLinq
+            //  DistinctBy returns IENumerable which is what OrderBy wants do not change DistinctBy to list - dowsn't work
+            var sourceOrderBy = sourceDistinct.OrderBy(e => e.StartTimeTicks).ToList();
+
+            var sourceDistinctToList = (from l in sourceOrderBy
+                                       select new NTDrawLine
+                                       {
+                                           Id = l.Id,
+                                           Playback = l.Playback,
+                                           Symbol = l.Symbol,
+                                           Long_Short = l.Long_Short,
+                                           StartTimeTicks = l.StartTimeTicks,
+                                           StartTime = l.StartTime,
+                                           StartY = l.StartY,
+                                           EndTimeTicks = l.EndTimeTicks,
+                                           EndTime = l.EndTime,
+                                           EndY = l.EndY,
+                                           P_L = l.P_L,
+                                           DailyTotal = null,
+                                           TotalTrades = null
+                                       }).ToList();
+
+
+            //  delete contents of DailyTotal and TotalTrades and fill in Id column
+            int id = 0;
+            foreach ( var s in sourceOrderBy)
+            {
+                s.Id = id;
+                id++;
+
+                s.DailyTotal = true ? (double?)null : null; 
+                s.TotalTrades = (int?)null;
+            }
+
+            //  cycle through trades - compare trade end date with previous - record total on change
+            //   zero accumulator
+            //foreach (var c in source)
+            foreach (var c in sourceOrderBy)
+
+                {
+                    //  get date of trade ("/MM/dd/yyy")
+                    currentTradeDate = c.EndTime.Substring(11);
+
+                //  has date changed - value less than zero is change
+                if (currentTradeDate.CompareTo(startingDate) == 0 && iD != 0)
+                {
+                    //  add curent line P/L to accumulator
+                    runningTotal = runningTotal + c.P_L;
+
+                    //  add to number of days trades
+                    TotalTrades++;
+                }
+
+                //  date has changed
+                else if (iD != 0)
+                {
+                    //  insert total in DailyTotal column 1 line up
+                    sourceOrderBy[iD - 1].DailyTotal = runningTotal;
+
+                    //  insert total in TotalTrades column 1 line up
+                    source[iD - 1].TotalTrades = TotalTrades;
+
+
+                    //  zero accumulator - this if is hit when dates are unequal so running total 
+                    //      needs to be set to rows P/L - zero is not needed
+                    runningTotal = 0;
+
+                    //  zero TotalTrades
+                    TotalTrades = 1;
+
+                    //  add curent line P/L to accumulator
+                    runningTotal = runningTotal + c.P_L;
+
+                    //  update trade end date
+                    startingDate = currentTradeDate;
+                };
+
+                //  update line ID
+                iD++;
+
+                //  if ID  == list.count - at end of list - enter last total
+                if (iD == sourceOrderBy.Count)
+                {
+                    sourceOrderBy[iD - 1].DailyTotal = runningTotal;
+
+                    //  enter number of trades in TotalTrades
+                    sourceOrderBy[iD - 1].TotalTrades = TotalTrades;
+
+                }
+            }
+
+
+            return sourceOrderBy;
         }
 
         #endregion FillDailyTotalColumn        
@@ -324,7 +455,7 @@ namespace NinjaTrader.Custom.AddOns
         }
         #endregion FillLongShortColumnInTradesList
 
-        #region Fill in workingTrades P/L column
+        #region Fill in workingTrades P/L column using Source
 
         public static Source FillProfitLossColumnInTradesList(this Source source)
         {
@@ -372,11 +503,64 @@ namespace NinjaTrader.Custom.AddOns
                     }
                 }
             }
-            return source;
-
+            return source; 
         }
 
-        #endregion Fill in workingTrades P/L column
+        #endregion Fill in workingTrades P/L column using Source
+
+        #region Fill in workingTrades P/L column using List<NTDrawLine>
+
+        public static List<NTDrawLine> FillProfitLossColumnInTradesList(this List<NTDrawLine> source)
+        {
+            foreach (var pl in source)
+            {
+                //// 	Check for null - condition when prices have not been filled in yet in finList
+                //if (pl.Exit.HasValue && pl.Entry.HasValue)
+                //{
+                //    // long
+                //    if (pl.Long_Short == "Long")
+                //    {
+                //        try
+                //        {
+                //            // Exception for ExitPrice is null -- caused by making calculation on partial fill before price columns are filled in
+                //            //ln = LineNumber();
+                //            //ln.Dump("long try blockExitPrice");
+
+
+                //            //fl.P_L = (double)fl.ExitPrice.Dump("long try blockExitPrice") - (double)fl.EntryPrice.Dump("EntryPrice");
+                //            pl.P_L = (double)pl.Exit - (double)pl.Entry;
+
+                //            pl.P_L = Math.Round((Double)pl.P_L, 2);
+                //        }
+                //        catch
+                //        {
+                //            //ln = LineNumber();
+                //            //ln.Dump("long catch block");
+                //            //pl.Exit.Dump("catch ExitPrice");
+                //            //pl.Entry.Dump("EntryPrice");
+                //        }
+                //    }
+
+                //    // short
+                //    if (pl.Long_Short == "Short")
+                //    {
+                //        try
+                //        {
+                //            pl.P_L = (double)pl.Entry - (double)pl.Exit;
+                //            pl.P_L = Math.Round((Double)pl.P_L, 2);
+                //        }
+                //        catch (Exception ex)
+                //        {
+                //            Console.WriteLine(ex.Message);
+                //        }
+                //    }
+                //}
+            }
+            return source;
+        }
+
+        #endregion Fill in workingTrades P/L column using List<NTDrawLine>
+
 
         #region GetActiveEntry - Finds applicable entry in Trades 
         //	On first pass ActiveEntry numbers have been set in Main()

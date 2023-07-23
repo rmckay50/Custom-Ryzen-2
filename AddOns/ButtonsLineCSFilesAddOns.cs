@@ -11,7 +11,6 @@ using System.Data.SQLite;
 namespace NinjaTrader.Custom.AddOns
 {
     //public class ButtonsLineCSFilesAddOns : NinjaTrader.NinjaScript.AddOnBase
-    //{
     public class CSV
     {
         //public int EntryId { get; set; }
@@ -46,7 +45,6 @@ namespace NinjaTrader.Custom.AddOns
         public Int64? BarIndex { get; set; }
 
         public Double? Commission { get; set; }
-        //public float? Commission { get; set; }
 
         public Int64? Exchange { get; set; }
 
@@ -370,11 +368,175 @@ namespace NinjaTrader.Custom.AddOns
 
         }
 
+        public static List<NTDrawLine> FillDailyTotalColumn (List<NTDrawLine> source)
+        {
+            //  get date ("MM/dd/yyyy") portion of end date
+            //  compare on each pass with starting date
+            //  when date changes (string compare) enter new total into DailyTotal column
+            var startingDate = source[0].EndTime.Substring(11);
+
+            //  use to get trade end date to be used for comparison
+            var currentTradeDate = "";
+
+            //  use as register to total trade P/L values
+            //  initialize with first value because starting poing for foreach is line 2
+            double runningTotal = source[0].P_L;
+
+            //  use as register to count number of trades in the day
+            int TotalTrades = 1;
+
+            //  need to keep track of line number in list
+            int iD = 0;
+
+            //  cycle through trades - compare trade end date with previous - record total on change
+            //   zero accumulator
+            foreach (var c in source)
+            {
+                //  get date of trade ("/MM/dd/yyy")
+                currentTradeDate = c.EndTime.Substring(11);
+
+                //  has date changed - value less than zero is change
+                if (currentTradeDate.CompareTo(startingDate) == 0 && iD != 0)
+                {
+                    //  add curent line P/L to accumulator
+                    runningTotal = runningTotal + c.P_L;
+
+                    //  add to number of days trades
+                    TotalTrades++;
+                }
+
+                //  date has changed
+                else if (iD != 0)
+                {
+                    //  insert total in DailyTotal column 1 line up
+                    source[iD - 1].DailyTotal = runningTotal;
+
+                    //  insert total in TotalTrades column 1 line up
+                    source[iD - 1].TotalTrades = TotalTrades;
+
+
+                    //  zero accumulator - this if is hit when dates are unequal so running total 
+                    //      needs to be set to rows P/L - zero is not needed
+                    runningTotal = 0;
+
+                    //  zero TotalTrades
+                    TotalTrades = 1;
+
+                    //  add curent line P/L to accumulator
+                    runningTotal = runningTotal + c.P_L;
+
+                    //  update trade end date
+                    startingDate = currentTradeDate;
+                };
+
+                //  update line ID
+                iD++;
+
+                //  if ID  == list.count - at end of list - enter last total
+                if (iD == source.Count)
+                {
+                    source[iD - 1].DailyTotal = runningTotal;
+
+                    //  enter number of trades in TotalTrades
+                    source[iD - 1].TotalTrades = TotalTrades;
+
+                }
+            }
+
+
+            return source;
+        }
+
+        /*
+                public static List<NTDrawLine> FillDailyTotalColumn
+            (this List<NTDrawLine> source)
+
+        {
+
+            //  get date ("MM/dd/yyyy") portion of end date
+            //  compare on each pass with starting date
+            //  when date changes (string compare) enter new total into DailyTotal column
+            var startingDate = source[0].EndTime.Substring(11);
+
+            //  use to get trade end date to be used for comparison
+            var currentTradeDate = "";
+
+            //  use as register to total trade P/L values
+            //  initialize with first value because starting poing for foreach is line 2
+            double runningTotal = source[0].P_L;
+
+            //  use as register to count number of trades in the day
+            int TotalTrades = 1;
+
+            //  need to keep track of line number in list
+            int iD = 0;
+
+            //  cycle through trades - compare trade end date with previous - record total on change
+            //   zero accumulator
+            foreach (var c in source)
+            {
+                //  get date of trade ("/MM/dd/yyy")
+                currentTradeDate = c.EndTime.Substring(11);
+
+                //  has date changed - value less than zero is change
+                if (currentTradeDate.CompareTo(startingDate) == 0 && iD != 0)
+                {
+                    //  add curent line P/L to accumulator
+                    runningTotal = runningTotal + c.P_L;
+
+                    //  add to number of days trades
+                    TotalTrades++;
+                }
+
+                //  date has changed
+                else if (iD != 0)
+                {
+                    //  insert total in DailyTotal column 1 line up
+                    source[iD - 1].DailyTotal = runningTotal;
+
+                    //  insert total in TotalTrades column 1 line up
+                    source[iD - 1].TotalTrades = TotalTrades;
+
+
+                    //  zero accumulator - this if is hit when dates are unequal so running total 
+                    //      needs to be set to rows P/L - zero is not needed
+                    runningTotal = 0;
+
+                    //  zero TotalTrades
+                    TotalTrades = 1;
+
+                    //  add curent line P/L to accumulator
+                    runningTotal = runningTotal + c.P_L;
+
+                    //  update trade end date
+                    startingDate = currentTradeDate;
+                };
+
+                //  update line ID
+                iD++;
+
+                //  if ID  == list.count - at end of list - enter last total
+                if (iD == source.Count)
+                {
+                    source[iD - 1].DailyTotal = runningTotal;
+
+                    //  enter number of trades in TotalTrades
+                    source[iD - 1].TotalTrades = TotalTrades;
+
+                }
+            }
+
+
+            return source;
+        }
+
+
+        */
     }
     public class NTDrawLine
     {
-        //DateTime startTime, double startY, DateTime endTime, double endY
         public int Id { get; set; }
+        public bool Playback { get; set; }
         public string Symbol { get; set; }
         public string Long_Short { get; set; }
         public long StartTimeTicks { get; set; }
@@ -384,15 +546,16 @@ namespace NinjaTrader.Custom.AddOns
         public string EndTime { get; set; }
         public double EndY { get; set; }
         public double P_L { get; set; }
-        public double? DailyTotal { get; set; }
+        public double? DailyTotal { get; set; } 
         public int? TotalTrades { get; set; }
 
         public NTDrawLine() { }
 
-        public NTDrawLine(int id, string symbol, string long_Short, long startTimeTicks, string startTime, double startY, long endTimeTicks, string endTime, double endY,
+        public NTDrawLine(int id, bool playback, string symbol, string long_Short, long startTimeTicks, string startTime, double startY, long endTimeTicks, string endTime, double endY,
             double p_L, double? dailyTotal, int? totalTrades)
         {
             Id = id;
+            Playback = playback;
             Symbol = symbol;
             Long_Short = long_Short;
             StartTimeTicks = startTimeTicks;
@@ -405,33 +568,45 @@ namespace NinjaTrader.Custom.AddOns
             DailyTotal = dailyTotal;
             TotalTrades = totalTrades;
         }
+        public IEnumerator GetEnumerator()                                                              //	class CSV
+        {
+            return (IEnumerator)this;                                                                       //	class CSV
+        }
+
     }
     public class NTDrawLineForLINQtoCSV
     {
         [CsvColumn(FieldIndex = 1)]
         public int Id { get; set; }
         [CsvColumn(FieldIndex = 2)]
-        public string Symbol { get; set; }
+        public bool Playback { get; set; }
         [CsvColumn(FieldIndex = 3)]
-        public string Long_Short { get; set; }
+        public string Symbol { get; set; }
         [CsvColumn(FieldIndex = 4)]
-        public long StartTimeTicks { get; set; }
+        public string Long_Short { get; set; }
         [CsvColumn(FieldIndex = 5)]
-        public string StartTime { get; set; }
+        public long StartTimeTicks { get; set; }
         [CsvColumn(FieldIndex = 6)]
-        public double StartY { get; set; }
+        public string StartTime { get; set; }
         [CsvColumn(FieldIndex = 7)]
-        public long EndTimeTicks { get; set; }
+        public double StartY { get; set; }
         [CsvColumn(FieldIndex = 8)]
-        public string EndTime { get; set; }
+        public long EndTimeTicks { get; set; }
         [CsvColumn(FieldIndex = 9)]
-        public double EndY { get; set; }
+        public string EndTime { get; set; }
         [CsvColumn(FieldIndex = 10)]
-        public double P_L { get; set; }
+        public double EndY { get; set; }
         [CsvColumn(FieldIndex = 11)]
-        public double? DailyTotal { get; set; }
+        public double P_L { get; set; }
         [CsvColumn(FieldIndex = 12)]
+        public double? DailyTotal { get; set; }
+        [CsvColumn(FieldIndex = 13)]
         public int? TotalTrades { get; set; }
+        public IEnumerator GetEnumerator()                                                              //	class CSV
+        {
+            return (IEnumerator)this;                                                                       //	class CSV
+        }
+
 
     }
     public class Source
@@ -446,7 +621,6 @@ namespace NinjaTrader.Custom.AddOns
         public double? StartingExitPrice { get; set; }                                                   //	class source
         public int rowInTrades { get; set; }                                                            //	class source
         public int RowInTrades { get; set; }                                                            //	class source
-        //public int RowInCsv { get; set; }                                                               //	class source
         public long? ExitQty { get; set; }                                                                //	class source
         public long? Remaining { get; set; }                                                              //	class source
         public List<Trade> Trades { get; set; }                                                         //	class source
@@ -512,17 +686,17 @@ namespace NinjaTrader.Custom.AddOns
         public string Expiry { get; set; }
         public double? P_L { get; set; }
         public string Long_Short { get; set; }
-        public int TradeNo { get; set; }                                                                // 	class Trade
+        public int TradeNo { get; set; }                                                                
 
-        public IEnumerator GetEnumerator()                                                              // 	class Trade
+        public IEnumerator GetEnumerator()                                                             
         {
-            return (IEnumerator)this;                                                                   // 	class Trade
+            return (IEnumerator)this;                                                                  
         }
 
         public Trade() { }
 
-        // Without int execId (second cstr, code runs
-        //public Ret(int instId, int execId, string name, int? position, int? quantity, bool? isEntry, bool? isExit, double? price, long? time,
+        //  Without int execId (second cstr, code runs
+        //  public Ret(int instId, int execId, string name, int? position, int? quantity, bool? isEntry, bool? isExit, double? price, long? time,
         //	string humanTime, long instrument, string expiry, double? p_L, string long_Short)
         public Trade(long execId, long? position, string name, long? qty, bool? isEntry, bool? isExit, double? price, long? time,
             string humanTime, long instrument, string expiry, double? p_L, string long_Short)

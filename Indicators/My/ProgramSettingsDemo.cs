@@ -53,7 +53,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 			{
                 ClearOutputWindow();
                 var b = Settings.Default.temp;
-                //var newB = Properties.Settings1.Date;
+                //var newB = Properties.Settings.Date;
                 Print("Line 57 get an ddisplay temp " + Settings.Default.temp + "\n");
                 var c = DateTime.Now.ToString("MM/dd/yyyy");
                 Settings.Default.temp = "04/04/2023";
@@ -80,9 +80,10 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 				Settings.Default.firstPassAppend = false;
                 Settings.Default.Save();
 
-                Print("Line 84 firstPassAppend should be false " + Settings.Default.firstPassAppend + "\n");
+                Print("Line 84 firstPassAppend should be false " + Settings		.Default.firstPassAppend + "\n");
 
-
+				Settings.Default.array[0] = 2; Settings.Default.array[1] = 1;
+                Settings.Default.Save();
             }
         }
 

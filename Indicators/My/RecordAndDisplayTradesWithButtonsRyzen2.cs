@@ -616,12 +616,12 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                             // Print P/L in blue below line start
                             if (rc.P_L >= 0)
                         {
-                            Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString(), sTime, rc.StartY, -PixelsAboveBelowBar, Brushes.Blue, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                            Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString("0.00"), sTime, rc.StartY, -PixelsAboveBelowBar, Brushes.Blue, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
                         }
                         // Print P/L in red above line start
                         else
                         {
-                            Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString(), sTime, rc.StartY, PixelsAboveBelowBar, Brushes.Red, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
+                            Draw.Text(this, i.ToString() + "Text", false, rc.P_L.ToString("0.00"), sTime, rc.StartY, PixelsAboveBelowBar, Brushes.Red, chartFont, TextAlignment.Center, Brushes.White, Brushes.White, 100);
                         }
 
                         //  if DailyTotal is available draw it at midpoint of day
@@ -875,8 +875,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             //foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {
+                var anchors = dTL.Anchors.ToList();
                 var draw = dTL as DrawingTool;
-                if (draw != null)
+                if (draw != null) 
                 {
                     if (draw.IsVisible && draw.IsUserDrawn)
                     {
@@ -890,6 +891,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                         btnUserDrawObjs.Background = Brushes.DimGray;
                     }
                 }
+                
             }
 
             //foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)

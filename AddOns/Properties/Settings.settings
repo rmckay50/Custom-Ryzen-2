@@ -11,5 +11,8 @@
     <Setting Name="temp" Type="System.String" Scope="User">
       <Value Profile="(Default)">01/01/2000</Value>
     </Setting>
+    <Setting Name="array" Type="System.Collections.ArrayList" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>
