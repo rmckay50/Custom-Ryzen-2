@@ -67,6 +67,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         private new System.Windows.Controls.Button btnTradeLines;
         private new System.Windows.Controls.Button btnP_L;
         private new System.Windows.Controls.Button btnUserDrawObjs;
+        private new System.Windows.Controls.Button btnArrowLines;
         private new System.Windows.Controls.Button btnIndicators;
         private new System.Windows.Controls.Button btnShowTrades;
         private new System.Windows.Controls.Button btnHideWicks;
@@ -299,6 +300,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnUserDrawObjs = new System.Windows.Controls.Button();
             btnTradeLines = new System.Windows.Controls.Button();
             btnP_L = new System.Windows.Controls.Button();
+            btnArrowLines = new System.Windows.Controls.Button();
             btnIndicators = new System.Windows.Controls.Button();
             btnShowTrades = new System.Windows.Controls.Button();
             btnHideWicks = new System.Windows.Controls.Button();
@@ -308,6 +310,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnTradeLines.Content = "Toggle Trade Lines";
             btnP_L.Content = "Toggle P/L";
             btnUserDrawObjs.Content = "Toggle Draw";
+            btnArrowLines.Content = "Arrow Lines";
             btnIndicators.Content = "Toggle Indicators";
             btnShowTrades.Content = "Toggle Trades";
             btnHideWicks.Content = "Toggle Wicks";
@@ -317,6 +320,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnTradeLines.Style = btnStyle;
             btnP_L.Style = btnStyle;
             btnUserDrawObjs.Style = btnStyle;
+            btnArrowLines.Style = btnStyle;
             btnIndicators.Style = btnStyle;
             btnShowTrades.Style = btnStyle;
             btnHideWicks.Style = btnStyle;
@@ -326,6 +330,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             chartWindow.MainMenu.Add(btnTradeLines);
             chartWindow.MainMenu.Add(btnP_L);
             chartWindow.MainMenu.Add(btnUserDrawObjs);
+            chartWindow.MainMenu.Add(btnArrowLines);
             chartWindow.MainMenu.Add(btnIndicators);
             chartWindow.MainMenu.Add(btnShowTrades);
             chartWindow.MainMenu.Add(btnHideWicks);
@@ -335,6 +340,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnTradeLines.Visibility = Visibility.Visible;
             btnP_L.Visibility = Visibility.Visible;
             btnUserDrawObjs.Visibility = Visibility.Visible;
+            btnArrowLines.Visibility = Visibility.Visible;
             btnIndicators.Visibility = Visibility.Visible;
             btnShowTrades.Visibility = Visibility.Visible;
             btnHideWicks.Visibility = Visibility.Visible;
@@ -344,6 +350,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnTradeLines.Click += btnTradeLinesClick;
             btnP_L.Click += btnP_LClick;
             btnUserDrawObjs.Click += btnUserDrawObjsClick;
+            btnArrowLines.Click += btnArrowLinesClick;
             btnIndicators.Click += btnIndicatorsClick;
             btnShowTrades.Click += btnShowTradesClick;
             btnHideWicks.Click += btnHideWicksClick;
@@ -353,6 +360,12 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             // toolbar multiple times if NS code is refreshed
             IsToolBarButtonAdded = true;
         }
+
+        private void BtnArrowLines_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void OnRender(ChartControl chartControl, ChartScale chartScale)
         {
         }
@@ -385,6 +398,15 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 hideUserDrawsFunc();
             }
         }
+        private void btnArrowLinesClick(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Controls.Button button = sender as System.Windows.Controls.Button;
+            if (button != null)
+            {
+                hideArrowLines();
+            }
+        }
+
         private void btnIndicatorsClick(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.Button button = sender as System.Windows.Controls.Button;
@@ -761,7 +783,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 }));
             }
         }
-    private void hideDrawsFunc()
+        private void hideDrawsFunc()
         {
 //            ClearOutputWindow();
             // Sets drawSwitch based on whether there are any drawings on the chart
@@ -809,7 +831,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             chartWindow.ActiveChartControl.InvalidateVisual();
             ForceRefresh();
         }
-        //  toggle P/L
+        private void hideArrowLines()
+        { }
         private void hideP_LFunc()
         {
             //  ClearOutputWindow();
