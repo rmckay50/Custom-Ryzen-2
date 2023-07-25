@@ -835,14 +835,37 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         private void hideArrowLines()
         {
             // create list of arrowlines
+            List< ArrowLines > arrowLines = new List< ArrowLines >();
+            //  Sets arrowLinesSwitch based on whether there are any drawings on the chart
+            //  foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
+            //  cereate list of arrowlines
 
-            // Sets drawSwitch based on whether there are any drawings on the chart
-            //foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {
+                //dTL.Name
                 var anchors = dTL.Anchors.ToList();
+                var dTLTag = dTL.Tag;
+                try
+                {
+                    if ( dTL.DisplayName == "Arrow line")
+                    {
+                        //var arrowLineId = dTL.Tag.Substring(11);
+                        arrowLines.Add(new ArrowLines()
+                        {
+                            StartTime = anchors[0].Time.ToString(),
+                            StartY = (double)anchors[0].Price,
+                            EndTime = anchors[1].Time.ToString(),
+                            EndY = (double)anchors[1].Price
+                        });
+                    }
+                    arrowLines = arrowLines.ToList();
+                }
+                catch (Exception ex)
+                {
+                    Print(ex);
+                }
                 var draw = dTL as DrawingTool;
-                if (draw != null)
+                if (draw != null) 
                 {
                     if (draw.IsVisible && draw.IsUserDrawn)
                     {
@@ -858,6 +881,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 }
 
             }
+            arrowLinesSwitch = !arrowLinesSwitch;
+            chartWindow.ActiveChartControl.InvalidateVisual();
+            ForceRefresh();
 
         }
         private void hideP_LFunc()
@@ -920,13 +946,13 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         }
         private void hideUserDrawsFunc()
         {
-            // turns off historical drawings but future drawings will show until hidden
+            //  turns off historical drawings but future drawings will show until hidden
 
-            // Sets drawSwitch based on whether there are any drawings on the chart
-            //foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
+            //  Sets drawSwitch based on whether there are any drawings on the chart
+            //  foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
+            //  toggle button color
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {
-                var anchors = dTL.Anchors.ToList();
                 var draw = dTL as DrawingTool;
                 if (draw != null) 
                 {
@@ -946,6 +972,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             }
 
             //foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
+            //  toggle .IsVisible to hide and show drawing objects
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {
                 //var draw = obj as DrawingTool;
@@ -1111,7 +1138,14 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnUserDrawObjs.Click -= btnUserDrawObjsClick;
             btnUserDrawObjs = null;
         }
-        if (btnIndicators != null)
+            if (btnArrowLines != null)
+            {
+                chartWindow.MainMenu.Remove(btnArrowLines);
+                btnArrowLines.Click -= btnArrowLinesClick;
+                btnArrowLines = null;
+            }
+
+            if (btnIndicators != null)
         {
             chartWindow.MainMenu.Remove(btnIndicators);
             btnIndicators.Click -= btnIndicatorsClick;
