@@ -13,13 +13,15 @@ namespace NinjaTrader.Custom.AddOns
     //public class ButtonsLineCSFilesAddOns : NinjaTrader.NinjaScript.AddOnBase
     public class ArrowLines
     {
+        public string ID { get; set; }
         public string StartTime { get; set; }
         public double StartY { get; set; }
         public string EndTime { get; set; }
         public double EndY { get; set; }
         public ArrowLines() { }
-        public ArrowLines ( string startTime, double startY, string endTime, double endY ) 
+        public ArrowLines ( string iD, string startTime, double startY, string endTime, double endY ) 
         { 
+            ID = iD;
             StartTime = startTime;
             StartY = startY;
             EndTime = endTime;

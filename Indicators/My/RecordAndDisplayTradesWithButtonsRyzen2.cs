@@ -849,9 +849,10 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 {
                     if ( dTL.DisplayName == "Arrow line")
                     {
-                        //var arrowLineId = dTL.Tag.Substring(11);
+                        var arrowLineId = dTL.Tag.Substring(11);
                         arrowLines.Add(new ArrowLines()
                         {
+                            ID = arrowLineId,
                             StartTime = anchors[0].Time.ToString(),
                             StartY = (double)anchors[0].Price,
                             EndTime = anchors[1].Time.ToString(),
