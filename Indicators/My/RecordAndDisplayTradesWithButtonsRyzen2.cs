@@ -868,34 +868,48 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 {
                     Print(ex);
                 }
-                //var draw = dTL as DrawingTool;
-                //if (draw != null)
-                //{
-                //    if (draw.IsVisible && draw.IsUserDrawn)
-                //    {
-                //        arrowLinesSwitch = true;
-                //        btnArrowLines.Background = Brushes.Green;
-                //        break;
-                //    }
-                //    else
-                //    {
-                //        arrowLinesSwitch = false;
-                //        btnArrowLines.Background = Brushes.DimGray;
-                //    }
-                //}
+                //  write arrowlines list to json file
+                try
+                {
+                    if ( arrowLines == null ) 
+                    {
+                        Print("Arrowlines == null");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Print(ex);
+                }
+                var draw = dTL as DrawingTool;
+                if (draw != null)
+                {
+                    if (draw.IsVisible && draw.IsUserDrawn)
+                    {
+                        arrowLinesSwitch = true;
+                        btnArrowLines.Background = Brushes.Green;
+                        break;
+                    }
+                    else
+                    {
+                        arrowLinesSwitch = false;
+                        btnArrowLines.Background = Brushes.DimGray;
+                    }
+                }
             }
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {
-                if (dTL.IsAttachedToNinjaScript)
+                if (dTL.DisplayName == "Arrow line" )
                 {
-                    if (drawSwitch)
+                    if (arrowLinesSwitch)
                     {
-                        if (dTL.Tag.Contains("Text"))
+                        //if (dTL.Tag.Contains("Text"))
+                        if (dTL.DisplayName == "Arrow line") 
                         {
+                            Print(String.Format("Found arrowlinw {0}", dTL.Tag));
                         }
                         dTL.IsVisible = false;
                     }
-                    else if (!drawSwitch)
+                    else if (!arrowLinesSwitch)
                     {
                         dTL.IsVisible = true;
                     }
