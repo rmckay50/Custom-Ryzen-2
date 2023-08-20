@@ -51,6 +51,8 @@ using NinjaTrader.Custom.AddOns;
 using Trade = NinjaTrader.Custom.AddOns.Trade;
 using NTRes.NinjaTrader.Gui.Tools;
 using NinjaTrader.Gui.PropertiesTest;
+using System.Security.Cryptography;
+using System.Windows.Shapes;
 #endregion
 
 //This namespace holds Indicators in this folder and is required. Do not change it. 
@@ -841,6 +843,29 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         }
         private void hideArrowLines()
         {
+            ClearOutputWindow();
+            if (EnumValue == MyEnum.Playback)
+            {
+                Print(" Set to Playback");
+                var options = new JsonSerializerOptions();
+
+                //options = new JsonSerializerOptions { WriteIndented = true };
+                //string jsonString = JsonSerializer.Serialize(arrowLines, options);
+                string fileName = @"C:\data\ArrowLines.json";
+                //File.WriteAllText(fileName, jsonString);
+                //Print(jsonString);
+                var result = File.ReadAllText(fileName);
+                Print(result);
+
+                var jsonStringReturned = File.ReadAllText(fileName);
+                Console.WriteLine("\njsonStringReturned\n" + jsonStringReturned);
+
+                //var list1 = System.Text.Json.JsonSerializer.Deserialize<Person>(content);
+                var arrowLinesList = System.Text.Json.JsonSerializer.Deserialize<List<ArrowLines>>(jsonStringReturned);
+                return;
+            }
+
+
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {
                 //  change button color
@@ -882,7 +907,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {
-                //dTL.Name
                 var anchors = dTL.Anchors.ToList();
                 var dTLTag = dTL.Tag;
                 try
@@ -903,7 +927,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     arrowLines = arrowLines.ToList();
 
                     //  Needed to add files that are referenced by System.Text.Json to .../Bin/Custom
-                    var options = new JsonSerializerOptions();
+                    //var options = new JsonSerializerOptions();
                     List<UserDetail> users = new List<UserDetail>();
                     users.Add(new UserDetail
                     {
@@ -911,9 +935,22 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                         Name = "John",
                     });
 
-                    options = new JsonSerializerOptions { WriteIndented = true };
+                    var options = new JsonSerializerOptions { WriteIndented = true };
                     string jsonString = JsonSerializer.Serialize(arrowLines, options);
                     string fileName = @"C:\data\ArrowLines.json";
+
+                    // Check to see if the file exists.
+                    FileInfo fInfo = new FileInfo(fileName);
+
+                    // You can throw a personalized exception if
+                    // the file does not exist.
+                    if (!fInfo.Exists)
+                    {
+                        throw new FileNotFoundException("The file was not found.", fileName);
+                    }
+                    //  Delete file contents
+                    File.WriteAllText(fileName, String.Empty);
+                    //  Write arrowList to file
                     File.WriteAllText(fileName, jsonString);
                     Print(jsonString);
                     var result = File.ReadAllText(fileName);
@@ -922,8 +959,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     var jsonStringReturned = File.ReadAllText(fileName);
                     Console.WriteLine("\njsonStringReturned\n" + jsonStringReturned);
 
-                    //var list1 = System.Text.Json.JsonSerializer.Deserialize<Person>(content);
-                    var arrowLinesList = System.Text.Json.JsonSerializer.Deserialize<List<ArrowLines>>(jsonStringReturned);
+                    ////var list1 = System.Text.Json.JsonSerializer.Deserialize<Person>(content);
+                    //var arrowLinesList = System.Text.Json.JsonSerializer.Deserialize<List<ArrowLines>>(jsonStringReturned);
 
 
 
