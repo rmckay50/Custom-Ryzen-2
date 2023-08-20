@@ -844,24 +844,40 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         private void hideArrowLines()
         {
             ClearOutputWindow();
+
+            //  If Switch is set to Playback read the ArrowLines file and draw the arrowlines
             if (EnumValue == MyEnum.Playback)
             {
                 Print(" Set to Playback");
                 var options = new JsonSerializerOptions();
 
-                //options = new JsonSerializerOptions { WriteIndented = true };
-                //string jsonString = JsonSerializer.Serialize(arrowLines, options);
+
                 string fileName = @"C:\data\ArrowLines.json";
-                //File.WriteAllText(fileName, jsonString);
-                //Print(jsonString);
                 var result = File.ReadAllText(fileName);
                 Print(result);
 
                 var jsonStringReturned = File.ReadAllText(fileName);
                 Console.WriteLine("\njsonStringReturned\n" + jsonStringReturned);
 
-                //var list1 = System.Text.Json.JsonSerializer.Deserialize<Person>(content);
+                //  Deserialize file contents into List<T>
                 var arrowLinesList = System.Text.Json.JsonSerializer.Deserialize<List<ArrowLines>>(jsonStringReturned);
+
+                var arrowId = 0;
+                //  draw arrowLines on chart
+                foreach (var arrow in arrowLinesList)
+                {
+                    try 
+                    { 
+                    Draw.ArrowLine(this, arrowId.ToString() + " arrowLinesList", DateTime.Parse(arrow.StartTime), arrow.StartY, DateTime.Parse(arrow.EndTime), arrow.EndY, Brushes.LimeGreen);
+                        arrowId++; 
+                    } catch (Exception ex)
+                    {
+                        Print(ex.Message);
+                    }
+                    //Draw.ArrowLine()
+                }
+                ForceRefresh();
+
                 return;
             }
 
@@ -884,6 +900,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
                             //  make invisible for debugging
                             //dTL.IsVisible = false;
+                            ForceRefresh();
                             break;
                         }
                         else 
@@ -892,6 +909,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                             btnArrowLines.Background = Brushes.DimGray;
                             //  make visible for debugging
                             //dTL.IsVisible = true;
+                            ForceRefresh();
                             break;
                         }
                     }
@@ -899,16 +917,17 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
             }
 
-            ///*
-            //chartWindow.
+            //  clear arrowLines list
+            arrowLines.Clear();
+
             //  Sets arrowLinesSwitch based on whether there are any drawings on the chart
             //  foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
-            //  cereate list of arrowlines
+            //  create list of arrowlines
 
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {
                 var anchors = dTL.Anchors.ToList();
-                var dTLTag = dTL.Tag;
+                //var dTLTag = dTL.Tag;
                 try
                 {
                     //  is line an Arrow line?
@@ -926,17 +945,13 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     }
                     arrowLines = arrowLines.ToList();
 
-                    //  Needed to add files that are referenced by System.Text.Json to .../Bin/Custom
-                    //var options = new JsonSerializerOptions();
-                    List<UserDetail> users = new List<UserDetail>();
-                    users.Add(new UserDetail
-                    {
-                        Id = 1,
-                        Name = "John",
-                    });
-
+                    //  set Serialize options
                     var options = new JsonSerializerOptions { WriteIndented = true };
+
+                    //  Create Json string
                     string jsonString = JsonSerializer.Serialize(arrowLines, options);
+
+                    //  Write to C:\data\ArrowLines.json
                     string fileName = @"C:\data\ArrowLines.json";
 
                     // Check to see if the file exists.
@@ -948,16 +963,19 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     {
                         throw new FileNotFoundException("The file was not found.", fileName);
                     }
+
                     //  Delete file contents
                     File.WriteAllText(fileName, String.Empty);
+
                     //  Write arrowList to file
                     File.WriteAllText(fileName, jsonString);
                     Print(jsonString);
+
                     var result = File.ReadAllText(fileName);
                     Print(result);
 
-                    var jsonStringReturned = File.ReadAllText(fileName);
-                    Console.WriteLine("\njsonStringReturned\n" + jsonStringReturned);
+                    //var jsonStringReturned = File.ReadAllText(fileName);
+                    //Console.WriteLine("\njsonStringReturned\n" + jsonStringReturned);
 
                     ////var list1 = System.Text.Json.JsonSerializer.Deserialize<Person>(content);
                     //var arrowLinesList = System.Text.Json.JsonSerializer.Deserialize<List<ArrowLines>>(jsonStringReturned);
@@ -996,10 +1014,12 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                             Print(String.Format("Found arrowlinw {0}", dTL.Tag));
                         }
                         dTL.IsVisible = false;
+                        ForceRefresh();
                     }
                     else if (!arrowLinesSwitch)
                     {
                         dTL.IsVisible = true;
+                        ForceRefresh();
                     }
                 }
             }
