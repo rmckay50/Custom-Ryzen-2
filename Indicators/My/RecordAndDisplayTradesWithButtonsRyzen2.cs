@@ -87,6 +87,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
         //  create dictionary
         IDictionary<string, double> dictDayClose = new Dictionary<string, double>();
+        // create list of arrowlines
+        List<ArrowLines> arrowLines = new List<ArrowLines>();
+
 
         #endregion Create variables
         protected override void OnStateChange()
@@ -107,8 +110,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 PixelsAboveBelowBar = 50;
                 PixelsAboveBelowDay = 200;
                 IsSuspendedWhileInactive = true;
-                StartTime = DateTime.Parse("06/15/2023");
-                EndTime = DateTime.Parse("07/30/2023");
+                StartTime = DateTime.Parse("08/18/2023");
+                EndTime = DateTime.Parse("08/21/2023");
                 EnumValue = MyEnum.Futures;
                 //  The userName needs to be correct to keep ReadCsvAndDrawLines() in State.Historical from throwing exception
                 InputFile = @"C:\Users\" + userName + @"\Documents\NinjaTrader 8\db\NinjaTrader.sqlite";
@@ -834,8 +837,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         }
         private void hideArrowLines()
         {
-            // create list of arrowlines
-            List< ArrowLines > arrowLines = new List< ArrowLines >();
+            //chartWindow.
             //  Sets arrowLinesSwitch based on whether there are any drawings on the chart
             //  foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
             //  cereate list of arrowlines
@@ -847,11 +849,12 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 var dTLTag = dTL.Tag;
                 try
                 {
-                    if ( dTL.DisplayName == "Arrow line")
+                    //  is line an Arrow line?
+                    if (dTL.DisplayName == "Arrow line")
                     {
                         var arrowLineId = dTL.Tag.Substring(11);
                         arrowLines.Add(new ArrowLines()
-                        { 
+                        {
                             ID = arrowLineId,
                             StartTime = anchors[0].Time.ToString(),
                             StartY = (double)anchors[0].Price,
@@ -865,23 +868,40 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 {
                     Print(ex);
                 }
-                var draw = dTL as DrawingTool;
-                if (draw != null) 
+                //var draw = dTL as DrawingTool;
+                //if (draw != null)
+                //{
+                //    if (draw.IsVisible && draw.IsUserDrawn)
+                //    {
+                //        arrowLinesSwitch = true;
+                //        btnArrowLines.Background = Brushes.Green;
+                //        break;
+                //    }
+                //    else
+                //    {
+                //        arrowLinesSwitch = false;
+                //        btnArrowLines.Background = Brushes.DimGray;
+                //    }
+                //}
+            }
+            foreach (DrawingTool dTL in DrawObjects.ToList())
+            {
+                if (dTL.IsAttachedToNinjaScript)
                 {
-                    if (draw.IsVisible && draw.IsUserDrawn)
+                    if (drawSwitch)
                     {
-                        arrowLinesSwitch = true;
-                        btnArrowLines.Background = Brushes.Green;
-                        break;
+                        if (dTL.Tag.Contains("Text"))
+                        {
+                        }
+                        dTL.IsVisible = false;
                     }
-                    else
+                    else if (!drawSwitch)
                     {
-                        arrowLinesSwitch = false;
-                        btnArrowLines.Background = Brushes.DimGray;
+                        dTL.IsVisible = true;
                     }
                 }
-
             }
+            
             arrowLinesSwitch = !arrowLinesSwitch;
             chartWindow.ActiveChartControl.InvalidateVisual();
             ForceRefresh();
@@ -1168,7 +1188,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         {
             chartWindow.MainMenu.Remove(btnCreateCsv);
             btnCreateCsv.Click -= btnCreateCsvClick;
-            btnHideWicks = null;
+            btnCreateCsv = null;
         }
 
     }
