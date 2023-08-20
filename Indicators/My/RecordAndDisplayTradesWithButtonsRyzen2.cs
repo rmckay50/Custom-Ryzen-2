@@ -25,8 +25,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -47,6 +49,8 @@ using LINQtoCSV;
 using NinjaTrader.Gui.NinjaScript;
 using NinjaTrader.Custom.AddOns;
 using Trade = NinjaTrader.Custom.AddOns.Trade;
+using NTRes.NinjaTrader.Gui.Tools;
+using NinjaTrader.Gui.PropertiesTest;
 #endregion
 
 //This namespace holds Indicators in this folder and is required. Do not change it. 
@@ -897,6 +901,34 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                         });
                     }
                     arrowLines = arrowLines.ToList();
+
+                    //  Needed to add files that are referenced by System.Text.Json to .../Bin/Custom
+                    var options = new JsonSerializerOptions();
+                    List<UserDetail> users = new List<UserDetail>();
+                    users.Add(new UserDetail
+                    {
+                        Id = 1,
+                        Name = "John",
+                    });
+
+                    options = new JsonSerializerOptions { WriteIndented = true };
+                    string jsonString = JsonSerializer.Serialize(arrowLines, options);
+                    string fileName = @"C:\data\ArrowLines.json";
+                    File.WriteAllText(fileName, jsonString);
+                    Print(jsonString);
+                    var result = File.ReadAllText(fileName);
+                    Print(result);
+
+                    var jsonStringReturned = File.ReadAllText(fileName);
+                    Console.WriteLine("\njsonStringReturned\n" + jsonStringReturned);
+
+                    //var list1 = System.Text.Json.JsonSerializer.Deserialize<Person>(content);
+                    var arrowLinesList = System.Text.Json.JsonSerializer.Deserialize<List<ArrowLines>>(jsonStringReturned);
+
+
+
+
+
                 }
                 catch (Exception ex)
                 {
@@ -914,25 +946,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 {
                     Print(ex);
                 }
-
-                ////  change button color
-                ////  'break' kicks execution out of foreach
-                //var draw = dTL as DrawingTool;
-                //if (draw != null)
-                //{
-                //    if (draw.IsVisible && draw.IsUserDrawn)
-                //    {
-                //        arrowLinesSwitch = true;
-                //        btnArrowLines.Background = Brushes.Green;
-                //        break;
-                //    }
-                //    else
-                //    {
-                //        arrowLinesSwitch = false;
-                //        btnArrowLines.Background = Brushes.DimGray;
-                //        break;
-                //    }
-                //}
             }
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {
@@ -953,6 +966,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     }
                 }
             }
+
+            //  write arrowlines list to Json file
+
             //*/
             arrowLinesSwitch = !arrowLinesSwitch;
             chartWindow.ActiveChartControl.InvalidateVisual();
