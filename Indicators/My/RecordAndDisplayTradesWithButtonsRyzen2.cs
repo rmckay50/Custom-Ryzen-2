@@ -793,7 +793,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             // Sets drawSwitch based on whether there are any drawings on the chart
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {
-                //  'break' kicks execution out of loop
+                //  'break' kicks execution out of foreach
                 if (dTL.IsAttachedToNinjaScript)
                 {
                     if (dTL.IsVisible && dTL.IsAttachedToNinjaScript)
@@ -837,6 +837,40 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         }
         private void hideArrowLines()
         {
+            foreach (DrawingTool dTL in DrawObjects.ToList())
+            {
+                //  change button color
+                //  'break' kicks execution out of foreach
+                //var draw = dTL as DrawingTool;
+                if (dTL != null)
+                {
+                    //  find first arrowline
+                    if (dTL.DisplayName == "Arrow line")
+                    {
+
+                        if ( dTL.IsVisible )
+                        {
+                            arrowLinesSwitch = true;
+                            btnArrowLines.Background = Brushes.Green;
+
+                            //  make invisible for debugging
+                            //dTL.IsVisible = false;
+                            break;
+                        }
+                        else 
+                        {
+                            arrowLinesSwitch = false;
+                            btnArrowLines.Background = Brushes.DimGray;
+                            //  make visible for debugging
+                            //dTL.IsVisible = true;
+                            break;
+                        }
+                    }
+                }
+
+            }
+
+            ///*
             //chartWindow.
             //  Sets arrowLinesSwitch based on whether there are any drawings on the chart
             //  foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
@@ -880,21 +914,25 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 {
                     Print(ex);
                 }
-                var draw = dTL as DrawingTool;
-                if (draw != null)
-                {
-                    if (draw.IsVisible && draw.IsUserDrawn)
-                    {
-                        arrowLinesSwitch = true;
-                        btnArrowLines.Background = Brushes.Green;
-                        break;
-                    }
-                    else
-                    {
-                        arrowLinesSwitch = false;
-                        btnArrowLines.Background = Brushes.DimGray;
-                    }
-                }
+
+                ////  change button color
+                ////  'break' kicks execution out of foreach
+                //var draw = dTL as DrawingTool;
+                //if (draw != null)
+                //{
+                //    if (draw.IsVisible && draw.IsUserDrawn)
+                //    {
+                //        arrowLinesSwitch = true;
+                //        btnArrowLines.Background = Brushes.Green;
+                //        break;
+                //    }
+                //    else
+                //    {
+                //        arrowLinesSwitch = false;
+                //        btnArrowLines.Background = Brushes.DimGray;
+                //        break;
+                //    }
+                //}
             }
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {
@@ -915,7 +953,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     }
                 }
             }
-            
+            //*/
             arrowLinesSwitch = !arrowLinesSwitch;
             chartWindow.ActiveChartControl.InvalidateVisual();
             ForceRefresh();
