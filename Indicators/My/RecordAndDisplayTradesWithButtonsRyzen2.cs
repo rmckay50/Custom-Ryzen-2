@@ -95,6 +95,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         IDictionary<string, double> dictDayClose = new Dictionary<string, double>();
         // create list of arrowlines
         List<ArrowLines> arrowLines = new List<ArrowLines>();
+        //  switch used to monitor passes in Playback mode for ArrowLines
+        private bool arrowLinesFirstPass = true;
 
 
         #endregion Create variables
@@ -862,23 +864,33 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 //  Deserialize file contents into List<T>
                 var arrowLinesList = System.Text.Json.JsonSerializer.Deserialize<List<ArrowLines>>(jsonStringReturned);
 
-                var arrowId = 0;
-                //  draw arrowLines on chart
-                foreach (var arrow in arrowLinesList)
+                //  On first pass when Enum is set to Playback redraw arrowlines
+                if (arrowLinesFirstPass == true)
                 {
-                    try 
-                    { 
-                    Draw.ArrowLine(this, arrowId.ToString() + " arrowLinesList", DateTime.Parse(arrow.StartTime), arrow.StartY, DateTime.Parse(arrow.EndTime), arrow.EndY, Brushes.LimeGreen);
-                        arrowId++; 
-                    } catch (Exception ex)
+                    var arrowId = 0;
+                    //  draw arrowLines on chart
+                    foreach (var arrow in arrowLinesList)
                     {
-                        Print(ex.Message);
+                        try
+                        {
+                            Draw.ArrowLine(this, arrowId.ToString() + " arrowLinesList", DateTime.Parse(arrow.StartTime), arrow.StartY, DateTime.Parse(arrow.EndTime), arrow.EndY, Brushes.LimeGreen);
+                            arrowId++;
+                        }
+                        catch (Exception ex)
+                        {
+                            Print(ex.Message);
+                        }
+                        //Draw.ArrowLine()
                     }
-                    //Draw.ArrowLine()
-                }
-                ForceRefresh();
-
+                    ForceRefresh();
+                    arrowLinesFirstPass = false;
                 return;
+
+                }
+                else 
+                {
+                    Print("arrowLinesFirstPass = false;");
+                }
             }
 
 
