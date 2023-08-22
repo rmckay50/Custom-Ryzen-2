@@ -405,6 +405,41 @@ namespace NinjaTrader.Custom.AddOns
                 #endregion
 
                 #region Fill in 'Long' or 'Short' column for remaining entries in trade
+                //	Fill in posList Long_Short column with "null" if trade is an exit
+                //  Sets Long_Short to null on reversal - change to check for both entry and exit == true and then fill in Long_Short column
+                if (ls.IsExit == true)
+                {
+                    //  both true means reverse
+                    if (ls.IsExit == true && ls.IsEntry == true)
+                    {
+                        if (ls.Position > lastPosition)
+                        {
+                            //position = Position.Long;
+                            longShort = "Long";
+                            lastPosition = ls.Position;
+                            ls.Long_Short = longShort;
+                        }
+                        else if (ls.Position < lastPosition)
+                        {
+                            //position = Position.Short;
+                            longShort = "Short";
+                            lastPosition = ls.Position;
+                            ls.Long_Short = longShort;
+                        }
+                        goto done;
+                    }
+
+                    longShort = null;
+                    lastPosition = ls.Position;
+                    ls.Long_Short = null;
+
+                //  branches to here
+                done:;
+                    //  will go to next item
+                    continue;
+
+                }
+
                 // If position size increases (positive) trade was a long
                 //	Fill in posList 'Long_Short' with "Long"
                 if (ls.IsEntry == true && ls.Position > lastPosition)
@@ -429,21 +464,6 @@ namespace NinjaTrader.Custom.AddOns
                     //lastPosition.Dump();
                 }
 
-                //	Fill in posList Long_Short column with "null" if trade is an exit
-                //
-                if (ls.IsExit == true)
-
-                //if (ao.IsExit == true
-                //	|| ao.IsExit == true && ao.IsEntry == true)
-
-                {
-                    longShort = null;
-                    lastPosition = ls.Position;
-                    ls.Long_Short = null;
-
-                    //lastPosition.Dump();
-
-                }
                 #endregion
 
             }
