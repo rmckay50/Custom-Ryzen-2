@@ -412,14 +412,16 @@ namespace NinjaTrader.Custom.AddOns
                     //  both true means reverse
                     if (ls.IsExit == true && ls.IsEntry == true)
                     {
-                        if (ls.Position > lastPosition)
+                        //if (ls.Position > lastPosition)
+                        if (ls.Position > 0)
                         {
                             //position = Position.Long;
                             longShort = "Long";
                             lastPosition = ls.Position;
                             ls.Long_Short = longShort;
                         }
-                        else if (ls.Position < lastPosition)
+                        //else if (ls.Position < lastPosition)
+                        else if (ls.Position < 0)
                         {
                             //position = Position.Short;
                             longShort = "Short";
