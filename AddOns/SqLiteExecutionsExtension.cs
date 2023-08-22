@@ -430,6 +430,7 @@ namespace NinjaTrader.Custom.AddOns
                 }
 
                 //	Fill in posList Long_Short column with "null" if trade is an exit
+                //
                 if (ls.IsExit == true)
 
                 //if (ao.IsExit == true
