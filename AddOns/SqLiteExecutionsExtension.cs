@@ -378,9 +378,9 @@ namespace NinjaTrader.Custom.AddOns
                 ////	Exit if first trade is not an exit
                 //if (ls.Id == 0 && ls.IsExit == false)
                 //{
-                //	Console.WriteLine(@"First trade is exit");                                                  //	FillLongShortColumnInTradesList
-                //																								//	FillLongShortColumnInTradesList
-                //	System.Environment.Exit(-1);                                                                //	FillLongShortColumnInTradesList																
+                //    Console.WriteLine(@"First trade is exit");
+                //                                              
+                //    System.Environment.Exit(-1);              
                 //}
                 #region First trade fill in 'Long' or 'short'
                 // Fill in Long_Short column
@@ -405,14 +405,14 @@ namespace NinjaTrader.Custom.AddOns
                 #endregion
 
                 #region Fill in 'Long' or 'Short' column for remaining entries in trade
-                //	Fill in posList Long_Short column with "null" if trade is an exit
+                //	Fill in Trades Long_Short column with "null" if trade is an exit
                 //  Sets Long_Short to null on reversal - change to check for both entry and exit == true and then fill in Long_Short column
                 if (ls.IsExit == true)
                 {
                     //  both true means reverse
                     if (ls.IsExit == true && ls.IsEntry == true)
                     {
-                        //if (ls.Position > lastPosition)
+                        //  position positive is long trade
                         if (ls.Position > 0)
                         {
                             //position = Position.Long;
@@ -420,7 +420,8 @@ namespace NinjaTrader.Custom.AddOns
                             lastPosition = ls.Position;
                             ls.Long_Short = longShort;
                         }
-                        //else if (ls.Position < lastPosition)
+
+                        //  position negative is short trade
                         else if (ls.Position < 0)
                         {
                             //position = Position.Short;
@@ -428,6 +429,8 @@ namespace NinjaTrader.Custom.AddOns
                             lastPosition = ls.Position;
                             ls.Long_Short = longShort;
                         }
+
+                        //  skip setting Long_Short to null
                         goto done;
                     }
 
@@ -435,35 +438,29 @@ namespace NinjaTrader.Custom.AddOns
                     lastPosition = ls.Position;
                     ls.Long_Short = null;
 
-                //  branches to here
-                done:;
-                    //  will go to next item
-                    continue;
+                    //  branches to here
+                    done:;
 
+                    //  will go to next item and skip the check for entry
+                    continue;
                 }
 
                 // If position size increases (positive) trade was a long
                 //	Fill in posList 'Long_Short' with "Long"
                 if (ls.IsEntry == true && ls.Position > lastPosition)
                 {
-                    //position = Position.Long;
                     longShort = "Long";
                     lastPosition = ls.Position;
                     ls.Long_Short = longShort;
-
-                    //lastPosition.Dump();
                 }
 
                 // If position size increases (negative) trade was a short
                 //	Fill in posList 'Long_Short' with "Short"
-
                 else if (ls.IsEntry == true && ls.Position < lastPosition)
                 {
-                    //position = Position.Short;
                     longShort = "Short";
                     lastPosition = ls.Position;
                     ls.Long_Short = longShort;
-                    //lastPosition.Dump();
                 }
 
                 #endregion
