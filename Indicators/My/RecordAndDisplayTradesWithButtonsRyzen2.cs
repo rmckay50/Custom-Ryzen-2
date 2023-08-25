@@ -63,6 +63,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
     {
         #region Create variables
         private bool arrowLinesSwitch = true;
+        private bool fibLinesSwitch = true;
         private bool drawSwitch = true;
         private bool indiSwitch;
         private bool p_LSwitch = true;
@@ -75,6 +76,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         private new System.Windows.Controls.Button btnP_L;
         private new System.Windows.Controls.Button btnUserDrawObjs;
         private new System.Windows.Controls.Button btnArrowLines;
+        private new System.Windows.Controls.Button btnFibLines;
         private new System.Windows.Controls.Button btnIndicators;
         private new System.Windows.Controls.Button btnShowTrades;
         private new System.Windows.Controls.Button btnHideWicks;
@@ -313,6 +315,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnTradeLines = new System.Windows.Controls.Button();
             btnP_L = new System.Windows.Controls.Button();
             btnArrowLines = new System.Windows.Controls.Button();
+            btnFibLines = new System.Windows.Controls.Button();
             btnIndicators = new System.Windows.Controls.Button();
             btnShowTrades = new System.Windows.Controls.Button();
             btnHideWicks = new System.Windows.Controls.Button();
@@ -323,6 +326,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnP_L.Content = "Toggle P/L";
             btnUserDrawObjs.Content = "Toggle Draw";
             btnArrowLines.Content = "Toggle ArrowLines";
+            btnFibLines.Content = "Toggle Fib Lines";
             btnIndicators.Content = "Toggle Indicators";
             btnShowTrades.Content = "Toggle Trades";
             btnHideWicks.Content = "Toggle Wicks";
@@ -333,6 +337,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnP_L.Style = btnStyle;
             btnUserDrawObjs.Style = btnStyle;
             btnArrowLines.Style = btnStyle;
+            btnFibLines.Style = btnStyle;
             btnIndicators.Style = btnStyle;
             btnShowTrades.Style = btnStyle;
             btnHideWicks.Style = btnStyle;
@@ -343,6 +348,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             chartWindow.MainMenu.Add(btnP_L);
             chartWindow.MainMenu.Add(btnUserDrawObjs);
             chartWindow.MainMenu.Add(btnArrowLines);
+            chartWindow.MainMenu.Add(btnFibLines);
             chartWindow.MainMenu.Add(btnIndicators);
             chartWindow.MainMenu.Add(btnShowTrades);
             chartWindow.MainMenu.Add(btnHideWicks);
@@ -353,6 +359,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnP_L.Visibility = Visibility.Visible;
             btnUserDrawObjs.Visibility = Visibility.Visible;
             btnArrowLines.Visibility = Visibility.Visible;
+            btnFibLines.Visibility = Visibility.Visible;
             btnIndicators.Visibility = Visibility.Visible;
             btnShowTrades.Visibility = Visibility.Visible;
             btnHideWicks.Visibility = Visibility.Visible;
@@ -363,6 +370,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnP_L.Click += btnP_LClick;
             btnUserDrawObjs.Click += btnUserDrawObjsClick;
             btnArrowLines.Click += btnArrowLinesClick;
+            btnFibLines.Click += btnFibLinesClick;
             btnIndicators.Click += btnIndicatorsClick;
             btnShowTrades.Click += btnShowTradesClick;
             btnHideWicks.Click += btnHideWicksClick;
@@ -418,7 +426,14 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 hideArrowLines();
             }
         }
-
+        private void btnFibLinesClick(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Controls.Button button = sender as System.Windows.Controls.Button;
+            if (button != null)
+            {
+                hideFibLines();
+            }
+        }
         private void btnIndicatorsClick(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.Button button = sender as System.Windows.Controls.Button;
@@ -898,7 +913,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             {
                 //  change button color
                 //  'break' kicks execution out of foreach
-                //var draw = dTL as DrawingTool;
                 if (dTL != null)
                 {
                     //  find first arrowline
@@ -984,18 +998,13 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                     Print(jsonString);
 
                     var result = File.ReadAllText(fileName);
-                    Print(result);
+                    //Print(result);
 
                     //var jsonStringReturned = File.ReadAllText(fileName);
                     //Console.WriteLine("\njsonStringReturned\n" + jsonStringReturned);
 
                     ////var list1 = System.Text.Json.JsonSerializer.Deserialize<Person>(content);
                     //var arrowLinesList = System.Text.Json.JsonSerializer.Deserialize<List<ArrowLines>>(jsonStringReturned);
-
-
-
-
-
                 }
                 catch (Exception ex)
                 {
@@ -1043,6 +1052,73 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             chartWindow.ActiveChartControl.InvalidateVisual();
             ForceRefresh();
 
+        }
+        private void hideFibLines()
+        {
+            //  toggle Fibonacci Extension lines
+            ClearOutputWindow();
+
+            foreach (DrawingTool dTL in DrawObjects.ToList())
+            {
+                //  change button color
+                //  'break' kicks execution out of foreach
+
+                //  toggle button color
+                if (dTL != null)
+                {
+                    //  find first fibline
+                    if (dTL.DisplayName == "Fibonacci extensions")
+                    {
+
+                        if (dTL.IsVisible)
+                        {
+                            fibLinesSwitch = true;
+                            btnFibLines.Background = Brushes.Green;
+
+                            //  make invisible for debugging
+                            //dTL.IsVisible = false;
+                            ForceRefresh();
+                            break;
+                        }
+                        else
+                        {
+                            fibLinesSwitch = false;
+                            btnFibLines.Background = Brushes.DimGray;
+                            //  make visible for debugging
+                            //dTL.IsVisible = true;
+                            ForceRefresh();
+                            break;
+                        }
+                    }
+                }
+            }
+
+            //  toggle Fib lines
+            foreach (DrawingTool dTL in DrawObjects.ToList())
+            {
+                if (dTL.DisplayName == "Fibonacci extensions")
+                {
+                    if (fibLinesSwitch)
+                    {
+                        //if (dTL.Tag.Contains("Text"))
+                        if (dTL.DisplayName == "Fibonacci extensions")
+                        {
+                            Print(String.Format("Found Fib {0}", dTL.Tag));
+                        }
+                        dTL.IsVisible = false;
+                        ForceRefresh();
+                    }
+                    else if (!fibLinesSwitch)
+                    {
+                        dTL.IsVisible = true;
+                        ForceRefresh();
+                    }
+                }
+            }
+
+            fibLinesSwitch = !fibLinesSwitch;
+            chartWindow.ActiveChartControl.InvalidateVisual();
+            ForceRefresh();
         }
         private void hideP_LFunc()
         {
@@ -1296,14 +1372,20 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnUserDrawObjs.Click -= btnUserDrawObjsClick;
             btnUserDrawObjs = null;
         }
-            if (btnArrowLines != null)
-            {
-                chartWindow.MainMenu.Remove(btnArrowLines);
-                btnArrowLines.Click -= btnArrowLinesClick;
-                btnArrowLines = null;
-            }
+        if (btnArrowLines != null)
+        {
+            chartWindow.MainMenu.Remove(btnArrowLines);
+            btnArrowLines.Click -= btnArrowLinesClick;
+            btnArrowLines = null;
+        }
+        if (btnFibLines != null)
+        {
+            chartWindow.MainMenu.Remove(btnFibLines);
+            btnFibLines.Click -= btnFibLinesClick;
+            btnFibLines = null;
+        }
 
-            if (btnIndicators != null)
+        if (btnIndicators != null)
         {
             chartWindow.MainMenu.Remove(btnIndicators);
             btnIndicators.Click -= btnIndicatorsClick;
