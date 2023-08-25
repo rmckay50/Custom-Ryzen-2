@@ -1140,7 +1140,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         private void hideLinesOnly()
         {
             //  toggle lines
-            ClearOutputWindow();
+            ClearOutputWindow(); 
 
             foreach (DrawingTool dTL in DrawObjects.ToList()) 
             {
