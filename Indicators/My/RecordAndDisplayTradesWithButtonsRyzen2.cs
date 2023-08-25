@@ -1090,7 +1090,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                             break;
                         }
                     }
-                }
+                } 
             }
 
             //  toggle Fib lines
