@@ -64,6 +64,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         #region Create variables
         private bool arrowLinesSwitch = true;
         private bool fibLinesSwitch = true;
+        private bool linesOnlySwitch = true;
         private bool drawSwitch = true;
         private bool indiSwitch;
         private bool p_LSwitch = true;
@@ -77,6 +78,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         private new System.Windows.Controls.Button btnUserDrawObjs;
         private new System.Windows.Controls.Button btnArrowLines;
         private new System.Windows.Controls.Button btnFibLines;
+        private new System.Windows.Controls.Button btnLinesOnly;
         private new System.Windows.Controls.Button btnIndicators;
         private new System.Windows.Controls.Button btnShowTrades;
         private new System.Windows.Controls.Button btnHideWicks;
@@ -315,6 +317,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnTradeLines = new System.Windows.Controls.Button();
             btnP_L = new System.Windows.Controls.Button();
             btnArrowLines = new System.Windows.Controls.Button();
+            btnLinesOnly = new System.Windows.Controls.Button();
             btnFibLines = new System.Windows.Controls.Button();
             btnIndicators = new System.Windows.Controls.Button();
             btnShowTrades = new System.Windows.Controls.Button();
@@ -325,6 +328,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnTradeLines.Content = "Toggle Trade Lines";
             btnP_L.Content = "Toggle P/L";
             btnUserDrawObjs.Content = "Toggle Draw";
+            btnLinesOnly.Content = "Toggle Lines";
             btnArrowLines.Content = "Toggle ArrowLines";
             btnFibLines.Content = "Toggle Fib Lines";
             btnIndicators.Content = "Toggle Indicators";
@@ -338,6 +342,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnUserDrawObjs.Style = btnStyle;
             btnArrowLines.Style = btnStyle;
             btnFibLines.Style = btnStyle;
+            btnLinesOnly.Style = btnStyle;
             btnIndicators.Style = btnStyle;
             btnShowTrades.Style = btnStyle;
             btnHideWicks.Style = btnStyle;
@@ -348,7 +353,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             chartWindow.MainMenu.Add(btnP_L);
             chartWindow.MainMenu.Add(btnUserDrawObjs);
             chartWindow.MainMenu.Add(btnArrowLines);
-            chartWindow.MainMenu.Add(btnFibLines);
+            chartWindow.MainMenu.Add(btnFibLines); 
+            chartWindow.MainMenu.Add(btnLinesOnly);
             chartWindow.MainMenu.Add(btnIndicators);
             chartWindow.MainMenu.Add(btnShowTrades);
             chartWindow.MainMenu.Add(btnHideWicks);
@@ -360,6 +366,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnUserDrawObjs.Visibility = Visibility.Visible;
             btnArrowLines.Visibility = Visibility.Visible;
             btnFibLines.Visibility = Visibility.Visible;
+            btnLinesOnly.Visibility = Visibility.Visible;
             btnIndicators.Visibility = Visibility.Visible;
             btnShowTrades.Visibility = Visibility.Visible;
             btnHideWicks.Visibility = Visibility.Visible;
@@ -371,6 +378,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnUserDrawObjs.Click += btnUserDrawObjsClick;
             btnArrowLines.Click += btnArrowLinesClick;
             btnFibLines.Click += btnFibLinesClick;
+            btnLinesOnly.Click += btnLinesOnlyClick;
             btnIndicators.Click += btnIndicatorsClick;
             btnShowTrades.Click += btnShowTradesClick;
             btnHideWicks.Click += btnHideWicksClick;
@@ -434,6 +442,15 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 hideFibLines();
             }
         }
+        private void btnLinesOnlyClick(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Controls.Button button = sender as System.Windows.Controls.Button;
+            if (button != null)
+            {
+                hideLinesOnly();
+            }
+        }
+
         private void btnIndicatorsClick(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.Button button = sender as System.Windows.Controls.Button;
@@ -1120,6 +1137,64 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             chartWindow.ActiveChartControl.InvalidateVisual();
             ForceRefresh();
         }
+        private void hideLinesOnly()
+        {
+            //  toggle lines
+            ClearOutputWindow();
+
+            foreach (DrawingTool dTL in DrawObjects.ToList())
+            {
+                var draw = dTL as DrawingTool;
+
+                //  change button color
+                //  'break' kicks execution out of foreach
+
+                //  toggle button color
+                if (dTL != null)
+                {
+                    //  find first UserDrawn line and switch button background color
+                    if (dTL.IsUserDrawn && dTL.DisplayName == "Line")
+                    {
+
+                        if (dTL.IsVisible)
+                        {
+                            linesOnlySwitch = true;
+                            btnLinesOnly.Background = Brushes.Green;
+                            ForceRefresh();
+                            break;
+                        }
+                        else
+                        {
+                            linesOnlySwitch = false;
+                            btnLinesOnly.Background = Brushes.DimGray;
+                            ForceRefresh();
+                            break;
+                        }
+                    }
+                }
+            }
+            //toggle lines
+            foreach (DrawingTool dTL in DrawObjects.ToList())
+            {
+                if (dTL.IsUserDrawn && dTL.DisplayName == "Line")
+                {
+                    if (linesOnlySwitch)
+                    {
+                        dTL.IsVisible = false;
+                        ForceRefresh();
+                    }
+                    else if (!linesOnlySwitch)
+                    {
+                        dTL.IsVisible = true;
+                        ForceRefresh();
+                    }
+                }
+            }
+
+            linesOnlySwitch = !linesOnlySwitch;
+            chartWindow.ActiveChartControl.InvalidateVisual();
+            ForceRefresh();
+        }
         private void hideP_LFunc()
         {
             //  ClearOutputWindow();
@@ -1384,8 +1459,14 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnFibLines.Click -= btnFibLinesClick;
             btnFibLines = null;
         }
+        if (btnLinesOnly != null)
+            {
+                chartWindow.MainMenu.Remove(btnLinesOnly);
+                btnLinesOnly.Click -= btnLinesOnlyClick;
+                btnLinesOnly = null;
+            }
 
-        if (btnIndicators != null)
+            if (btnIndicators != null)
         {
             chartWindow.MainMenu.Remove(btnIndicators);
             btnIndicators.Click -= btnIndicatorsClick;
