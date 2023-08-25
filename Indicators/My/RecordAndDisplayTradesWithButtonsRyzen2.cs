@@ -1142,7 +1142,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             //  toggle lines
             ClearOutputWindow();
 
-            foreach (DrawingTool dTL in DrawObjects.ToList())
+            foreach (DrawingTool dTL in DrawObjects.ToList()) 
             {
                 var draw = dTL as DrawingTool;
 
