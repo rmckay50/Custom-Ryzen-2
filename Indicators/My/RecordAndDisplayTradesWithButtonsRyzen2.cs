@@ -25,8 +25,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -47,6 +49,10 @@ using LINQtoCSV;
 using NinjaTrader.Gui.NinjaScript;
 using NinjaTrader.Custom.AddOns;
 using Trade = NinjaTrader.Custom.AddOns.Trade;
+using NTRes.NinjaTrader.Gui.Tools;
+using NinjaTrader.Gui.PropertiesTest;
+using System.Security.Cryptography;
+using System.Windows.Shapes;
 #endregion
 
 //This namespace holds Indicators in this folder and is required. Do not change it. 
@@ -56,6 +62,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
     public class RecordAndDisplayTradesWithButtons : Indicator
     {
         #region Create variables
+        private bool arrowLinesSwitch = true;
         private bool drawSwitch = true;
         private bool indiSwitch;
         private bool p_LSwitch = true;
@@ -67,6 +74,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         private new System.Windows.Controls.Button btnTradeLines;
         private new System.Windows.Controls.Button btnP_L;
         private new System.Windows.Controls.Button btnUserDrawObjs;
+        private new System.Windows.Controls.Button btnArrowLines;
         private new System.Windows.Controls.Button btnIndicators;
         private new System.Windows.Controls.Button btnShowTrades;
         private new System.Windows.Controls.Button btnHideWicks;
@@ -85,6 +93,11 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
         //  create dictionary
         IDictionary<string, double> dictDayClose = new Dictionary<string, double>();
+        // create list of arrowlines
+        List<ArrowLines> arrowLines = new List<ArrowLines>();
+        //  switch used to monitor passes in Playback mode for ArrowLines
+        private bool arrowLinesFirstPass = true;
+
 
         #endregion Create variables
         protected override void OnStateChange()
@@ -105,8 +118,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 PixelsAboveBelowBar = 50;
                 PixelsAboveBelowDay = 200;
                 IsSuspendedWhileInactive = true;
-                StartTime = DateTime.Parse("06/15/2023");
-                EndTime = DateTime.Parse("07/30/2023");
+                StartTime = DateTime.Parse("08/01/2023");
+                EndTime = DateTime.Parse("08/31/2023");
                 EnumValue = MyEnum.Futures;
                 //  The userName needs to be correct to keep ReadCsvAndDrawLines() in State.Historical from throwing exception
                 InputFile = @"C:\Users\" + userName + @"\Documents\NinjaTrader 8\db\NinjaTrader.sqlite";
@@ -299,6 +312,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnUserDrawObjs = new System.Windows.Controls.Button();
             btnTradeLines = new System.Windows.Controls.Button();
             btnP_L = new System.Windows.Controls.Button();
+            btnArrowLines = new System.Windows.Controls.Button();
             btnIndicators = new System.Windows.Controls.Button();
             btnShowTrades = new System.Windows.Controls.Button();
             btnHideWicks = new System.Windows.Controls.Button();
@@ -308,6 +322,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnTradeLines.Content = "Toggle Trade Lines";
             btnP_L.Content = "Toggle P/L";
             btnUserDrawObjs.Content = "Toggle Draw";
+            btnArrowLines.Content = "Toggle ArrowLines";
             btnIndicators.Content = "Toggle Indicators";
             btnShowTrades.Content = "Toggle Trades";
             btnHideWicks.Content = "Toggle Wicks";
@@ -317,6 +332,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnTradeLines.Style = btnStyle;
             btnP_L.Style = btnStyle;
             btnUserDrawObjs.Style = btnStyle;
+            btnArrowLines.Style = btnStyle;
             btnIndicators.Style = btnStyle;
             btnShowTrades.Style = btnStyle;
             btnHideWicks.Style = btnStyle;
@@ -326,6 +342,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             chartWindow.MainMenu.Add(btnTradeLines);
             chartWindow.MainMenu.Add(btnP_L);
             chartWindow.MainMenu.Add(btnUserDrawObjs);
+            chartWindow.MainMenu.Add(btnArrowLines);
             chartWindow.MainMenu.Add(btnIndicators);
             chartWindow.MainMenu.Add(btnShowTrades);
             chartWindow.MainMenu.Add(btnHideWicks);
@@ -335,6 +352,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnTradeLines.Visibility = Visibility.Visible;
             btnP_L.Visibility = Visibility.Visible;
             btnUserDrawObjs.Visibility = Visibility.Visible;
+            btnArrowLines.Visibility = Visibility.Visible;
             btnIndicators.Visibility = Visibility.Visible;
             btnShowTrades.Visibility = Visibility.Visible;
             btnHideWicks.Visibility = Visibility.Visible;
@@ -344,6 +362,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnTradeLines.Click += btnTradeLinesClick;
             btnP_L.Click += btnP_LClick;
             btnUserDrawObjs.Click += btnUserDrawObjsClick;
+            btnArrowLines.Click += btnArrowLinesClick;
             btnIndicators.Click += btnIndicatorsClick;
             btnShowTrades.Click += btnShowTradesClick;
             btnHideWicks.Click += btnHideWicksClick;
@@ -353,6 +372,12 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             // toolbar multiple times if NS code is refreshed
             IsToolBarButtonAdded = true;
         }
+
+        private void BtnArrowLines_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void OnRender(ChartControl chartControl, ChartScale chartScale)
         {
         }
@@ -385,6 +410,15 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 hideUserDrawsFunc();
             }
         }
+        private void btnArrowLinesClick(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Controls.Button button = sender as System.Windows.Controls.Button;
+            if (button != null)
+            {
+                hideArrowLines();
+            }
+        }
+
         private void btnIndicatorsClick(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.Button button = sender as System.Windows.Controls.Button;
@@ -573,6 +607,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 };
                 #endregion Determine brush color
 
+
                 #region Draw.Line()
                 Draw.Line
                     (this,
@@ -760,13 +795,13 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 }));
             }
         }
-    private void hideDrawsFunc()
+        private void hideDrawsFunc()
         {
 //            ClearOutputWindow();
             // Sets drawSwitch based on whether there are any drawings on the chart
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {
-                //  'break' kicks execution out of loop
+                //  'break' kicks execution out of foreach
                 if (dTL.IsAttachedToNinjaScript)
                 {
                     if (dTL.IsVisible && dTL.IsAttachedToNinjaScript)
@@ -808,7 +843,207 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             chartWindow.ActiveChartControl.InvalidateVisual();
             ForceRefresh();
         }
-        //  toggle P/L
+        private void hideArrowLines()
+        {
+            ClearOutputWindow();
+
+            //  If Switch is set to Playback read the ArrowLines file and draw the arrowlines
+            if (EnumValue == MyEnum.Playback)
+            {
+                Print(" Set to Playback");
+                var options = new JsonSerializerOptions();
+
+
+                string fileName = @"C:\data\ArrowLines.json";
+                var result = File.ReadAllText(fileName);
+                Print(result);
+
+                var jsonStringReturned = File.ReadAllText(fileName);
+                Console.WriteLine("\njsonStringReturned\n" + jsonStringReturned);
+
+                //  Deserialize file contents into List<T>
+                var arrowLinesList = System.Text.Json.JsonSerializer.Deserialize<List<ArrowLines>>(jsonStringReturned);
+
+                //  On first pass when Enum is set to Playback redraw arrowlines
+                if (arrowLinesFirstPass == true)
+                {
+                    var arrowId = 0;
+                    //  draw arrowLines on chart
+                    foreach (var arrow in arrowLinesList)
+                    {
+                        try
+                        {
+                            Draw.ArrowLine(this, arrowId.ToString() + " arrowLinesList", DateTime.Parse(arrow.StartTime), arrow.StartY, DateTime.Parse(arrow.EndTime), arrow.EndY, Brushes.LimeGreen);
+                            arrowId++;
+                        }
+                        catch (Exception ex)
+                        {
+                            Print(ex.Message);
+                        }
+                        //Draw.ArrowLine()
+                    }
+                    ForceRefresh();
+                    arrowLinesFirstPass = false;
+                return;
+
+                }
+                else 
+                {
+                    Print("arrowLinesFirstPass = false;");
+                }
+            }
+
+
+            foreach (DrawingTool dTL in DrawObjects.ToList())
+            {
+                //  change button color
+                //  'break' kicks execution out of foreach
+                //var draw = dTL as DrawingTool;
+                if (dTL != null)
+                {
+                    //  find first arrowline
+                    if (dTL.DisplayName == "Arrow line")
+                    {
+
+                        if ( dTL.IsVisible )
+                        {
+                            arrowLinesSwitch = true;
+                            btnArrowLines.Background = Brushes.Green;
+
+                            //  make invisible for debugging
+                            //dTL.IsVisible = false;
+                            ForceRefresh();
+                            break;
+                        }
+                        else 
+                        {
+                            arrowLinesSwitch = false;
+                            btnArrowLines.Background = Brushes.DimGray;
+                            //  make visible for debugging
+                            //dTL.IsVisible = true;
+                            ForceRefresh();
+                            break;
+                        }
+                    }
+                }
+
+            }
+
+            //  clear arrowLines list
+            arrowLines.Clear();
+
+            //  Sets arrowLinesSwitch based on whether there are any drawings on the chart
+            //  foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
+            //  create list of arrowlines
+
+            foreach (DrawingTool dTL in DrawObjects.ToList())
+            {
+                var anchors = dTL.Anchors.ToList();
+                //var dTLTag = dTL.Tag;
+                try
+                {
+                    //  is line an Arrow line?
+                    if (dTL.DisplayName == "Arrow line")
+                    {
+                        var arrowLineId = dTL.Tag.Substring(11);
+                        arrowLines.Add(new ArrowLines()
+                        {
+                            ID = arrowLineId,
+                            StartTime = anchors[0].Time.ToString(),
+                            StartY = (double)anchors[0].Price,
+                            EndTime = anchors[1].Time.ToString(),
+                            EndY = (double)anchors[1].Price
+                        });
+                    }
+                    arrowLines = arrowLines.ToList();
+
+                    //  set Serialize options
+                    var options = new JsonSerializerOptions { WriteIndented = true };
+
+                    //  Create Json string
+                    string jsonString = JsonSerializer.Serialize(arrowLines, options);
+
+                    //  Write to C:\data\ArrowLines.json
+                    string fileName = @"C:\data\ArrowLines.json";
+
+                    // Check to see if the file exists.
+                    FileInfo fInfo = new FileInfo(fileName);
+
+                    // You can throw a personalized exception if
+                    // the file does not exist.
+                    if (!fInfo.Exists)
+                    {
+                        throw new FileNotFoundException("The file was not found.", fileName);
+                    }
+
+                    //  Delete file contents
+                    File.WriteAllText(fileName, String.Empty);
+
+                    //  Write arrowList to file
+                    File.WriteAllText(fileName, jsonString);
+                    Print(jsonString);
+
+                    var result = File.ReadAllText(fileName);
+                    Print(result);
+
+                    //var jsonStringReturned = File.ReadAllText(fileName);
+                    //Console.WriteLine("\njsonStringReturned\n" + jsonStringReturned);
+
+                    ////var list1 = System.Text.Json.JsonSerializer.Deserialize<Person>(content);
+                    //var arrowLinesList = System.Text.Json.JsonSerializer.Deserialize<List<ArrowLines>>(jsonStringReturned);
+
+
+
+
+
+                }
+                catch (Exception ex)
+                {
+                    Print(ex);
+                }
+                //  write arrowlines list to json file
+                try
+                {
+                    if ( arrowLines == null ) 
+                    {
+                        Print("Arrowlines == null");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Print(ex);
+                }
+            }
+            foreach (DrawingTool dTL in DrawObjects.ToList())
+            {
+                if (dTL.DisplayName == "Arrow line" )
+                {
+                    if (arrowLinesSwitch)
+                    {
+                        //if (dTL.Tag.Contains("Text"))
+                        if (dTL.DisplayName == "Arrow line") 
+                        {
+                            Print(String.Format("Found arrowlinw {0}", dTL.Tag));
+                        }
+                        dTL.IsVisible = false;
+                        ForceRefresh();
+                    }
+                    else if (!arrowLinesSwitch)
+                    {
+                        dTL.IsVisible = true;
+                        ForceRefresh();
+                    }
+                }
+            }
+
+            //  write arrowlines list to Json file
+
+            //*/
+            arrowLinesSwitch = !arrowLinesSwitch;
+            chartWindow.ActiveChartControl.InvalidateVisual();
+            ForceRefresh();
+
+        }
         private void hideP_LFunc()
         {
             //  ClearOutputWindow();
@@ -869,13 +1104,13 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         }
         private void hideUserDrawsFunc()
         {
-            // turns off historical drawings but future drawings will show until hidden
+            //  turns off historical drawings but future drawings will show until hidden
 
-            // Sets drawSwitch based on whether there are any drawings on the chart
-            //foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
+            //  Sets drawSwitch based on whether there are any drawings on the chart
+            //  foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
+            //  toggle button color
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {
-                var anchors = dTL.Anchors.ToList();
                 var draw = dTL as DrawingTool;
                 if (draw != null) 
                 {
@@ -895,6 +1130,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             }
 
             //foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
+            //  toggle .IsVisible to hide and show drawing objects
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {
                 //var draw = obj as DrawingTool;
@@ -1060,7 +1296,14 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnUserDrawObjs.Click -= btnUserDrawObjsClick;
             btnUserDrawObjs = null;
         }
-        if (btnIndicators != null)
+            if (btnArrowLines != null)
+            {
+                chartWindow.MainMenu.Remove(btnArrowLines);
+                btnArrowLines.Click -= btnArrowLinesClick;
+                btnArrowLines = null;
+            }
+
+            if (btnIndicators != null)
         {
             chartWindow.MainMenu.Remove(btnIndicators);
             btnIndicators.Click -= btnIndicatorsClick;
@@ -1082,7 +1325,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         {
             chartWindow.MainMenu.Remove(btnCreateCsv);
             btnCreateCsv.Click -= btnCreateCsvClick;
-            btnHideWicks = null;
+            btnCreateCsv = null;
         }
 
     }

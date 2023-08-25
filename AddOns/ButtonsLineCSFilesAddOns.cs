@@ -11,6 +11,27 @@ using System.Data.SQLite;
 namespace NinjaTrader.Custom.AddOns
 {
     //public class ButtonsLineCSFilesAddOns : NinjaTrader.NinjaScript.AddOnBase
+    public class ArrowLines
+    {
+        public string ID { get; set; }
+        public string StartTime { get; set; }
+        public double StartY { get; set; }
+        public string EndTime { get; set; }
+        public double EndY { get; set; }
+        public ArrowLines() { }
+        public ArrowLines ( string iD, string startTime, double startY, string endTime, double endY ) 
+        { 
+            ID = iD;
+            StartTime = startTime;
+            StartY = startY;
+            EndTime = endTime;
+            EndY = endY;
+        }
+        public IEnumerator GetEnumerator() 
+        {
+            return (IEnumerator)this;
+        }
+    }
     public class CSV
     {
         //public int EntryId { get; set; }
@@ -568,9 +589,9 @@ namespace NinjaTrader.Custom.AddOns
             DailyTotal = dailyTotal;
             TotalTrades = totalTrades;
         }
-        public IEnumerator GetEnumerator()                                                              //	class CSV
+        public IEnumerator GetEnumerator()
         {
-            return (IEnumerator)this;                                                                       //	class CSV
+            return (IEnumerator)this;
         }
 
     }
@@ -607,25 +628,6 @@ namespace NinjaTrader.Custom.AddOns
             return (IEnumerator)this;                                                                       //	class CSV
         }
 
-
-    }
-    public class Source
-    {
-        public int ActiveEntryId { get; set; }                                                          //	class source
-        public long? ActiveEntryRemaining { get; set; }                                                   //	class source
-        public double? ActiveEntryPrice { get; set; }                                                    //	class source
-        public bool IsReversal { get; set; }                                                            //	class source
-        public long PositionAfterReverse { get; set; }                                                   //	class source
-        public long RowOfReverse { get; set; }                                                           //	class source
-        public long Position { get; set; }                                                               //	class source
-        public double? StartingExitPrice { get; set; }                                                   //	class source
-        public int rowInTrades { get; set; }                                                            //	class source
-        public int RowInTrades { get; set; }                                                            //	class source
-        public long? ExitQty { get; set; }                                                                //	class source
-        public long? Remaining { get; set; }                                                              //	class source
-        public List<Trade> Trades { get; set; }                                                         //	class source
-        public List<CSV> Csv { get; set; }                                                              //	class source
-        public List<NTDrawLine> NTDrawLine { get; set; }
 
     }
     public class Ret
@@ -667,6 +669,25 @@ namespace NinjaTrader.Custom.AddOns
             P_L = p_L;
             Long_Short = long_Short;
         }
+    }
+    public class Source
+    {
+        public int ActiveEntryId { get; set; }                                                          //	class source
+        public long? ActiveEntryRemaining { get; set; }                                                   //	class source
+        public double? ActiveEntryPrice { get; set; }                                                    //	class source
+        public bool IsReversal { get; set; }                                                            //	class source
+        public long PositionAfterReverse { get; set; }                                                   //	class source
+        public long RowOfReverse { get; set; }                                                           //	class source
+        public long Position { get; set; }                                                               //	class source
+        public double? StartingExitPrice { get; set; }                                                   //	class source
+        public int rowInTrades { get; set; }                                                            //	class source
+        public int RowInTrades { get; set; }                                                            //	class source
+        public long? ExitQty { get; set; }                                                                //	class source
+        public long? Remaining { get; set; }                                                              //	class source
+        public List<Trade> Trades { get; set; }                                                         //	class source
+        public List<CSV> Csv { get; set; }                                                              //	class source
+        public List<NTDrawLine> NTDrawLine { get; set; }
+
     }
     public class Trade
     {
@@ -722,4 +743,10 @@ namespace NinjaTrader.Custom.AddOns
             Id = id;
         }
     }
+    public class UserDetail
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
 }
