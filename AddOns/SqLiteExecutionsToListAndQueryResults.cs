@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LINQtoCSV;
-using System.IO;
+//using System.IO;
 using NinjaTrader.NinjaScript;
 using NinjaTrader.Custom.AddOns.Properties;
 

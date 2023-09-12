@@ -623,12 +623,10 @@ namespace NinjaTrader.Custom.AddOns
         public double? DailyTotal { get; set; }
         [CsvColumn(FieldIndex = 13)]
         public int? TotalTrades { get; set; }
-        public IEnumerator GetEnumerator()                                                              //	class CSV
+        public IEnumerator GetEnumerator()
         {
-            return (IEnumerator)this;                                                                       //	class CSV
+            return (IEnumerator)this;
         }
-
-
     }
     public class Ret
     {

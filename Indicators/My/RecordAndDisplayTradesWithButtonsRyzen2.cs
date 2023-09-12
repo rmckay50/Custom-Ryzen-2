@@ -15,7 +15,7 @@
  *      
  * 2023 04 25 1200  
  *  'SqLiteExecutionsToListAndQueryResults' works correctly as .dll 
- *  attemptiong transfer to AddOns
+ *  attempting transfer to AddOns
 */
 #endregion Comments
 
@@ -74,17 +74,17 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         private Chart chartWindow;
 
         // Define a Button
-        private new System.Windows.Controls.Button btnTradeLines;
-        private new System.Windows.Controls.Button btnP_L;
-        private new System.Windows.Controls.Button btnUserDrawObjs;
-        private new System.Windows.Controls.Button btnArrowLines;
-        private new System.Windows.Controls.Button btnFibLines;
-        private new System.Windows.Controls.Button btnLinesOnly;
-        private new System.Windows.Controls.Button btnCustomLinesOnly;
-        private new System.Windows.Controls.Button btnIndicators;
-        private new System.Windows.Controls.Button btnShowTrades;
-        private new System.Windows.Controls.Button btnHideWicks;
-        private new System.Windows.Controls.Button btnCreateCsv;
+        private System.Windows.Controls.Button btnTradeLines;
+        private System.Windows.Controls.Button btnP_L;
+        private System.Windows.Controls.Button btnUserDrawObjs;
+        private System.Windows.Controls.Button btnArrowLines;
+        private System.Windows.Controls.Button btnFibLines;
+        private System.Windows.Controls.Button btnLinesOnly;
+        private System.Windows.Controls.Button btnCustomLinesOnly;
+        private System.Windows.Controls.Button btnIndicators;
+        private System.Windows.Controls.Button btnShowTrades;
+        private System.Windows.Controls.Button btnHideWicks;
+        private System.Windows.Controls.Button btnCreateCsv;
 
         private bool IsToolBarButtonAdded;
 
@@ -103,7 +103,10 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         List<ArrowLines> arrowLines = new List<ArrowLines>();
         //  switch used to monitor passes in Playback mode for ArrowLines
         private bool arrowLinesFirstPass = true;
-
+        //  from 'public class ChartToolBarCustomMenuExample : Indicator'
+        private NinjaTrader.Gui.Chart.ChartTab chartTab;
+        private System.Windows.Controls.TabItem tabItem;
+        private System.Windows.Controls.Menu theMenu;
 
         #endregion Create variables
         protected override void OnStateChange()
@@ -124,8 +127,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 PixelsAboveBelowBar = 50;
                 PixelsAboveBelowDay = 200;
                 IsSuspendedWhileInactive = true;
-                StartTime = DateTime.Parse("08/01/2023");
-                EndTime = DateTime.Parse("08/31/2023");
+                StartTime = DateTime.Parse("08/28/2023");
+                EndTime = DateTime.Parse("09/30/2023");
                 EnumValue = MyEnum.Futures;
                 //  The userName needs to be correct to keep ReadCsvAndDrawLines() in State.Historical from throwing exception
                 InputFile = @"C:\Users\" + userName + @"\Documents\NinjaTrader 8\db\NinjaTrader.sqlite";
@@ -198,7 +201,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         [Display(Name = "Append Playback Results", Order = 6, GroupName = "Parameters")]
         public bool appendPlayback
         { get; set; }
-
 
         #endregion Properties
 
@@ -354,31 +356,59 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnHideWicks.Style = btnStyle;
             btnCreateCsv.Style = btnStyle;
 
-            // Add the Buttons to the chart's toolbar
-            chartWindow.MainMenu.Add(btnTradeLines);
-            chartWindow.MainMenu.Add(btnP_L);
-            chartWindow.MainMenu.Add(btnUserDrawObjs);
-            chartWindow.MainMenu.Add(btnArrowLines);
-            chartWindow.MainMenu.Add(btnFibLines); 
-            chartWindow.MainMenu.Add(btnLinesOnly);
-            chartWindow.MainMenu.Add(btnCustomLinesOnly);
-            chartWindow.MainMenu.Add(btnIndicators);
-            chartWindow.MainMenu.Add(btnShowTrades);
-            chartWindow.MainMenu.Add(btnHideWicks);
-            chartWindow.MainMenu.Add(btnCreateCsv);
+            //  from 'public class ChartToolBarCustomMenuExample : Indicator'
+            theMenu = new System.Windows.Controls.Menu
+            {
+                // important to set the alignment, otherwise you will never see the menu populated
+                VerticalAlignment = VerticalAlignment.Top,
+                VerticalContentAlignment = VerticalAlignment.Top,
 
-            // Set button visibility
-            btnTradeLines.Visibility = Visibility.Visible;
-            btnP_L.Visibility = Visibility.Visible;
-            btnUserDrawObjs.Visibility = Visibility.Visible;
-            btnArrowLines.Visibility = Visibility.Visible;
-            btnFibLines.Visibility = Visibility.Visible;
-            btnLinesOnly.Visibility = Visibility.Visible;
-            btnCustomLinesOnly.Visibility = Visibility.Visible;
-            btnIndicators.Visibility = Visibility.Visible;
-            btnShowTrades.Visibility = Visibility.Visible;
-            btnHideWicks.Visibility = Visibility.Visible;
-            btnCreateCsv.Visibility = Visibility.Visible;
+                // make sure to style as a System Menu	
+                //Style = System.Windows.Application.Current.TryFindResource("SystemMenuStyle") as Style
+            };
+            theMenu.Items.Add(btnTradeLines);
+            theMenu.Items.Add(btnP_L);
+            theMenu.Items.Add(btnUserDrawObjs);
+            theMenu.Items.Add(btnIndicators);
+            theMenu.Items.Add(btnShowTrades);
+            theMenu.Items.Add(btnHideWicks);
+            theMenu.Items.Add(btnCreateCsv);
+
+            // add the menu which contains all menu items to the chart
+            chartWindow.MainMenu.Add(theMenu);
+
+            //  set visibility to .Visible
+            foreach (System.Windows.Controls.TabItem tab in chartWindow.MainTabControl.Items)
+                if ((tab.Content as ChartTab).ChartControl == ChartControl && tab == chartWindow.MainTabControl.SelectedItem)
+                    theMenu.Visibility = Visibility.Visible;
+
+
+
+            //// Add the Buttons to the chart's toolbar
+            //chartWindow.MainMenu.Add(btnTradeLines);
+            //chartWindow.MainMenu.Add(btnP_L);
+            //chartWindow.MainMenu.Add(btnUserDrawObjs);
+            //chartWindow.MainMenu.Add(btnArrowLines);
+            //chartWindow.MainMenu.Add(btnFibLines); 
+            //chartWindow.MainMenu.Add(btnLinesOnly);
+            //chartWindow.MainMenu.Add(btnCustomLinesOnly);
+            //chartWindow.MainMenu.Add(btnIndicators);
+            //chartWindow.MainMenu.Add(btnShowTrades);
+            //chartWindow.MainMenu.Add(btnHideWicks);
+            //chartWindow.MainMenu.Add(btnCreateCsv);
+
+            //// Set button visibility
+            //btnTradeLines.Visibility = Visibility.Visible;
+            //btnP_L.Visibility = Visibility.Visible;
+            //btnUserDrawObjs.Visibility = Visibility.Visible;
+            //btnArrowLines.Visibility = Visibility.Visible;
+            //btnFibLines.Visibility = Visibility.Visible;
+            //btnLinesOnly.Visibility = Visibility.Visible;
+            //btnCustomLinesOnly.Visibility = Visibility.Visible;
+            //btnIndicators.Visibility = Visibility.Visible;
+            //btnShowTrades.Visibility = Visibility.Visible;
+            //btnHideWicks.Visibility = Visibility.Visible;
+            //btnCreateCsv.Visibility = Visibility.Visible;
 
             // Subscribe to click events
             btnTradeLines.Click += btnTradeLinesClick;
@@ -1099,11 +1129,11 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 //  toggle button color
                 if (dTL != null)
                 {
-                    //  find first fibline
-                    if (dTL.DisplayName == "Fibonacci extensions")
-                    {
+                    //  find first fibline 
+                    if (dTL.DisplayName == "Fibonacci retracements")
+                        {
 
-                        if (dTL.IsVisible)
+                            if (dTL.IsVisible)
                         {
                             fibLinesSwitch = true;
                             btnFibLines.Background = Brushes.Green;
@@ -1129,12 +1159,13 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             //  toggle Fib lines
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {
-                if (dTL.DisplayName == "Fibonacci extensions")
-                {
-                    if (fibLinesSwitch)
+                if (dTL.DisplayName == "Fibonacci retracements")
+
+                    {
+                        if (fibLinesSwitch)
                     {
                         //if (dTL.Tag.Contains("Text"))
-                        if (dTL.DisplayName == "Fibonacci extensions")
+                    if (dTL.DisplayName == "Fibonacci retracements")
                         {
                             Print(String.Format("Found Fib {0}", dTL.Tag));
                         }
