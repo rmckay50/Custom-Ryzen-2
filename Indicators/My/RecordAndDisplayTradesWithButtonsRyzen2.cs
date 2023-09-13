@@ -382,34 +382,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 if ((tab.Content as ChartTab).ChartControl == ChartControl && tab == chartWindow.MainTabControl.SelectedItem)
                     theMenu.Visibility = Visibility.Visible;
 
-
-
-            //// Add the Buttons to the chart's toolbar
-            //chartWindow.MainMenu.Add(btnTradeLines);
-            //chartWindow.MainMenu.Add(btnP_L);
-            //chartWindow.MainMenu.Add(btnUserDrawObjs);
-            //chartWindow.MainMenu.Add(btnArrowLines);
-            //chartWindow.MainMenu.Add(btnFibLines); 
-            //chartWindow.MainMenu.Add(btnLinesOnly);
-            //chartWindow.MainMenu.Add(btnCustomLinesOnly);
-            //chartWindow.MainMenu.Add(btnIndicators);
-            //chartWindow.MainMenu.Add(btnShowTrades);
-            //chartWindow.MainMenu.Add(btnHideWicks);
-            //chartWindow.MainMenu.Add(btnCreateCsv);
-
-            //// Set button visibility
-            //btnTradeLines.Visibility = Visibility.Visible;
-            //btnP_L.Visibility = Visibility.Visible;
-            //btnUserDrawObjs.Visibility = Visibility.Visible;
-            //btnArrowLines.Visibility = Visibility.Visible;
-            //btnFibLines.Visibility = Visibility.Visible;
-            //btnLinesOnly.Visibility = Visibility.Visible;
-            //btnCustomLinesOnly.Visibility = Visibility.Visible;
-            //btnIndicators.Visibility = Visibility.Visible;
-            //btnShowTrades.Visibility = Visibility.Visible;
-            //btnHideWicks.Visibility = Visibility.Visible;
-            //btnCreateCsv.Visibility = Visibility.Visible;
-
             // Subscribe to click events
             btnTradeLines.Click += btnTradeLinesClick;
             btnP_L.Click += btnP_LClick;
@@ -423,16 +395,31 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnHideWicks.Click += btnHideWicksClick;
             btnCreateCsv.Click += btnCreateCsvClick;
 
+            //  hook up tab changed handler
+            chartWindow.MainTabControl.SelectionChanged += MySelectionChangedHandler;
+
             // Set this value to true so it doesn't add the
             // toolbar multiple times if NS code is refreshed
             IsToolBarButtonAdded = true;
         }
+        private void MySelectionChangedHandler(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count <= 0)
+                return;
 
+            tabItem = e.AddedItems[0] as System.Windows.Controls.TabItem;
+            if (tabItem == null)
+                return;
+
+            chartTab = tabItem.Content as NinjaTrader.Gui.Chart.ChartTab;
+            if (chartTab != null)
+                if (theMenu != null)
+                    theMenu.Visibility = (chartTab.ChartControl == ChartControl) ? Visibility.Visible : Visibility.Collapsed;
+        }
         private void BtnArrowLines_Click(object sender, RoutedEventArgs e)
         {
             throw new NotImplementedException();
         }
-
         protected override void OnRender(ChartControl chartControl, ChartScale chartScale)
         {
         }
@@ -685,7 +672,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 };
                 #endregion Determine brush color
 
-
                 #region Draw.Line()
                 Draw.Line
                     (this,
@@ -724,8 +710,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
                     //  CurrentBar is -1 for a while && check for enough bars on the chart
                     if (CurrentBar >= 0 && CurrentBar > barsAgo)
-
-                        {
+                    {
                             // Print P/L in blue below line start
                             if (rc.P_L >= 0)
                         {
@@ -800,7 +785,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 #endregion Draw.Text()
                 i++;
             }
-            #endregion 
+            #endregion foreach() Through returnedClass and Draw line
         }
         private void CreateCvsFunc()
         {
@@ -826,8 +811,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             else if (Instrument.MasterInstrument.ToString().Contains("Future"))
             {
                 expiryString = Instrument.ToString().Substring(3, 5); ;
-                Print(string.Format("Symbol is: \t{0}\tExpiry is:\t{1}", Bars.Instrument.MasterInstrument.Name,
-                    expiryString));
+                //Print(string.Format("Symbol is: \t{0}\tExpiry is:\t{1}", Bars.Instrument.MasterInstrument.Name,
+                //    expiryString));
 
             }
 
@@ -1600,8 +1585,18 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnCreateCsv.Click -= btnCreateCsvClick;
             btnCreateCsv = null;
         }
+            if (theMenu != null)
+                chartWindow.MainMenu.Remove(theMenu);
 
-    }
+            try
+            {
+                chartWindow.MainTabControl.SelectionChanged -= MySelectionChangedHandler;
+            }
+            catch (Exception ex)
+            {
+                Print(ex.Message);
+            }
+        }
     public IDictionary<string, double> DictDayClose()
         {
             IDictionary<string, double> dictDayClose = new Dictionary<string, double>();
@@ -1615,7 +1610,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
 
             return dictDayClose;
         }
-
 
         #region Properties
         [NinjaScriptProperty]
