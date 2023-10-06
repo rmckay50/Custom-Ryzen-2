@@ -369,6 +369,10 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             theMenu.Items.Add(btnTradeLines);
             theMenu.Items.Add(btnP_L);
             theMenu.Items.Add(btnUserDrawObjs);
+            theMenu.Items.Add(btnLinesOnly);
+            theMenu.Items.Add(btnCustomLinesOnly);
+            theMenu.Items.Add(btnArrowLines);
+            theMenu.Items.Add(btnFibLines);
             theMenu.Items.Add(btnIndicators);
             theMenu.Items.Add(btnShowTrades);
             theMenu.Items.Add(btnHideWicks);
