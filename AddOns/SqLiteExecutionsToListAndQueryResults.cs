@@ -313,7 +313,7 @@ namespace NinjaTrader.Custom.AddOns
                 }
                 //  this section is used when bPlayback is true
                 else
-                {
+                { 
                     //  create and write to 'csvNTDrawline.csv'
                     if ( parameters.AppendPlayback == true && firstPassAppend == true )
                     {
