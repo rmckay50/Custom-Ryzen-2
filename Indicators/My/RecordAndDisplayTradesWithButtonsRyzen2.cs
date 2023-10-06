@@ -109,6 +109,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         private System.Windows.Controls.Menu theMenu;
 
         #endregion Create variables
+
         protected override void OnStateChange()
         {
             if (State == State.SetDefaults)
@@ -127,8 +128,8 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 PixelsAboveBelowBar = 50;
                 PixelsAboveBelowDay = 200;
                 IsSuspendedWhileInactive = true;
-                StartTime = DateTime.Parse("08/28/2023");
-                EndTime = DateTime.Parse("09/30/2023");
+                StartTime = DateTime.Parse("10/01/2023");
+                EndTime = DateTime.Parse("10/30/2023");
                 EnumValue = MyEnum.Futures;
                 //  The userName needs to be correct to keep ReadCsvAndDrawLines() in State.Historical from throwing exception
                 InputFile = @"C:\Users\" + userName + @"\Documents\NinjaTrader 8\db\NinjaTrader.sqlite";
@@ -322,7 +323,6 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnP_L = new System.Windows.Controls.Button();
             btnArrowLines = new System.Windows.Controls.Button();
             btnLinesOnly = new System.Windows.Controls.Button();
-            btnLinesOnly = new System.Windows.Controls.Button();
             btnCustomLinesOnly = new System.Windows.Controls.Button();
             btnFibLines = new System.Windows.Controls.Button();
             btnIndicators = new System.Windows.Controls.Button();
@@ -406,6 +406,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             // toolbar multiple times if NS code is refreshed
             IsToolBarButtonAdded = true;
         }
+
         private void MySelectionChangedHandler(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count <= 0)
@@ -424,9 +425,11 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         {
             throw new NotImplementedException();
         }
+
         protected override void OnRender(ChartControl chartControl, ChartScale chartScale)
         {
         }
+
         //  Toggle trade lines
         private void btnTradeLinesClick(object sender, RoutedEventArgs e)
         {
@@ -437,6 +440,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 hideDrawsFunc();
             }
         }
+
         //  Toggle P/L
         private void btnP_LClick(object sender, RoutedEventArgs e)
         {
@@ -528,6 +532,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
         }
         private void btnShowTradesClick(object sender, RoutedEventArgs e)
         {
+            //  Start with no trades showing 
+            //  First pass turns them on and next toggles them off
+
             System.Windows.Controls.Button button = sender as System.Windows.Controls.Button;
             if (button != null)
             {
@@ -541,32 +548,22 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                         {
                             case ChartExecutionStyle.DoNotPlot:
                                 {
-                                    if (startingExecutionStyle == ChartExecutionStyle.MarkersOnly)
+                                    if (startingExecutionStyle == ChartExecutionStyle.DoNotPlot)
                                     {
+                                        //trades.Properties.PlotExecutions = ChartExecutionStyle.TextAndMarker;
+                                        startingExecutionStyle = ChartExecutionStyle.MarkersOnly;
                                         trades.Properties.PlotExecutions = ChartExecutionStyle.MarkersOnly;
-                                        btnShowTrades.Background = Brushes.DimGray;
-                                        goto Done;
-                                    }
-                                    else if (startingExecutionStyle == ChartExecutionStyle.TextAndMarker)
-                                    {
-                                        trades.Properties.PlotExecutions = ChartExecutionStyle.TextAndMarker;
-                                        btnShowTrades.Background = Brushes.DimGray;
+                                        btnShowTrades.Background = Brushes.Green;
+
                                         goto Done;
                                     }
                                     break;
                                 }
                             case ChartExecutionStyle.MarkersOnly:
                                 {
-                                    startingExecutionStyle = ChartExecutionStyle.MarkersOnly;
+                                    startingExecutionStyle = ChartExecutionStyle.DoNotPlot;
                                     trades.Properties.PlotExecutions = ChartExecutionStyle.DoNotPlot;
-                                    btnShowTrades.Background = Brushes.Green;
-                                    break;
-                                }
-                            case ChartExecutionStyle.TextAndMarker:
-                                {
-                                    startingExecutionStyle = ChartExecutionStyle.TextAndMarker;
-                                    trades.Properties.PlotExecutions = ChartExecutionStyle.DoNotPlot;
-                                    btnShowTrades.Background = Brushes.Green;
+                                    btnShowTrades.Background = Brushes.DimGray;
                                     break;
                                 }
 
@@ -787,8 +784,10 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                 }
 
                 #endregion Draw.Text()
+
                 i++;
             }
+
             #endregion foreach() Through returnedClass and Draw line
         }
         private void CreateCvsFunc()
@@ -1370,11 +1369,9 @@ namespace NinjaTrader.NinjaScript.Indicators.My
                         drawSwitch = false;
                         btnUserDrawObjs.Background = Brushes.DimGray;
                     }
-                }
-                
+                }                
             }
 
-            //foreach (var obj in chartWindow.ActiveChartControl.ChartObjects)
             //  toggle .IsVisible to hide and show drawing objects
             foreach (DrawingTool dTL in DrawObjects.ToList())
             {
@@ -1589,6 +1586,7 @@ namespace NinjaTrader.NinjaScript.Indicators.My
             btnCreateCsv.Click -= btnCreateCsvClick;
             btnCreateCsv = null;
         }
+
             if (theMenu != null)
                 chartWindow.MainMenu.Remove(theMenu);
 
